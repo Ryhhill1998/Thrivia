@@ -11,6 +11,7 @@
 		5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DE2A5027FC001F92B8 /* ContentView.swift */; };
 		5B8F31E12A5027FE001F92B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E02A5027FE001F92B8 /* Assets.xcassets */; };
 		5B8F31E42A5027FE001F92B8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E32A5027FE001F92B8 /* Preview Assets.xcassets */; };
+		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		5B8F31E02A5027FE001F92B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5B8F31E32A5027FE001F92B8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,9 +54,11 @@
 		5B8F31DB2A5027FC001F92B8 /* Thrivia */ = {
 			isa = PBXGroup;
 			children = (
+				5BC6FDDF2A5DD6DD006459F8 /* ViewModels */,
+				5BC6FDDE2A5DD6CD006459F8 /* Views */,
+				5BC6FDDD2A5DD6BF006459F8 /* Models */,
 				5BC6FDDC2A5DCAE0006459F8 /* Info.plist */,
 				5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */,
-				5B8F31DE2A5027FC001F92B8 /* ContentView.swift */,
 				5B8F31E02A5027FE001F92B8 /* Assets.xcassets */,
 				5B8F31E22A5027FE001F92B8 /* Preview Content */,
 			);
@@ -67,6 +71,29 @@
 				5B8F31E32A5027FE001F92B8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		5BC6FDDD2A5DD6BF006459F8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5BC6FDDE2A5DD6CD006459F8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5B8F31DE2A5027FC001F92B8 /* ContentView.swift */,
+				5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5BC6FDDF2A5DD6DD006459F8 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
+				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
