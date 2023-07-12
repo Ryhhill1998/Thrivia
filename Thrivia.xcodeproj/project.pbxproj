@@ -17,6 +17,7 @@
 		5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */; };
 		5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF32A5EA84E006459F8 /* InputField.swift */; };
 		5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF52A5EACB2006459F8 /* RegisterScreen.swift */; };
+		5BC6FDF82A5EADA8006459F8 /* NavigationTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF72A5EADA8006459F8 /* NavigationTab.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		5BC6FDF32A5EA84E006459F8 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
 		5BC6FDF52A5EACB2006459F8 /* RegisterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterScreen.swift; sourceTree = "<group>"; };
+		5BC6FDF72A5EADA8006459F8 /* NavigationTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTab.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +165,7 @@
 			children = (
 				5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */,
 				5BC6FDF32A5EA84E006459F8 /* InputField.swift */,
+				5BC6FDF72A5EADA8006459F8 /* NavigationTab.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
+				5BC6FDF82A5EADA8006459F8 /* NavigationTab.swift in Sources */,
 				5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */,
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
 			);
