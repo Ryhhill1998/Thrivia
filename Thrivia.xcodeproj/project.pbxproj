@@ -16,6 +16,7 @@
 		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
 		5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */; };
 		5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF32A5EA84E006459F8 /* InputField.swift */; };
+		5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF52A5EACB2006459F8 /* RegisterScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		5BC6FDF32A5EA84E006459F8 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
+		5BC6FDF52A5EACB2006459F8 /* RegisterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 		5BC6FDE62A5EA298006459F8 /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				5BC6FDF52A5EACB2006459F8 /* RegisterScreen.swift */,
 			);
 			path = Register;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
+				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
 				5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */,
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
