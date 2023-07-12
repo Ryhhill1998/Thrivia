@@ -13,7 +13,34 @@ struct LoginScreen: View {
             Color("Background").ignoresSafeArea()
             
             VStack {
+                Image("AppIconNoBg")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 120.0, height: 120.0)
                 
+                InputField(placeholder: "Email or Username") { print($0) }
+                    .padding(.vertical)
+                
+                InputField(placeholder: "Password") { print($0) }
+                    .padding(.bottom)
+                
+                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                    .padding(.bottom)
+                
+                
+                HStack(spacing: 5.0) {
+                    Text("Don't have an account?")
+                        .font(.custom("Montserrat", size: 15))
+                    
+                    Button {
+                        print("guest")
+                    } label: {
+                        Text("Register")
+                            .font(.custom("Montserrat", size: 15))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("DarkGreen"))
+                    }
+                }
             }
         }
     }

@@ -13,8 +13,9 @@
 		5B8F31E42A5027FE001F92B8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E32A5027FE001F92B8 /* Preview Assets.xcassets */; };
 		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 		5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */; };
-		5BC6FDEB2A5EA2F8006459F8 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDEA2A5EA2F8006459F8 /* ActionButton.swift */; };
 		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
+		5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */; };
+		5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDF32A5EA84E006459F8 /* InputField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +27,9 @@
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 		5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
-		5BC6FDEA2A5EA2F8006459F8 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		5BC6FDF32A5EA84E006459F8 /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,7 +158,8 @@
 		5BC6FDEC2A5EA31E006459F8 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				5BC6FDEA2A5EA2F8006459F8 /* ActionButton.swift */,
+				5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */,
+				5BC6FDF32A5EA84E006459F8 /* InputField.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -235,8 +238,9 @@
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
-				5BC6FDEB2A5EA2F8006459F8 /* ActionButton.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
+				5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */,
+				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

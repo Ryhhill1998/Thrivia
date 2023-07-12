@@ -20,17 +20,17 @@ struct AuthenticationScreen: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(40)
                 
-                ActionButtonView(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
-                    .padding(.bottom, 20.0)
+                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                    .padding(.bottom)
                 
-                ActionButtonView(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
-                    .padding(.bottom, 20.0)
+                ActionButton(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
+                    .padding(.bottom)
                 
                 Text("OR")
                     .font(.custom("Montserrat", size: 18))
                     .fontWeight(.medium)
                     .foregroundColor(Color("DarkGreen"))
-                    .padding(.bottom, 20.0)
+                    .padding(.bottom)
                 
                 Button {
                     print("guest")
@@ -41,7 +41,7 @@ struct AuthenticationScreen: View {
                         .foregroundColor(Color("DarkGreen"))
                         .underline()
                 }
-                .padding(.bottom, 20.0)
+                .padding(.bottom)
             }
         }
     }

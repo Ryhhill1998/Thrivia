@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-struct ActionButtonView: View {
-    
+struct ActionButton: View {
     let text: String
     let fontColour: Color
     let backgroundColour: Color
@@ -18,7 +17,7 @@ struct ActionButtonView: View {
             print("logging in")
         } label: {
             Text(text)
-                .font(.custom("Montserrat", size: 25))
+                .font(.custom("Montserrat", size: 22))
                 .padding()
                 .bold()
         }
@@ -26,6 +25,12 @@ struct ActionButtonView: View {
         .frame(maxWidth: .infinity)
         .background(backgroundColour)
         .cornerRadius(10)
-        .padding(.horizontal, 20.0)
+        .padding(.horizontal)
+    }
+}
+
+struct ActionButton_Previews: PreviewProvider {
+    static var previews: some View {
+        ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
     }
 }
