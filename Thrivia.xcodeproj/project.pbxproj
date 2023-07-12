@@ -13,6 +13,8 @@
 		5B8F31E42A5027FE001F92B8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E32A5027FE001F92B8 /* Preview Assets.xcassets */; };
 		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 		5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */; };
+		5BC6FDEB2A5EA2F8006459F8 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDEA2A5EA2F8006459F8 /* ActionButton.swift */; };
+		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 		5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
+		5BC6FDEA2A5EA2F8006459F8 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,8 +90,14 @@
 		5BC6FDDE2A5DD6CD006459F8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5BC6FDEC2A5EA31E006459F8 /* Common */,
+				5BC6FDE92A5EA2C9006459F8 /* Chats */,
+				5BC6FDE82A5EA2BD006459F8 /* Profile */,
+				5BC6FDE72A5EA2B4006459F8 /* Progress */,
+				5BC6FDE62A5EA298006459F8 /* Register */,
+				5BC6FDE52A5EA28F006459F8 /* Login */,
+				5BC6FDE42A5EA27C006459F8 /* Authentication */,
 				5B8F31DE2A5027FC001F92B8 /* ContentView.swift */,
-				5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -97,6 +107,58 @@
 			children = (
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		5BC6FDE42A5EA27C006459F8 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		5BC6FDE52A5EA28F006459F8 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		5BC6FDE62A5EA298006459F8 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		5BC6FDE72A5EA2B4006459F8 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		5BC6FDE82A5EA2BD006459F8 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		5BC6FDE92A5EA2C9006459F8 /* Chats */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Chats;
+			sourceTree = "<group>";
+		};
+		5BC6FDEC2A5EA31E006459F8 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				5BC6FDEA2A5EA2F8006459F8 /* ActionButton.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +235,8 @@
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
+				5BC6FDEB2A5EA2F8006459F8 /* ActionButton.swift in Sources */,
+				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
