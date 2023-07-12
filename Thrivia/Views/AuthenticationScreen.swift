@@ -27,8 +27,8 @@ struct AuthenticationScreen: View {
                     .padding(.bottom, 20.0)
                 
                 Text("OR")
-                    .font(.system(size: 17))
-                    .fontWeight(.regular)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
                     .foregroundColor(Color("DarkGreen"))
                     .padding(.bottom, 20.0)
                 
@@ -36,8 +36,8 @@ struct AuthenticationScreen: View {
                     print("guest")
                 } label: {
                     Text("Login as guest")
-                        .font(.system(size: 20))
-                        .fontWeight(.bold)
+                        .font(.custom("Montserrat", size: 20))
+                        .fontWeight(.semibold)
                         .foregroundColor(Color("DarkGreen"))
                         .underline()
                 }
@@ -64,7 +64,7 @@ struct ActionButtonView: View {
             print("logging in")
         } label: {
             Text(text)
-                .font(.system(size: 25))
+                .font(.custom("Montserrat", size: 25))
                 .padding()
                 .bold()
         }
