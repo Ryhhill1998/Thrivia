@@ -70,6 +70,7 @@ struct ProgressScreen: View {
             }
             .navigationTitle("Alcohol")
             .navigationBarTitleDisplayMode(.automatic)
+            .toolbarBackground(Color("Background"), for: .navigationBar)
         }
     }
 }
