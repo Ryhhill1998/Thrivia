@@ -46,8 +46,8 @@ struct RegisterScreen: View {
                     Text("Already have an account?")
                         .font(.custom("Montserrat", size: 15))
                     
-                    Button {
-                        print("guest")
+                    NavigationLink {
+                        LoginScreen(updateAuthStatus: updateAuthStatus)
                     } label: {
                         Text("Login")
                             .font(.custom("Montserrat", size: 15))

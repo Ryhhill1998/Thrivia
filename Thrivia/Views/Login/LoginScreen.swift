@@ -40,14 +40,15 @@ struct LoginScreen: View {
                     Text("Don't have an account?")
                         .font(.custom("Montserrat", size: 15))
                     
-                    Button {
-                        print("guest")
+                    NavigationLink {
+                        RegisterScreen(updateAuthStatus: updateAuthStatus)
                     } label: {
                         Text("Register")
                             .font(.custom("Montserrat", size: 15))
                             .fontWeight(.bold)
                             .foregroundColor(Color("DarkGreen"))
                     }
+
                 }
             }
         }
