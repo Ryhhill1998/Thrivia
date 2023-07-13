@@ -9,8 +9,6 @@ import SwiftUI
 
 struct LoginScreen: View {
     
-    @Environment(\.presentationMode) var presentationMode
-    
     let updateAuthStatus: (Bool) -> Void
     
     func loginClicked() {

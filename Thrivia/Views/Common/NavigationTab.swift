@@ -13,6 +13,7 @@ struct NavigationTab: View {
     @State var isAuthenticated = false
     
     func updateAuthStatus(authStatus: Bool) {
+        print("updating auth status")
         isAuthenticated = authStatus
     }
     

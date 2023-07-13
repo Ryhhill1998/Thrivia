@@ -9,10 +9,10 @@ import SwiftUI
 
 struct RegisterScreen: View {
     
-    @State var ready = false
+    let updateAuthStatus: (Bool) -> Void
     
     func registerClicked() {
-        ready = true
+        updateAuthStatus(true)
     }
     
     var body: some View {
@@ -56,15 +56,12 @@ struct RegisterScreen: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $ready) {
-                ProgressScreen()
-            }
         }
     }
 }
 
 struct RegisterScreen_Previews: PreviewProvider {
     static var previews: some View {
-        RegisterScreen()
+        RegisterScreen() { _ in print("auth status updated") }
     }
 }
