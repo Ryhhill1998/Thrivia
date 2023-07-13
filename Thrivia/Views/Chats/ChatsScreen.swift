@@ -11,9 +11,11 @@ struct ChatsScreen: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
+            
+            ScrollView {
+                Text("This is the chats screen")
+            }
         }
-        .navigationBarBackButtonHidden(true)
-        .navigationTitle("Chats")
     }
 }
 

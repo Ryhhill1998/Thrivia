@@ -9,10 +9,12 @@ import SwiftUI
 
 struct LoginScreen: View {
     
-    @State var ready = false
+    @Environment(\.presentationMode) var presentationMode
+    
+    let updateAuthStatus: (Bool) -> Void
     
     func loginClicked() {
-        ready = true
+        updateAuthStatus(true)
     }
     
     var body: some View {
@@ -50,15 +52,12 @@ struct LoginScreen: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $ready) {
-                NavigationTab()
-            }
         }
     }
 }
 
 struct LoginScreen_Previews: PreviewProvider {
     static var previews: some View {
-        LoginScreen()
+        LoginScreen() { _ in print("auth status updated") }
     }
 }

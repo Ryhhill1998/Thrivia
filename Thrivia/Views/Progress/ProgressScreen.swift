@@ -11,6 +11,10 @@ struct ProgressScreen: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
+            
+            ScrollView {
+                Text("Tracked since 27 Jun 2023")
+            }
         }
     }
 }

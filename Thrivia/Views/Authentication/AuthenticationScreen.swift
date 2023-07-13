@@ -8,55 +8,63 @@
 import SwiftUI
 
 struct AuthenticationScreen: View {
+    
+    let updateAuthStatus: (Bool) -> Void
+    
     var body: some View {
-        ZStack {
-            Color("Background").ignoresSafeArea()
-            
-            VStack {
-                Spacer()
+        NavigationStack {
+            ZStack {
+                Color("Background").ignoresSafeArea()
                 
-                Image("Logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(40)
-                
-                NavigationLink {
-                    LoginScreen()
-                } label: {
-                    ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
-                        .padding(.bottom)
-                }
-                
-                NavigationLink {
-                    RegisterScreen()
-                } label: {
-                    ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
-                        .padding(.bottom)
-                }
-                
-                Text("OR")
-                    .font(.custom("Montserrat", size: 18))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("DarkGreen"))
-                    .padding(.bottom)
-                
-                Button {
-                    print("guest")
-                } label: {
-                    Text("Login as guest")
-                        .font(.custom("Montserrat", size: 20))
-                        .fontWeight(.semibold)
+                VStack {
+                    Spacer()
+                    
+                    Image("Logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(40)
+                    
+                    NavigationLink {
+                        LoginScreen(updateAuthStatus: updateAuthStatus)
+                            .navigationTitle("Login")
+                    } label: {
+                        ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                            .padding(.bottom)
+                    }
+                    
+                    NavigationLink {
+                        RegisterScreen()
+                            .navigationTitle("Register")
+                    } label: {
+                        ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
+                            .padding(.bottom)
+                    }
+                    
+                    Text("OR")
+                        .font(.custom("Montserrat", size: 18))
+                        .fontWeight(.medium)
                         .foregroundColor(Color("DarkGreen"))
-                        .underline()
+                        .padding(.bottom)
+                    
+                    Button {
+                        updateAuthStatus(true)
+                    } label: {
+                        Text("Login as guest")
+                            .font(.custom("Montserrat", size: 20))
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color("DarkGreen"))
+                            .underline()
+                    }
+                    .padding(.bottom)
                 }
-                .padding(.bottom)
             }
         }
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 
 struct AuthenticationScreen_Previews: PreviewProvider {
     static var previews: some View {
-        AuthenticationScreen()
+        AuthenticationScreen() { _ in print("auth status updated") }
     }
 }

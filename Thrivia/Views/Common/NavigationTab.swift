@@ -9,9 +9,14 @@ import SwiftUI
 
 struct NavigationTab: View {
     
-    @State var navigationTitle = "Progress"
+    @State var navigationTitle = "Alcohol"
+    @State var isAuthenticated = false
     
-    init(navigationTitle: String = "Progress") {
+    func updateAuthStatus(authStatus: Bool) {
+        isAuthenticated = authStatus
+    }
+    
+    init(navigationTitle: String = "Alcohol") {
         self.navigationTitle = navigationTitle
         
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.init(Color("DarkGreen"))]
@@ -19,18 +24,22 @@ struct NavigationTab: View {
     
     var body: some View {
         TabView(selection: $navigationTitle) {
-            ProgressScreen()
-                .tabItem {
-                    Label("Progress", systemImage: "chart.bar.fill")
-                }
-                .tag("Progress")
+            if isAuthenticated {
+                ProgressScreen()
+                    .tabItem {
+                        Label("Progress", systemImage: "chart.bar.fill")
+                    }
+                    .tag("Alcohol")
+            } else {
+                AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+            }
             
             ProfileScreen()
                 .tabItem {
                     Label("Profile", systemImage: "person.fill")
                 }
                 .tag("Profile")
-
+            
             ChatsScreen()
                 .tabItem {
                     Label("Chats", systemImage: "message.fill")
@@ -40,7 +49,7 @@ struct NavigationTab: View {
         .accentColor(Color("Green"))
         .navigationBarBackButtonHidden(true)
         .navigationTitle(navigationTitle)
-        .navigationBarHidden(navigationTitle == "Progress")
+        .navigationBarTitleDisplayMode(.automatic)
     }
 }
 
