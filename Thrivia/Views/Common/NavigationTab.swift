@@ -11,6 +11,12 @@ struct NavigationTab: View {
     
     @State var navigationTitle = "Progress"
     
+    init(navigationTitle: String = "Progress") {
+        self.navigationTitle = navigationTitle
+        
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.init(Color("DarkGreen"))]
+    }
+    
     var body: some View {
         TabView(selection: $navigationTitle) {
             ProgressScreen()
@@ -31,12 +37,10 @@ struct NavigationTab: View {
                 }
                 .tag("Chats")
         }
-        .onChange(of: navigationTitle, perform: { newValue in
-            print(newValue)
-        })
         .accentColor(Color("Green"))
         .navigationBarBackButtonHidden(true)
         .navigationTitle(navigationTitle)
+        .navigationBarHidden(navigationTitle == "Progress")
     }
 }
 
