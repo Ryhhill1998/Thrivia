@@ -12,6 +12,7 @@ struct ProfileScreen: View {
         ZStack {
             Color("Background").ignoresSafeArea()
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

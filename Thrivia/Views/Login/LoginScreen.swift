@@ -51,7 +51,7 @@ struct LoginScreen: View {
                 }
             }
             .navigationDestination(isPresented: $ready) {
-                ProgressScreen()
+                NavigationTab()
             }
         }
     }

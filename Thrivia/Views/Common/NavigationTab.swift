@@ -8,24 +8,35 @@
 import SwiftUI
 
 struct NavigationTab: View {
+    
+    @State var navigationTitle = "Progress"
+    
     var body: some View {
-        TabView {
+        TabView(selection: $navigationTitle) {
             ProgressScreen()
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar.fill")
                 }
+                .tag("Progress")
             
             ProfileScreen()
                 .tabItem {
                     Label("Profile", systemImage: "person.fill")
                 }
+                .tag("Profile")
 
             ChatsScreen()
                 .tabItem {
                     Label("Chats", systemImage: "message.fill")
                 }
+                .tag("Chats")
         }
+        .onChange(of: navigationTitle, perform: { newValue in
+            print(newValue)
+        })
         .accentColor(Color("Green"))
+        .navigationBarBackButtonHidden(true)
+        .navigationTitle(navigationTitle)
     }
 }
 

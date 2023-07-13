@@ -12,6 +12,8 @@ struct ChatsScreen: View {
         ZStack {
             Color("Background").ignoresSafeArea()
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationTitle("Chats")
     }
 }
 
