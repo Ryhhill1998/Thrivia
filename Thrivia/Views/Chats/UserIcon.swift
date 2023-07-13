@@ -8,17 +8,31 @@
 import SwiftUI
 
 struct UserIcon: View {
+    
+    let size: String
+    let borderColour: Color
+    
+    var width: CGFloat {
+        if size == "large" {
+            return 70.0
+        } else if size == "medium" {
+            return 50.0
+        }
+        
+        return 50.0
+    }
+    
     var body: some View {
         Text("Z")
             .foregroundColor(.white)
             .font(.custom("Montserrat", size: 25))
             .bold()
-            .frame(width: 75.0, height: 75.0)
+            .frame(width: width, height: width)
             .background(.purple)
-            .cornerRadius(37.5)
+            .cornerRadius(width / 2)
             .overlay {
                 Circle()
-                    .stroke(.white, lineWidth: 4)
+                    .stroke(borderColour, lineWidth: 4)
             }
     }
 }
@@ -28,7 +42,7 @@ struct UserIcon_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            UserIcon()
+            UserIcon(size: "large", borderColour: .white)
         }
     }
 }
