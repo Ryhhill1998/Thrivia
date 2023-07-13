@@ -21,6 +21,7 @@
 		5BC6FDFB2A5EB372006459F8 /* ChatsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDFA2A5EB372006459F8 /* ChatsScreen.swift */; };
 		5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDFC2A5EB399006459F8 /* ProfileScreen.swift */; };
 		5BC6FDFF2A5EB3A6006459F8 /* ProgressScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */; };
+		5BC6FE032A5FDEBD006459F8 /* NavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE022A5FDEBD006459F8 /* NavigationButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		5BC6FDFA2A5EB372006459F8 /* ChatsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsScreen.swift; sourceTree = "<group>"; };
 		5BC6FDFC2A5EB399006459F8 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressScreen.swift; sourceTree = "<group>"; };
+		5BC6FE022A5FDEBD006459F8 /* NavigationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 		5BC6FDEC2A5EA31E006459F8 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				5BC6FE022A5FDEBD006459F8 /* NavigationButton.swift */,
 				5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */,
 				5BC6FDF32A5EA84E006459F8 /* InputField.swift */,
 				5BC6FDF72A5EADA8006459F8 /* NavigationTab.swift */,
@@ -255,6 +258,7 @@
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
+				5BC6FE032A5FDEBD006459F8 /* NavigationButton.swift in Sources */,
 				5BC6FDFB2A5EB372006459F8 /* ChatsScreen.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
 				5BC6FDF82A5EADA8006459F8 /* NavigationTab.swift in Sources */,

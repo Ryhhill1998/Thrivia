@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct RegisterScreen: View {
+    
+    @State var ready = false
+    
+    func registerClicked() {
+        ready = true
+    }
+    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
@@ -31,7 +38,7 @@ struct RegisterScreen: View {
                 InputField(placeholder: "Confirm password") { print($0) }
                     .padding(.bottom)
                 
-                ActionButton(text: "Register", fontColour: .white, backgroundColour: Color("Green"))
+                ActionButton(text: "Register", fontColour: .white, backgroundColour: Color("Green"), action: registerClicked)
                     .padding(.bottom)
                 
                 
@@ -48,6 +55,9 @@ struct RegisterScreen: View {
                             .foregroundColor(Color("DarkGreen"))
                     }
                 }
+            }
+            .navigationDestination(isPresented: $ready) {
+                ProgressScreen()
             }
         }
     }

@@ -20,11 +20,19 @@ struct AuthenticationScreen: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(40)
                 
-                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
-                    .padding(.bottom)
+                NavigationLink {
+                    LoginScreen()
+                } label: {
+                    NavigationButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                        .padding(.bottom)
+                }
                 
-                ActionButton(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
-                    .padding(.bottom)
+                NavigationLink {
+                    RegisterScreen()
+                } label: {
+                    NavigationButton(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
+                        .padding(.bottom)
+                }
                 
                 Text("OR")
                     .font(.custom("Montserrat", size: 18))

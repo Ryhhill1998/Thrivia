@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct LoginScreen: View {
+    
+    @State var ready = false
+    
+    func loginClicked() {
+        ready = true
+    }
+    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
@@ -25,9 +32,9 @@ struct LoginScreen: View {
                 InputField(placeholder: "Password") { print($0) }
                     .padding(.bottom)
                 
-                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: loginClicked)
                     .padding(.bottom)
-                
+
                 
                 HStack(spacing: 5.0) {
                     Text("Don't have an account?")
@@ -42,6 +49,9 @@ struct LoginScreen: View {
                             .foregroundColor(Color("DarkGreen"))
                     }
                 }
+            }
+            .navigationDestination(isPresented: $ready) {
+                ProgressScreen()
             }
         }
     }

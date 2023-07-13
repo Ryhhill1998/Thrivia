@@ -8,29 +8,31 @@
 import SwiftUI
 
 struct ActionButton: View {
+    
     let text: String
     let fontColour: Color
     let backgroundColour: Color
+    let action: () -> Void
     
     var body: some View {
         Button {
-            print("logging in")
+            action()
         } label: {
             Text(text)
                 .font(.custom("Montserrat", size: 22))
                 .padding()
                 .bold()
+                .foregroundColor(fontColour)
+                .frame(maxWidth: .infinity)
+                .background(backgroundColour)
+                .cornerRadius(10)
+                .padding(.horizontal)
         }
-        .foregroundColor(fontColour)
-        .frame(maxWidth: .infinity)
-        .background(backgroundColour)
-        .cornerRadius(10)
-        .padding(.horizontal)
     }
 }
 
 struct ActionButton_Previews: PreviewProvider {
     static var previews: some View {
-        ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+        ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green")) { print("button clicked") }
     }
 }

@@ -10,17 +10,17 @@ import SwiftUI
 struct NavigationTab: View {
     var body: some View {
         TabView {
-            LoginScreen()
+            ProgressScreen()
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar.fill")
                 }
             
-            Text("Search")
+            ProfileScreen()
                 .tabItem {
                     Label("Profile", systemImage: "person.fill")
                 }
 
-            Text("Settings")
+            ChatsScreen()
                 .tabItem {
                     Label("Chats", systemImage: "message.fill")
                 }
