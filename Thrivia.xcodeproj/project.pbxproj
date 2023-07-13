@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
 		5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DE2A5027FC001F92B8 /* ContentView.swift */; };
 		5B8F31E12A5027FE001F92B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E02A5027FE001F92B8 /* Assets.xcassets */; };
@@ -22,9 +23,12 @@
 		5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDFC2A5EB399006459F8 /* ProfileScreen.swift */; };
 		5BC6FDFF2A5EB3A6006459F8 /* ProgressScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */; };
 		5BC6FE052A5FE1B1006459F8 /* ButtonAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */; };
+		5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE062A60508C006459F8 /* TimeDisplay.swift */; };
+		5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE082A6050DB006459F8 /* UserIcon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThriviaApp.swift; sourceTree = "<group>"; };
 		5B8F31DE2A5027FC001F92B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -42,6 +46,8 @@
 		5BC6FDFC2A5EB399006459F8 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressScreen.swift; sourceTree = "<group>"; };
 		5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAppearance.swift; sourceTree = "<group>"; };
+		5BC6FE062A60508C006459F8 /* TimeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplay.swift; sourceTree = "<group>"; };
+		5BC6FE082A6050DB006459F8 /* UserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIcon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */,
+				5BC6FE062A60508C006459F8 /* TimeDisplay.swift */,
 			);
 			path = Progress;
 			sourceTree = "<group>";
@@ -167,6 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				5BC6FDFA2A5EB372006459F8 /* ChatsScreen.swift */,
+				5BC6FE082A6050DB006459F8 /* UserIcon.swift */,
+				5B8186C82A60552A0093853D /* MessagePreview.swift */,
 			);
 			path = Chats;
 			sourceTree = "<group>";
@@ -254,9 +263,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BC6FE052A5FE1B1006459F8 /* ButtonAppearance.swift in Sources */,
+				5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */,
+				5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */,
 				5BC6FDFF2A5EB3A6006459F8 /* ProgressScreen.swift in Sources */,
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
+				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
 				5BC6FDFB2A5EB372006459F8 /* ChatsScreen.swift in Sources */,

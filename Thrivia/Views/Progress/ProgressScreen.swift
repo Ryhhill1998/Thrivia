@@ -9,12 +9,6 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
-    init() {
-        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.init(Color("DarkGreen"))]
-        
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.init(Color("DarkGreen"))]
-    }
-    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -24,7 +18,6 @@ struct ProgressScreen: View {
                     Text("Tracked since 27 Jun 2023")
                         .font(.custom("Montserrat", size: 15))
                         .fontWeight(.medium)
-                        .foregroundColor(Color("DarkGreen"))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading)
                     
@@ -34,13 +27,11 @@ struct ProgressScreen: View {
                                 Text("Current run")
                                     .font(.custom("Montserrat", size: 20))
                                     .bold()
-                                    .foregroundColor(Color("DarkGreen"))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 Text("Thriving since 27 Jun 2023")
                                     .font(.custom("Montserrat", size: 15))
                                     .fontWeight(.medium)
-                                    .foregroundColor(Color("DarkGreen"))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             
@@ -78,26 +69,5 @@ struct ProgressScreen: View {
 struct ProgressScreen_Previews: PreviewProvider {
     static var previews: some View {
         ProgressScreen()
-    }
-}
-
-struct TimeDisplay: View {
-    
-    let value: Int
-    let units: String
-    
-    var body: some View {
-        VStack(spacing: 7.0) {
-            Text("\(value)")
-                .font(.custom("Montserrat", size: 25))
-                .bold()
-                .foregroundColor(Color("DarkGreen"))
-            
-            Text(units)
-                .font(.custom("Montserrat", size: 15))
-                .fontWeight(.semibold)
-                .foregroundColor(Color("DarkGreen"))
-        }
-        .frame(maxWidth: .infinity)
     }
 }
