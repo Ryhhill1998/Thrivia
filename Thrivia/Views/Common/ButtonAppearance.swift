@@ -1,13 +1,13 @@
 //
-//  NavigationButton.swift
+//  ButtonAppearance.swift
 //  Thrivia
 //
-//  Created by Ryan Henzell-Hill on 12/07/2023.
+//  Created by Ryan Henzell-Hill on 13/07/2023.
 //
 
 import SwiftUI
 
-struct NavigationButton: View {
+struct ButtonAppearance: View {
     
     let text: String
     let fontColour: Color
@@ -26,8 +26,8 @@ struct NavigationButton: View {
     }
 }
 
-struct NavigationButton_Previews: PreviewProvider {
+struct ButtonAppearance_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+        ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
     }
 }

@@ -23,14 +23,14 @@ struct AuthenticationScreen: View {
                 NavigationLink {
                     LoginScreen()
                 } label: {
-                    NavigationButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                    ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
                         .padding(.bottom)
                 }
                 
                 NavigationLink {
                     RegisterScreen()
                 } label: {
-                    NavigationButton(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
+                    ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
                         .padding(.bottom)
                 }
                 
