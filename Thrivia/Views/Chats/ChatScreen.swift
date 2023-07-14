@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ChatScreen: View {
+    
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
@@ -17,7 +20,12 @@ struct ChatScreen: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Image(systemName: "chevron.left")
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+
             }
             
             ToolbarItem(placement: .navigationBarLeading) {
