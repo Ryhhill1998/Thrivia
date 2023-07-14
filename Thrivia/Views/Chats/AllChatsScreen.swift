@@ -15,6 +15,17 @@ struct AllChatsScreen: View {
         chatIsLoaded = true
     }
     
+    func loadAllChats() {
+        print("loading all chats")
+    }
+    
+    init(chatIsLoaded: Bool = false) {
+        self.chatIsLoaded = chatIsLoaded
+        
+        // will instead be done with initialising an observable object - ViewModel
+        loadAllChats()
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
