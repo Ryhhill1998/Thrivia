@@ -87,7 +87,7 @@ struct AllChatsScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatIsLoaded) {
-                ChatScreen(iconColour: selectedIconColour!, name: selectedUserName!)
+                ChatScreen(iconColour: selectedIconColour ?? Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: selectedUserName ?? "ZigzagZebra24")
             }
         }
     }
