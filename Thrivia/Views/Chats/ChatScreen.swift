@@ -28,7 +28,7 @@ struct ChatScreen: View {
                     ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
                         MessageBubble(message: message)
                             .padding(.bottom, 5.0)
-                            .padding(.top, index == 0 ? 10.0 : 0)
+                            .padding(.top, index == 0 ? 15.0 : 0)
                     }
                 }
                 .background(.white)
