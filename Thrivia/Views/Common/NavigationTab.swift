@@ -41,7 +41,7 @@ struct NavigationTab: View {
                 }
                 .tag("Profile")
             
-            ChatsScreen()
+            AllChatsScreen()
                 .tabItem {
                     Label("Chats", systemImage: "message.fill")
                 }

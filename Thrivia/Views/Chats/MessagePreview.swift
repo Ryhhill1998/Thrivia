@@ -10,7 +10,7 @@ import SwiftUI
 struct MessagePreview: View {
     var body: some View {
         HStack(spacing: 15.0) {
-            UserIcon(size: "medium", borderColour: .purple)
+            UserIcon(size: "medium", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24")
             
             VStack(alignment: .leading, spacing: 5) {
                 Text("ZigzagZebra24")

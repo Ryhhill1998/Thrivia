@@ -11,6 +11,8 @@ struct UserIcon: View {
     
     let size: String
     let borderColour: Color
+    let backgroundColour: Color
+    let name: String
     
     var width: CGFloat {
         if size == "large" {
@@ -22,13 +24,17 @@ struct UserIcon: View {
         return 50.0
     }
     
+    var initial: String {
+        return "\(name.prefix(1))"
+    }
+    
     var body: some View {
-        Text("Z")
+        Text(initial)
             .foregroundColor(.white)
             .font(.custom("Montserrat", size: 25))
             .bold()
             .frame(width: width, height: width)
-            .background(.purple)
+            .background(backgroundColour)
             .cornerRadius(width / 2)
             .overlay {
                 Circle()
@@ -42,7 +48,7 @@ struct UserIcon_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            UserIcon(size: "large", borderColour: .white)
+            UserIcon(size: "large", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24")
         }
     }
 }
