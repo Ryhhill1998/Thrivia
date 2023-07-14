@@ -73,6 +73,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B5411CA2A617AC700A024E8 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				5B5411C02A61389F00A024E8 /* ChatScreen.swift */,
+				5B5411C42A6159EC00A024E8 /* MessageBubble.swift */,
+				5B5411C22A61566C00A024E8 /* MessageField.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		5B8F31D02A5027FC001F92B8 = {
 			isa = PBXGroup;
 			children = (
@@ -124,7 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				5BC6FDEC2A5EA31E006459F8 /* Common */,
-				5BC6FDE92A5EA2C9006459F8 /* Chats */,
+				5BC6FDE92A5EA2C9006459F8 /* AllChats */,
 				5BC6FDE82A5EA2BD006459F8 /* Profile */,
 				5BC6FDE72A5EA2B4006459F8 /* Progress */,
 				5BC6FDE62A5EA298006459F8 /* Register */,
@@ -183,18 +193,16 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		5BC6FDE92A5EA2C9006459F8 /* Chats */ = {
+		5BC6FDE92A5EA2C9006459F8 /* AllChats */ = {
 			isa = PBXGroup;
 			children = (
+				5B5411CA2A617AC700A024E8 /* Chat */,
 				5BC6FDFA2A5EB372006459F8 /* AllChatsScreen.swift */,
 				5BC6FE082A6050DB006459F8 /* UserIcon.swift */,
 				5B8186C82A60552A0093853D /* MessagePreview.swift */,
 				5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */,
-				5B5411C02A61389F00A024E8 /* ChatScreen.swift */,
-				5B5411C22A61566C00A024E8 /* MessageField.swift */,
-				5B5411C42A6159EC00A024E8 /* MessageBubble.swift */,
 			);
-			path = Chats;
+			path = AllChats;
 			sourceTree = "<group>";
 		};
 		5BC6FDEC2A5EA31E006459F8 /* Common */ = {

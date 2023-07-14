@@ -17,6 +17,9 @@ struct ChatScreen: View {
         Message(id: "3", content: "That's my favourite colour too!", sent: true, timestamp: Date())
     ]
     
+    let iconColour: Color
+    let name: String
+    
     func sendPressed(text: String) {
         messages.append(Message(id: "\(messages.count + 1)", content: text, sent: true, timestamp: Date()))
     }
@@ -52,10 +55,10 @@ struct ChatScreen: View {
     
             ToolbarItem(placement: .navigationBarLeading) {
                 HStack(spacing: 10.0) {
-                    UserIcon(size: "small", borderColour: .white, backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
+                    UserIcon(size: "small", borderColour: .white, backgroundColour: iconColour, name: name)
                     
                     VStack(alignment: .leading, spacing: 1.0) {
-                        Text("ZigzagZebra24")
+                        Text(name)
                             .font(.custom("Montserrat", size: 13))
                             .foregroundColor(Color("Black"))
                             .fontWeight(.medium)
@@ -79,6 +82,6 @@ struct ChatScreen: View {
 
 struct ChatScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ChatScreen()
+        ChatScreen(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
     }
 }

@@ -11,7 +11,13 @@ struct AllChatsScreen: View {
     
     @State private var chatIsLoaded = false
     
-    func loadChat() {
+    @State var selectedIconColour: Color?
+    @State var selectedUserName: String?
+    
+    func loadChat(iconColour: Color, name: String) {
+        selectedIconColour = iconColour
+        selectedUserName = name
+        
         chatIsLoaded = true
     }
     
@@ -36,19 +42,19 @@ struct AllChatsScreen: View {
                         ScrollView(.horizontal) {
                             HStack(spacing: 15.0) {
                                 Button {
-                                    loadChat()
+                                    loadChat(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
                                 } label: {
                                     AvailableUser(backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
                                 }
                                 
                                 Button {
-                                    loadChat()
+                                    loadChat(iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
                                 } label: {
                                     AvailableUser(backgroundColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
                                 }
                                 
                                 Button {
-                                    loadChat()
+                                    loadChat(iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
                                 } label: {
                                     AvailableUser(backgroundColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
                                 }
@@ -58,19 +64,19 @@ struct AllChatsScreen: View {
                         }
                         
                         Button {
-                            loadChat()
+                            loadChat(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
                         } label: {
                             MessagePreview(name: "ZigzagZebra24", backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), lastMessage: "That’s what thrivia is here for! What would you like to talk about?")
                         }
                         
                         Button {
-                            loadChat()
+                            loadChat(iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
                         } label: {
                             MessagePreview(name: "CoolCucumber8080", backgroundColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), lastMessage: "I’ve never heard of that before but it sounds cool!")
                         }
                         
                         Button {
-                            loadChat()
+                            loadChat(iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
                         } label: {
                             MessagePreview(name: "BoxingGiraffe99", backgroundColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), lastMessage: "Hi there! Are you okay?")
                         }
@@ -81,7 +87,7 @@ struct AllChatsScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatIsLoaded) {
-                ChatScreen()
+                ChatScreen(iconColour: selectedIconColour!, name: selectedUserName!)
             }
         }
     }
