@@ -9,7 +9,16 @@ import SwiftUI
 
 struct CreateCounterScreen: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @State private var currentDate = Date.now
+    
+    @State var textFieldText = ""
+    
+    func createCounter() {
+        print("Creating counter")
+        presentationMode.wrappedValue.dismiss()
+    }
     
     var body: some View {
         ZStack {
@@ -28,9 +37,13 @@ struct CreateCounterScreen: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                VStack(alignment: .leading, spacing: 15.0) {
-                    Text("Counter name")
+                VStack(alignment: .leading, spacing: 0) {
+                    TextField("Counter name", text: $textFieldText)
+                        .padding(.vertical, 15)
+                        .background(.white)
+                        .cornerRadius(10)
                         .font(.custom("Montserrat", size: 18))
+                        .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
                     
                     Divider()
@@ -43,6 +56,7 @@ struct CreateCounterScreen: View {
                             .foregroundColor(Color("Black"))
                             .fontWeight(.semibold)
                     }
+                    .padding(.vertical, 15)
                     
                     Divider()
                         .frame(height: 1)
@@ -54,19 +68,25 @@ struct CreateCounterScreen: View {
                             .foregroundColor(Color("Black"))
                             .fontWeight(.semibold)
                     }
+                    .padding(.vertical, 15)
                 }
-                .padding()
+                .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(.white)
                 .cornerRadius(10)
                 .padding()
                 
                 ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    print("creating counter")
+                    createCounter()
                 }
+                
+                Spacer()
             }
+            .padding(.top, 30)
         }
         .navigationTitle("Create a counter")
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

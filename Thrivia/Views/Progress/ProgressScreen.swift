@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
+    @State var counterNotCreated: Bool
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -65,12 +67,15 @@ struct ProgressScreen: View {
             .navigationTitle("Alcohol")
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
+            .navigationDestination(isPresented: $counterNotCreated) {
+                CreateCounterScreen()
+            }
         }
     }
 }
 
 struct ProgressScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressScreen()
+        ProgressScreen(counterNotCreated: true)
     }
 }
