@@ -8,16 +8,21 @@
 import SwiftUI
 
 struct MessagePreview: View {
+    
+    let name: String
+    let backgroundColour: Color
+    let lastMessage: String
+    
     var body: some View {
         HStack(spacing: 15.0) {
-            UserIcon(size: "medium", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24")
+            UserIcon(size: "medium", borderColour: .white, backgroundColour: backgroundColour, name: name)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text("ZigzagZebra24")
+                Text(name)
                     .font(.custom("Montserrat", size: 17))
                     .fontWeight(.semibold)
                 
-                Text("That’s what thrivia is here for! What would you like to talk about?")
+                Text(lastMessage)
                     .font(.custom("Montserrat", size: 13))
                     .lineLimit(1)
             }
@@ -35,7 +40,7 @@ struct MessagePreview_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            MessagePreview()
+            MessagePreview(name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?")
         }
     }
 }

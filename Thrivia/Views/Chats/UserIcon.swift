@@ -24,6 +24,16 @@ struct UserIcon: View {
         return 50.0
     }
     
+    var fontSize: CGFloat {
+        if size == "large" {
+            return 25.0
+        } else if size == "medium" {
+            return 20.0
+        }
+        
+        return 25.0
+    }
+    
     var initial: String {
         return "\(name.prefix(1))"
     }
@@ -31,7 +41,7 @@ struct UserIcon: View {
     var body: some View {
         Text(initial)
             .foregroundColor(.white)
-            .font(.custom("Montserrat", size: 25))
+            .font(.custom("Montserrat", size: fontSize))
             .bold()
             .frame(width: width, height: width)
             .background(backgroundColour)
@@ -48,7 +58,7 @@ struct UserIcon_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            UserIcon(size: "large", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24")
+            UserIcon(size: "medium", borderColour: .purple, backgroundColour: .purple, name: "ZigzagZebra24")
         }
     }
 }
