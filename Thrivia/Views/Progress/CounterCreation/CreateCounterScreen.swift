@@ -46,9 +46,7 @@ struct CreateCounterScreen: View {
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
                     
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color("Black").opacity(0.2))
+                    LineSeparator()
                     
                     DatePicker(selection: $currentDate, in: ...Date.now, displayedComponents: .date) {
                         Text("Start date")
@@ -58,9 +56,7 @@ struct CreateCounterScreen: View {
                     }
                     .padding(.vertical, 15)
                     
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color("Black").opacity(0.2))
+                    LineSeparator()
                     
                     DatePicker(selection: $currentDate, in: ...Date.now, displayedComponents: .hourAndMinute) {
                         Text("Start time")
