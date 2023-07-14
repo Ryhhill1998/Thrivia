@@ -15,7 +15,9 @@ struct UserIcon: View {
     let name: String
     
     var width: CGFloat {
-        if size == "large" {
+        if size == "xLarge" {
+            return 100.0
+        } else if size == "large" {
             return 70.0
         } else if size == "medium" {
             return 50.0
@@ -27,27 +29,21 @@ struct UserIcon: View {
     }
     
     var fontSize: CGFloat {
-        if size == "large" {
-            return 25.0
+        if size == "xLarge" {
+            return 40
+        } else if size == "large" {
+            return 28
         } else if size == "medium" {
-            return 20.0
+            return 22
         } else if size == "small" {
-            return 15.0
+            return 16.0
         }
         
         return 25.0
     }
     
     var borderWidth: CGFloat {
-        if size == "large" {
-            return 4.0
-        } else if size == "medium" {
-            return 3.5
-        } else if size == "small" {
-            return 2.5
-        }
-        
-        return 3.0
+        return width / 18
     }
     
     var initial: String {
@@ -74,7 +70,7 @@ struct UserIcon_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            UserIcon(size: "small", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24")
+            UserIcon(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24")
         }
     }
 }

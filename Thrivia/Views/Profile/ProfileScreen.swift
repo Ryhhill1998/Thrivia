@@ -11,7 +11,15 @@ struct ProfileScreen: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
+            
+            VStack {
+                ZStack {
+                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24", overlayImage: Image(systemName: "plus"), overlayColour: Color("LightGreen"))
+                }
+            }
         }
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
