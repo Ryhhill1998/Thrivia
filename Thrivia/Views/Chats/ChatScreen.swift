@@ -15,7 +15,15 @@ struct ChatScreen: View {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            
+            VStack {
+                ScrollView {
+                    
+                }
+                
+                MessageField { message in
+                    print(message)
+                }
+            }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -27,7 +35,7 @@ struct ChatScreen: View {
                 }
 
             }
-            
+    
             ToolbarItem(placement: .navigationBarLeading) {
                 HStack(spacing: 10.0) {
                     UserIcon(size: "small", borderColour: .white, backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
@@ -46,6 +54,8 @@ struct ChatScreen: View {
                 Image(systemName: "ellipsis")
             }
         }
+        .toolbarBackground(Color("Background"), for: .navigationBar)
+        .toolbar(.visible, for: .navigationBar)
     }
 }
 

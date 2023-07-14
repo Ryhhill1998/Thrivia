@@ -13,7 +13,7 @@ struct InputField: View {
     let sendPressed: (String) -> Void
     
     var body: some View {
-        CustomTextField(placeholder: placeholder, sendPressed: sendPressed)
+        CustomInputTextField(placeholder: placeholder, sendPressed: sendPressed)
     }
 }
 
@@ -27,7 +27,7 @@ struct InputField_Previews: PreviewProvider {
     }
 }
 
-struct CustomTextField: View {
+struct CustomInputTextField: View {
     @State var textFieldText: String = ""
     
     let placeholder: String

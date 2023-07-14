@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5B5411C12A61389F00A024E8 /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C02A61389F00A024E8 /* ChatScreen.swift */; };
+		5B5411C32A61566C00A024E8 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C22A61566C00A024E8 /* MessageField.swift */; };
 		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		5B5411C02A61389F00A024E8 /* ChatScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
+		5B5411C22A61566C00A024E8 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveUserIcon.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,6 +184,7 @@
 				5B8186C82A60552A0093853D /* MessagePreview.swift */,
 				5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */,
 				5B5411C02A61389F00A024E8 /* ChatScreen.swift */,
+				5B5411C22A61566C00A024E8 /* MessageField.swift */,
 			);
 			path = Chats;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
+				5B5411C32A61566C00A024E8 /* MessageField.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
 				5BC6FDFB2A5EB372006459F8 /* AllChatsScreen.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
