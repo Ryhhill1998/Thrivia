@@ -9,17 +9,20 @@ import SwiftUI
 
 struct ProfileScreen: View {
     var body: some View {
-        ZStack {
-            Color("Background").ignoresSafeArea()
-            
-            VStack {
-                ZStack {
+        NavigationStack {
+            ZStack {
+                Color("Background").ignoresSafeArea()
+                
+                VStack {
                     UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24", overlayImage: Image(systemName: "plus"), overlayColour: Color("LightGreen"))
+                    
+                    Spacer()
                 }
+                .padding(.top, 20.0)
             }
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle("Profile")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

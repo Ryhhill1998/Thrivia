@@ -210,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				5B5411CA2A617AC700A024E8 /* Chat */,
+				5BC6FE082A6050DB006459F8 /* UserIcon.swift */,
 				5BC6FDFA2A5EB372006459F8 /* AllChatsScreen.swift */,
 				5B8186C82A60552A0093853D /* MessagePreview.swift */,
 				5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */,
@@ -220,7 +221,6 @@
 		5BC6FDEC2A5EA31E006459F8 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				5BC6FE082A6050DB006459F8 /* UserIcon.swift */,
 				5BC6FDF12A5EA7E5006459F8 /* ActionButton.swift */,
 				5BC6FDF32A5EA84E006459F8 /* InputField.swift */,
 				5BC6FDF72A5EADA8006459F8 /* NavigationTab.swift */,
