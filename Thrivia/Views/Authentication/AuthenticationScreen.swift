@@ -24,6 +24,8 @@ struct AuthenticationScreen: View {
                         .aspectRatio(contentMode: .fit)
                         .padding(40)
                     
+                    Spacer()
+                    
                     NavigationLink {
                         LoginScreen(updateAuthStatus: updateAuthStatus)
                     } label: {
@@ -41,6 +43,7 @@ struct AuthenticationScreen: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .accentColor(Color("Black"))
     }
 }
 

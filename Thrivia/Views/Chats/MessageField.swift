@@ -40,9 +40,9 @@ struct CustomMessageTextField: View {
                     .frame(height: 35)
                     .padding(.horizontal)
                     .background(.white)
-                    .cornerRadius(10)
+                    .cornerRadius(15)
                     .font(.headline)
-                    .foregroundColor(Color(.black))
+                    .foregroundColor(Color("Black"))
             }
             
             Button {
@@ -55,7 +55,7 @@ struct CustomMessageTextField: View {
                     .resizable()
                     .frame(width: 35, height: 35)
                     .foregroundColor(Color("Green"))
-                    .background(Color(.white))
+                    .background(Color("White"))
                     .cornerRadius(17.5)
                     .overlay {
                         Circle()

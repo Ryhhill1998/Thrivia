@@ -56,7 +56,7 @@ struct UserIcon: View {
     
     var body: some View {
         Text(initial)
-            .foregroundColor(.white)
+            .foregroundColor(Color("White"))
             .font(.custom("Montserrat", size: fontSize))
             .bold()
             .frame(width: width, height: width)

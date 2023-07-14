@@ -21,12 +21,12 @@ struct MessagePreview: View {
                 Text(name)
                     .font(.custom("Montserrat", size: 17))
                     .fontWeight(.semibold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("Black"))
                 
                 Text(lastMessage)
                     .font(.custom("Montserrat", size: 13))
                     .lineLimit(1)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("Black"))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

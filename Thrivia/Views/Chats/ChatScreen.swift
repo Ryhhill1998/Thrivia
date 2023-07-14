@@ -45,6 +45,7 @@ struct ChatScreen: View {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
+                        .foregroundColor(Color("Black"))
                 }
 
             }
@@ -56,15 +57,18 @@ struct ChatScreen: View {
                     VStack(alignment: .leading, spacing: 1.0) {
                         Text("ZigzagZebra24")
                             .font(.custom("Montserrat", size: 13))
+                            .foregroundColor(Color("Black"))
                             .fontWeight(.medium)
                         Text("online")
                             .font(.custom("Montserrat", size: 11))
+                            .foregroundColor(Color("Black"))
                     }
                 }
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
                 Image(systemName: "ellipsis")
+                    .foregroundColor(Color("Black"))
             }
         }
         .toolbarBackground(Color("Background"), for: .navigationBar)
