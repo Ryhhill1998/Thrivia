@@ -18,6 +18,7 @@ struct ProgressScreen: View {
                     Text("Tracked since 27 Jun 2023")
                         .font(.custom("Montserrat", size: 15))
                         .fontWeight(.medium)
+                        .foregroundColor(Color("Black"))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading)
                     
@@ -26,11 +27,13 @@ struct ProgressScreen: View {
                             VStack(spacing: 5.0) {
                                 Text("Current run")
                                     .font(.custom("Montserrat", size: 20))
+                                    .foregroundColor(Color("Black"))
                                     .bold()
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 Text("Thriving since 27 Jun 2023")
                                     .font(.custom("Montserrat", size: 15))
+                                    .foregroundColor(Color("Black"))
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }

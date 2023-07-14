@@ -16,10 +16,12 @@ struct TimeDisplay: View {
         VStack(spacing: 7.0) {
             Text("\(value)")
                 .font(.custom("Montserrat", size: 25))
+                .foregroundColor(Color("Black"))
                 .bold()
             
             Text(units)
                 .font(.custom("Montserrat", size: 15))
+                .foregroundColor(Color("Black"))
                 .fontWeight(.semibold)
         }
         .frame(maxWidth: .infinity)
