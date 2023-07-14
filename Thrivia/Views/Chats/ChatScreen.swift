@@ -12,19 +12,20 @@ struct ChatScreen: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        ZStack {
-            Color("Background").ignoresSafeArea()
-            
+        VStack {
             VStack {
                 ScrollView {
                     
                 }
-                
-                MessageField { message in
-                    print(message)
-                }
+                .padding(.top, 10.0)
+                .background(.white)
+            }
+            
+            MessageField { message in
+                print(message)
             }
         }
+        .background(Color("Background"))
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
