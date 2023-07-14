@@ -38,7 +38,7 @@ struct AllChatsScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(spacing: 12.0) {
+                    VStack(spacing: 25.0) {
                         ScrollView(.horizontal) {
                             HStack(spacing: 15.0) {
                                 Button {
@@ -60,25 +60,28 @@ struct AllChatsScreen: View {
                                 }
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
+                            .padding(.horizontal)
+                            .padding(.top)
                         }
                         
-                        Button {
-                            loadChat(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
-                        } label: {
-                            MessagePreview(name: "ZigzagZebra24", backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), lastMessage: "That’s what thrivia is here for! What would you like to talk about?")
-                        }
-                        
-                        Button {
-                            loadChat(iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
-                        } label: {
-                            MessagePreview(name: "CoolCucumber8080", backgroundColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), lastMessage: "I’ve never heard of that before but it sounds cool!")
-                        }
-                        
-                        Button {
-                            loadChat(iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
-                        } label: {
-                            MessagePreview(name: "BoxingGiraffe99", backgroundColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), lastMessage: "Hi there! Are you okay?")
+                        VStack(spacing: 15.0) {
+                            Button {
+                                loadChat(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
+                            } label: {
+                                MessagePreview(name: "ZigzagZebra24", backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), lastMessage: "That’s what thrivia is here for! What would you like to talk about?")
+                            }
+                            
+                            Button {
+                                loadChat(iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
+                            } label: {
+                                MessagePreview(name: "CoolCucumber8080", backgroundColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), lastMessage: "I’ve never heard of that before but it sounds cool!")
+                            }
+                            
+                            Button {
+                                loadChat(iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
+                            } label: {
+                                MessagePreview(name: "BoxingGiraffe99", backgroundColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), lastMessage: "Hi there! Are you okay?")
+                            }
                         }
                     }
                 }

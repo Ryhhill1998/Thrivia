@@ -19,23 +19,18 @@ struct RegisterScreen: View {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 15.0) {
                 AppIcon()
                 
                 InputField(placeholder: "Email") { print($0) }
-                    .padding(.bottom)
                 
                 InputField(placeholder: "Username") { print($0) }
-                    .padding(.bottom)
                 
                 InputField(placeholder: "Password") { print($0) }
-                    .padding(.bottom)
                 
                 InputField(placeholder: "Confirm password") { print($0) }
-                    .padding(.bottom)
                 
                 ActionButton(text: "Register", fontColour: .white, backgroundColour: Color("Green"), action: registerClicked)
-                    .padding(.bottom)
                 
                 
                 HStack(spacing: 5.0) {

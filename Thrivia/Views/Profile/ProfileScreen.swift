@@ -13,7 +13,7 @@ struct ProfileScreen: View {
             ZStack {
                 Color("Background").ignoresSafeArea()
                 
-                VStack(spacing: 30.0) {
+                VStack(spacing: 25.0) {
                     UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24", overlayImage: Image(systemName: "plus"), overlayColour: Color("LightGreen"))
                     
                     VStack(spacing: 15.0) {
@@ -44,7 +44,7 @@ struct ProfileScreen: View {
                     
                     Spacer()
                 }
-                .padding(.top, 20.0)
+                .padding(.top)
             }
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)

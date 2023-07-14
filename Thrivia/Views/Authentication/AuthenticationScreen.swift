@@ -26,18 +26,18 @@ struct AuthenticationScreen: View {
                     
                     Spacer()
                     
-                    NavigationLink {
-                        LoginScreen(updateAuthStatus: updateAuthStatus)
-                    } label: {
-                        ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
-                            .padding(.bottom)
-                    }
-                    
-                    NavigationLink {
-                        RegisterScreen(updateAuthStatus: updateAuthStatus)
-                    } label: {
-                        ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
-                            .padding(.bottom)
+                    VStack(spacing: 15.0) {
+                        NavigationLink {
+                            LoginScreen(updateAuthStatus: updateAuthStatus)
+                        } label: {
+                            ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
+                        }
+                        
+                        NavigationLink {
+                            RegisterScreen(updateAuthStatus: updateAuthStatus)
+                        } label: {
+                            ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
+                        }
                     }
                 }
             }

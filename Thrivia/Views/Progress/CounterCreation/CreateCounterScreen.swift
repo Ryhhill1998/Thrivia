@@ -11,12 +11,16 @@ struct CreateCounterScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @State private var currentDate = Date.now
+    @State private var selectedDate = Date.now
+    @State private var selectedTime = Date.now
     
     @State var textFieldText = ""
     
     func createCounter() {
         print("Creating counter")
+        print("Selected date: \(selectedDate)")
+        print("Selected time: \(selectedTime.formatted(date: .omitted, time: .complete))")
+        print(Calendar.current.component(.day, from: selectedDate))
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -24,7 +28,7 @@ struct CreateCounterScreen: View {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            VStack(spacing: 10.0) {
+            VStack(spacing: 25) {
                 HStack {
                     TimeDisplay(value: 0, units: "Days")
                     TimeDisplay(value: 0, units: "Hours")
@@ -48,7 +52,7 @@ struct CreateCounterScreen: View {
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $currentDate, in: ...Date.now, displayedComponents: .date) {
+                    DatePicker(selection: $selectedDate, in: ...Date.now, displayedComponents: .date) {
                         Text("Start date")
                             .font(.custom("Montserrat", size: 18))
                             .foregroundColor(Color("Black"))
@@ -58,7 +62,7 @@ struct CreateCounterScreen: View {
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $currentDate, in: ...Date.now, displayedComponents: .hourAndMinute) {
+                    DatePicker(selection: $selectedTime, in: ...Date.now, displayedComponents: .hourAndMinute) {
                         Text("Start time")
                             .font(.custom("Montserrat", size: 18))
                             .foregroundColor(Color("Black"))
@@ -70,7 +74,7 @@ struct CreateCounterScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(.white)
                 .cornerRadius(10)
-                .padding()
+                .padding(.horizontal)
                 
                 ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
                     createCounter()
@@ -78,7 +82,7 @@ struct CreateCounterScreen: View {
                 
                 Spacer()
             }
-            .padding(.top, 30)
+            .padding(.top)
         }
         .navigationTitle("Create a counter")
         .navigationBarBackButtonHidden(true)

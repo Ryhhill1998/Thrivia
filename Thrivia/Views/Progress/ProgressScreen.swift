@@ -23,9 +23,10 @@ struct ProgressScreen: View {
                         .foregroundColor(Color("Black"))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading)
+                        .padding(.bottom, 15)
                     
-                    VStack(spacing: 10.0) {
-                        VStack(spacing: 25.0) {
+                    VStack(spacing: 15.0) {
+                        VStack(spacing: 15.0) {
                             VStack(spacing: 5.0) {
                                 Text("Current run")
                                     .font(.custom("Montserrat", size: 20))
@@ -50,16 +51,14 @@ struct ProgressScreen: View {
                         .padding()
                         .background(.white)
                         .cornerRadius(10)
-                        .padding()
+                        .padding(.horizontal)
                         
-                        VStack(spacing: 20.0) {
-                            ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) {
-                                print("editing counter")
-                            }
-                            
-                            ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                                print("resetting counter")
-                            }
+                        ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) {
+                            print("editing counter")
+                        }
+                        
+                        ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
+                            print("resetting counter")
                         }
                     }
                 }
@@ -76,6 +75,6 @@ struct ProgressScreen: View {
 
 struct ProgressScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressScreen(counterNotCreated: true)
+        ProgressScreen(counterNotCreated: false)
     }
 }

@@ -19,12 +19,6 @@ struct NavigationTab: View {
         isAuthenticated = authStatus
     }
     
-    init(navigationTitle: String = "Alcohol") {
-        self.navigationTitle = navigationTitle
-        
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.init(Color("DarkGreen"))]
-    }
-    
     var body: some View {
         TabView(selection: $navigationTitle) {
             if isAuthenticated {

@@ -37,7 +37,7 @@ struct CustomInputTextField: View {
         ZStack(alignment: .leading) {
             TextField(placeholder, text: $textFieldText)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 15)
+                .padding(.vertical, 10)
                 .background(.white)
                 .cornerRadius(10)
                 .font(.custom("Montserrat", size: 18))

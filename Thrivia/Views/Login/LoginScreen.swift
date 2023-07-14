@@ -19,17 +19,14 @@ struct LoginScreen: View {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 15.0) {
                 AppIcon()
                 
                 InputField(placeholder: "Email or Username") { print($0) }
-                    .padding(.bottom)
                 
                 InputField(placeholder: "Password") { print($0) }
-                    .padding(.bottom)
                 
                 ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: loginClicked)
-                    .padding(.bottom)
 
                 
                 HStack(spacing: 5.0) {
@@ -46,7 +43,6 @@ struct LoginScreen: View {
                             .foregroundColor(Color("Black"))
                     }
                 }
-                .padding(.bottom)
                 
                 Text("OR")
                     .font(.custom("Montserrat", size: 16))
@@ -62,7 +58,6 @@ struct LoginScreen: View {
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
                 }
-                .padding(.bottom)
             }
         }
     }
