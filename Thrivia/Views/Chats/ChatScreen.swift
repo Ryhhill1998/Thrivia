@@ -11,19 +11,31 @@ struct ChatScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State var messages = [
+        Message(id: "1", content: "Hello there! What is your favourite colour?", sent: true, timestamp: Date()),
+        Message(id: "2", content: "Hi! My favourite colour is blue", sent: false, timestamp: Date()),
+        Message(id: "3", content: "That's my favourite colour too!", sent: true, timestamp: Date())
+    ]
+    
+    func sendPressed(text: String) {
+        messages.append(Message(id: "\(messages.count + 1)", content: text, sent: true, timestamp: Date()))
+    }
+    
     var body: some View {
         VStack {
             VStack {
                 ScrollView {
-                    
+                    ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
+                        MessageBubble(message: message)
+                            .padding(.bottom, 5.0)
+                            .padding(.top, index == 0 ? 10.0 : 0)
+                    }
                 }
-                .padding(.top, 10.0)
                 .background(.white)
+                .padding(.top, 5.0)
             }
             
-            MessageField { message in
-                print(message)
-            }
+            MessageField(sendPressed: sendPressed)
         }
         .background(Color("Background"))
         .navigationBarBackButtonHidden(true)
