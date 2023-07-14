@@ -12,6 +12,7 @@
 		5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C42A6159EC00A024E8 /* MessageBubble.swift */; };
 		5B5411C72A615A6700A024E8 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C62A615A6700A024E8 /* Message.swift */; };
 		5B5411C92A61708600A024E8 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C82A61708600A024E8 /* AppIcon.swift */; };
+		5B5411CC2A6188BE00A024E8 /* CreateCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411CB2A6188BE00A024E8 /* CreateCounterScreen.swift */; };
 		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
@@ -39,6 +40,7 @@
 		5B5411C42A6159EC00A024E8 /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		5B5411C62A615A6700A024E8 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		5B5411C82A61708600A024E8 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
+		5B5411CB2A6188BE00A024E8 /* CreateCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCounterScreen.swift; sourceTree = "<group>"; };
 		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveUserIcon.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +83,14 @@
 				5B5411C22A61566C00A024E8 /* MessageField.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		5B5411CD2A6188CD00A024E8 /* CounterCreation */ = {
+			isa = PBXGroup;
+			children = (
+				5B5411CB2A6188BE00A024E8 /* CreateCounterScreen.swift */,
+			);
+			path = CounterCreation;
 			sourceTree = "<group>";
 		};
 		5B8F31D02A5027FC001F92B8 = {
@@ -181,6 +191,7 @@
 			children = (
 				5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */,
 				5BC6FE062A60508C006459F8 /* TimeDisplay.swift */,
+				5B5411CD2A6188CD00A024E8 /* CounterCreation */,
 			);
 			path = Progress;
 			sourceTree = "<group>";
@@ -308,6 +319,7 @@
 				5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */,
 				5B5411C72A615A6700A024E8 /* Message.swift in Sources */,
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
+				5B5411CC2A6188BE00A024E8 /* CreateCounterScreen.swift in Sources */,
 				5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
