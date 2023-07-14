@@ -11,16 +11,18 @@ struct CreateCounterScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    var counterViewModel: CounterViewModel
+    
     @State private var selectedDate = Date.now
     @State private var selectedTime = Date.now
     
-    @State var textFieldText = ""
+    @State var counterName = ""
     
     func createCounter() {
         print("Creating counter")
-        print("Selected date: \(selectedDate)")
-        print("Selected time: \(selectedTime.formatted(date: .omitted, time: .complete))")
-        print(Calendar.current.component(.day, from: selectedDate))
+        
+        counterViewModel.createCounter(name: counterName, startDate: selectedDate, startTime: selectedTime)
+        
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -42,7 +44,7 @@ struct CreateCounterScreen: View {
                 .padding(.horizontal)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    TextField("Counter name", text: $textFieldText)
+                    TextField("Counter name", text: $counterName)
                         .padding(.vertical, 15)
                         .background(.white)
                         .cornerRadius(10)
@@ -92,6 +94,6 @@ struct CreateCounterScreen: View {
 
 struct CreateCounterScreen_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCounterScreen()
+        CreateCounterScreen(counterViewModel: CounterViewModel())
     }
 }

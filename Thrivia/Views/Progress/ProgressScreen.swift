@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
+    @ObservedObject var counterViewModel = CounterViewModel()
+    
     @State var counterNotCreated: Bool
     
     var body: some View {
@@ -42,10 +44,10 @@ struct ProgressScreen: View {
                             }
                             
                             HStack {
-                                TimeDisplay(value: 1, units: "Day")
-                                TimeDisplay(value: 18, units: "Hours")
-                                TimeDisplay(value: 20, units: "Minutes")
-                                TimeDisplay(value: 59, units: "Seconds")
+                                TimeDisplay(value: counterViewModel.daysPassed, units: "Days")
+                                TimeDisplay(value: counterViewModel.hoursPassed, units: "Hours")
+                                TimeDisplay(value: counterViewModel.minutesPassed, units: "Minutes")
+                                TimeDisplay(value: counterViewModel.secondsPassed, units: "Seconds")
                             }
                         }
                         .padding()
@@ -55,6 +57,7 @@ struct ProgressScreen: View {
                         
                         ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) {
                             print("editing counter")
+                            print(counterViewModel.secondsPassed)
                         }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
@@ -63,11 +66,11 @@ struct ProgressScreen: View {
                     }
                 }
             }
-            .navigationTitle("Alcohol")
+            .navigationTitle(counterViewModel.counterName ?? "")
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterNotCreated) {
-                CreateCounterScreen()
+                CreateCounterScreen(counterViewModel: counterViewModel)
             }
         }
     }
@@ -75,6 +78,6 @@ struct ProgressScreen: View {
 
 struct ProgressScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressScreen(counterNotCreated: false)
+        ProgressScreen(counterNotCreated: true)
     }
 }
