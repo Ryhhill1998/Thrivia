@@ -69,6 +69,7 @@ struct ChatScreen: View {
         }
         .toolbarBackground(Color("Background"), for: .navigationBar)
         .toolbar(.visible, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

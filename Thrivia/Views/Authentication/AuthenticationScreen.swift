@@ -37,23 +37,6 @@ struct AuthenticationScreen: View {
                         ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
                             .padding(.bottom)
                     }
-                    
-                    Text("OR")
-                        .font(.custom("Montserrat", size: 18))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("DarkGreen"))
-                        .padding(.bottom)
-                    
-                    Button {
-                        updateAuthStatus(true)
-                    } label: {
-                        Text("Login as guest")
-                            .font(.custom("Montserrat", size: 20))
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color("DarkGreen"))
-                            .underline()
-                    }
-                    .padding(.bottom)
                 }
             }
         }

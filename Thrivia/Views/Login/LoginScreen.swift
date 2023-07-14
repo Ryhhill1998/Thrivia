@@ -20,11 +20,7 @@ struct LoginScreen: View {
             Color("Background").ignoresSafeArea()
             
             VStack {
-                Image("AppIconNoBg")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 120.0, height: 120.0)
-                    .padding(.bottom)
+                AppIcon()
                 
                 InputField(placeholder: "Email or Username") { print($0) }
                     .padding(.bottom)
@@ -39,17 +35,34 @@ struct LoginScreen: View {
                 HStack(spacing: 5.0) {
                     Text("Don't have an account?")
                         .font(.custom("Montserrat", size: 15))
+                        .foregroundColor(Color("Black"))
                     
                     NavigationLink {
                         RegisterScreen(updateAuthStatus: updateAuthStatus)
                     } label: {
                         Text("Register")
                             .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color("DarkGreen"))
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color("Black"))
                     }
-
                 }
+                .padding(.bottom)
+                
+                Text("OR")
+                    .font(.custom("Montserrat", size: 16))
+                    .fontWeight(.regular)
+                    .foregroundColor(Color("Black"))
+                    .padding(.vertical)
+                
+                Button {
+                    updateAuthStatus(true)
+                } label: {
+                    Text("Login as guest")
+                        .font(.custom("Montserrat", size: 20))
+                        .fontWeight(.medium)
+                        .foregroundColor(Color("Black"))
+                }
+                .padding(.bottom)
             }
         }
     }

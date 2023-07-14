@@ -36,20 +36,13 @@ struct CustomMessageTextField: View {
     var body: some View {
         HStack(spacing: 10.0) {
             ZStack(alignment: .leading) {
-                TextField("", text: $textFieldText)
+                TextField("Type something", text: $textFieldText)
                     .frame(height: 35)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal)
                     .background(.white)
-                    .cornerRadius(15)
+                    .cornerRadius(10)
                     .font(.headline)
                     .foregroundColor(Color(.black))
-                
-                if textFieldText.isEmpty {
-                    Text("Type something")
-                        .frame(height: 35)
-                        .padding(.horizontal, 20)
-                        .foregroundColor(Color(.black).opacity(0.6))
-                }
             }
             
             Button {
@@ -61,9 +54,13 @@ struct CustomMessageTextField: View {
                 Image(systemName: "paperplane.circle.fill")
                     .resizable()
                     .frame(width: 35, height: 35)
-                    .foregroundColor(Color("DarkGreen"))
-                    .background(.white)
+                    .foregroundColor(Color("Green"))
+                    .background(Color(.white))
                     .cornerRadius(17.5)
+                    .overlay {
+                        Circle()
+                            .stroke(.white, lineWidth: 3)
+                    }
             }
         }
         .padding()

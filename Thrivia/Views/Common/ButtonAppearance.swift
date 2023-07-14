@@ -15,7 +15,7 @@ struct ButtonAppearance: View {
     
     var body: some View {
         Text(text)
-            .font(.custom("Montserrat", size: 22))
+            .font(.custom("Montserrat", size: 20))
             .padding()
             .bold()
             .foregroundColor(fontColour)

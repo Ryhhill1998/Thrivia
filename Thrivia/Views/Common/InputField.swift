@@ -35,24 +35,14 @@ struct CustomInputTextField: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            TextField("", text: $textFieldText)
+            TextField(placeholder, text: $textFieldText)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
                 .background(.white)
                 .cornerRadius(10)
                 .font(.custom("Montserrat", size: 18))
                 .fontWeight(.medium)
-                .foregroundColor(Color("DarkGreen"))
-                .accentColor(Color("DarkGreen"))
-            
-            if textFieldText.isEmpty {
-                Text(placeholder)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 15)
-                    .font(.custom("Montserrat", size: 18))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("DarkGreen").opacity(0.5))
-            }
+                .foregroundColor(Color("Black"))
         }
         .padding(.horizontal)
     }

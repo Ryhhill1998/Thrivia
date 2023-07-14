@@ -108,6 +108,7 @@ struct AvailableUser: View {
                 .frame(width: 65.0)
                 .font(.custom("Montserrat", size: 12))
                 .fontWeight(.medium)
+                .foregroundColor(.black)
         }
     }
 }

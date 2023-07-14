@@ -20,11 +20,7 @@ struct RegisterScreen: View {
             Color("Background").ignoresSafeArea()
             
             VStack {
-                Image("AppIconNoBg")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 120.0, height: 120.0)
-                    .padding(.bottom)
+                AppIcon()
                 
                 InputField(placeholder: "Email") { print($0) }
                     .padding(.bottom)
@@ -45,6 +41,7 @@ struct RegisterScreen: View {
                 HStack(spacing: 5.0) {
                     Text("Already have an account?")
                         .font(.custom("Montserrat", size: 15))
+                        .foregroundColor(Color("Black"))
                     
                     NavigationLink {
                         LoginScreen(updateAuthStatus: updateAuthStatus)
@@ -52,7 +49,7 @@ struct RegisterScreen: View {
                         Text("Login")
                             .font(.custom("Montserrat", size: 15))
                             .fontWeight(.bold)
-                            .foregroundColor(Color("DarkGreen"))
+                            .foregroundColor(Color("Black"))
                     }
                 }
             }
