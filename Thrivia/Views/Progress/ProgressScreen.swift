@@ -64,7 +64,7 @@ struct ProgressScreen: View {
                         }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                            print("resetting counter")
+                            counterViewModel.counter?.reset()
                         }
                     }
                 }
