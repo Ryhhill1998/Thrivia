@@ -13,8 +13,15 @@ struct ProfileScreen: View {
     
     let updateAuthStatus: (Bool) -> Void
     
+    @State var showDeleteAccountAlert = false
+    
     func logOutUser() {
-        print("logging out user")
+        profileViewModel.logOutUser()
+        updateAuthStatus(false)
+    }
+    
+    func deleteUserAccount() {
+        profileViewModel.deleteUserAccount()
         updateAuthStatus(false)
     }
     
@@ -24,7 +31,7 @@ struct ProfileScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 VStack(spacing: 25.0) {
-                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: profileViewModel.username, overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
+                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username, overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
                     
                     VStack(spacing: 15.0) {
                         AccountDetailField(fieldName: "Username", fieldValue: profileViewModel.username)
@@ -48,8 +55,17 @@ struct ProfileScreen: View {
                         }
                         
                         ActionButton(text: "Delete account", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                            print("deleting user account")
+                            showDeleteAccountAlert = true
                         }
+                        .alert("Delete Account", isPresented: $showDeleteAccountAlert, actions: {
+                            Button("Delete", role: .destructive) {
+                                deleteUserAccount()
+                            }
+                            
+                            Button("Cancel", role: .cancel) {}
+                        }, message: {
+                            Text("Are you sure you want to delete your account")
+                        })
                     }
                     
                     Spacer()
@@ -65,31 +81,5 @@ struct ProfileScreen: View {
 struct ProfileScreen_Previews: PreviewProvider {
     static var previews: some View {
         ProfileScreen() { _ in print("auth status updated") }
-    }
-}
-
-struct AccountDetailField: View {
-    
-    let fieldName: String
-    let fieldValue: String
-    
-    var body: some View {
-        HStack {
-            Text(fieldName)
-                .foregroundColor(Color("Black"))
-                .font(.custom("Montserrat", size: 18))
-                .fontWeight(.semibold)
-            
-            Text(fieldValue)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .foregroundColor(Color("Black"))
-                .font(.custom("Montserrat", size: 15))
-            
-            Button {
-                print("edit mode")
-            } label: {
-                Image(systemName: "chevron.right")
-            }
-        }
     }
 }

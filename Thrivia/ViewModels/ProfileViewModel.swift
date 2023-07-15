@@ -5,20 +5,30 @@
 //  Created by Ryan Henzell-Hill on 15/07/2023.
 //
 
-import Foundation
+import SwiftUI
 
 class ProfileViewModel: ObservableObject {
     var user: User
     @Published var username: String
     @Published var email: String
     @Published var password: String
+    @Published var iconColour: Color
     
     init() {
-        user = User(username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678")
+        user = User(username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678", iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
         
         username = user.username
         email = user.email
-        password = user.password
+        password = user.getPassword()
+        iconColour = user.iconColour
+    }
+    
+    func logOutUser() {
+        print("logging out user")
+    }
+    
+    func deleteUserAccount() {
+        print("deleting user account")
     }
     
     func updateUserUsername(newUsername: String) {
@@ -33,6 +43,6 @@ class ProfileViewModel: ObservableObject {
     
     func updateUserPassword(newPassword: String) {
         user.updatePassword(newPassword: newPassword)
-        password = user.password
+        password = user.getPassword()
     }
 }
