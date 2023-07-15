@@ -20,14 +20,13 @@ struct CreateCounterScreen: View {
     @State private var selectedDate: Date
     @State var counterName: String
     @State private var showEmptyNameAlert = false
-    @State private var showUpdateOriginalStartAlert = false
     
     init(navigationTitle: String, counterViewModel: CounterViewModel, buttonActionDescription: String) {
         self.navigationTitle = navigationTitle
         self.counterViewModel = counterViewModel
         self.buttonActionDescription = buttonActionDescription
         
-        _counterName = State(initialValue: counterViewModel.getCounterName())
+        _counterName = State(initialValue: counterViewModel.counterName)
         _selectedDate = State(initialValue: counterViewModel.getCounterStart())
     }
     
@@ -35,16 +34,12 @@ struct CreateCounterScreen: View {
         if counterName.isEmpty {
             showEmptyNameAlert = true
         } else {
-            counterViewModel.createCounter(name: counterName, startDate: selectedDate)
-            presentationMode.wrappedValue.dismiss()
-        }
-    }
-    
-    func editCounter(updateOriginalStart: Bool) {
-        if counterName.isEmpty {
-            showEmptyNameAlert = true
-        } else {
-            counterViewModel.editCounter(newName: counterName, newStart: selectedDate, updateOriginalStart: updateOriginalStart)
+            if buttonActionDescription == "Create" {
+                counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+            } else {
+                counterViewModel.editCounter(newName: counterName, newStart: selectedDate)
+            }
+            
             presentationMode.wrappedValue.dismiss()
         }
     }
@@ -108,20 +103,7 @@ struct CreateCounterScreen: View {
                 .padding(.horizontal)
                 
                 ActionButton(text: "\(buttonActionDescription) counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    if buttonActionDescription == "Save" && selectedDate > counterViewModel.getCounterOriginalStart() {
-                        showUpdateOriginalStartAlert = true
-                    } else {
-                        createCounter()
-                    }
-                }
-                .alert("Update original tracking start date?", isPresented: $showUpdateOriginalStartAlert) {
-                    Button("No", role: .destructive) {
-                        editCounter(updateOriginalStart: false)
-                    }
-                    
-                    Button("Yes", role: .cancel) {
-                        editCounter(updateOriginalStart: true)
-                    }
+                    createCounter()
                 }
                 
                 Spacer()

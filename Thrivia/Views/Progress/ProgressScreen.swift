@@ -13,6 +13,7 @@ struct ProgressScreen: View {
     
     @State var counterNotCreated: Bool
     @State var inEditMode: Bool = false
+    @State var showResetAlert = false
     
     var body: some View {
         NavigationStack {
@@ -64,12 +65,19 @@ struct ProgressScreen: View {
                         }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                            counterViewModel.resetCounter()
+                            showResetAlert = true
+                        }
+                        .alert("Reset counter?", isPresented: $showResetAlert) {
+                            Button("No", role: .destructive) {}
+                            
+                            Button("Yes", role: .cancel) {
+                                counterViewModel.resetCounter()
+                            }
                         }
                     }
                 }
             }
-            .navigationTitle(counterViewModel.getCounterName())
+            .navigationTitle(counterViewModel.counterName)
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterNotCreated) {

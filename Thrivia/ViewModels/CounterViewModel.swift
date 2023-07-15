@@ -11,6 +11,8 @@ class CounterViewModel: ObservableObject {
     
     var counter: Counter?
     
+    @Published var counterName = ""
+    
     @Published var timeUnits1 = "Days"
     @Published var timeUnits2 = "Hours"
     @Published var timeUnits3 = "Minutes"
@@ -32,22 +34,23 @@ class CounterViewModel: ObservableObject {
     
     func createCounter(name: String, startDate: Date) {
         counter = Counter(name: name, start: startDate)
+        counterName = name
+        print("setting counter name to \(name)")
         
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.updateTimeDisplay()
         }
     }
     
-    func editCounter(newName: String, newStart: Date, updateOriginalStart: Bool) {
+    func editCounter(newName: String, newStart: Date) {
+        let updateOriginalStart = newStart < getCounterOriginalStart()
+        
         counter?.edit(newName: newName, newStart: newStart, updateOriginalStart: updateOriginalStart)
+        counterName = newName
     }
     
     func resetCounter() {
         counter?.reset()
-    }
-    
-    func getCounterName() -> String {
-        return counter?.name ?? ""
     }
     
     func getCounterStart() -> Date {
