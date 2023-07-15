@@ -26,15 +26,20 @@ struct CreateCounterScreen: View {
         self.counterViewModel = counterViewModel
         self.buttonActionDescription = buttonActionDescription
         
-        _counterName = State(initialValue: counterViewModel.counterName ?? "")
-        _selectedDate = State(initialValue: counterViewModel.counter?.start ?? Date.now)
+        _counterName = State(initialValue: counterViewModel.getCounterName())
+        _selectedDate = State(initialValue: counterViewModel.getCounterStart())
     }
     
     func createCounter() {
         if counterName.isEmpty {
             showEmptyNameAlert = true
         } else {
-            counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+            if counterViewModel.counter != nil {
+                counterViewModel.editCounter(newName: counterName, newStart: selectedDate)
+            } else {
+                counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+            }
+            
             presentationMode.wrappedValue.dismiss()
         }
     }

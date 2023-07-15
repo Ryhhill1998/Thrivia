@@ -9,8 +9,7 @@ import Foundation
 
 class CounterViewModel: ObservableObject {
     
-    @Published var counter: Counter?
-    @Published var counterName: String?
+    var counter: Counter?
     
     @Published var timeUnits1 = "Days"
     @Published var timeUnits2 = "Hours"
@@ -24,7 +23,6 @@ class CounterViewModel: ObservableObject {
     
     func generatePreview(name: String, startDate: Date) {
         counter = Counter(name: name, start: startDate)
-        counterName = counter?.name
         
         updateTimeDisplay()
         if timeUnits4 == "Seconds" {
@@ -34,11 +32,38 @@ class CounterViewModel: ObservableObject {
     
     func createCounter(name: String, startDate: Date) {
         counter = Counter(name: name, start: startDate)
-        counterName = counter?.name
         
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.updateTimeDisplay()
         }
+    }
+    
+    func editCounter(newName: String, newStart: Date) {
+        counter?.edit(newName: newName, newStart: newStart)
+    }
+    
+    func resetCounter() {
+        counter?.reset()
+    }
+    
+    func getCounterName() -> String {
+        return counter?.name ?? ""
+    }
+    
+    func getCounterStart() -> Date {
+        return counter?.start ?? Date.now
+    }
+    
+    func formatDate(date: Date) -> String {
+        return date.formatted(date: .long, time: .omitted)
+    }
+    
+    func getFormattedOriginalStartDate() -> String {
+        return formatDate(date: (counter?.originalStart ?? Date.now))
+    }
+    
+    func getFormattedRunStartDate() -> String {
+        return formatDate(date: getCounterStart())
     }
     
     func updateTimeDisplay() {

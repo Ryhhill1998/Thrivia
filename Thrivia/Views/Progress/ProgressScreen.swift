@@ -20,7 +20,7 @@ struct ProgressScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 ScrollView {
-                    Text("Tracked since 27 Jun 2023")
+                    Text("Tracked since \(counterViewModel.getFormattedOriginalStartDate())")
                         .font(.custom("Montserrat", size: 15))
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
@@ -37,7 +37,7 @@ struct ProgressScreen: View {
                                     .bold()
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
-                                Text("Thriving since 27 Jun 2023")
+                                Text("Thriving since  \(counterViewModel.getFormattedRunStartDate())")
                                     .font(.custom("Montserrat", size: 15))
                                     .foregroundColor(Color("Black"))
                                     .fontWeight(.medium)
@@ -64,12 +64,12 @@ struct ProgressScreen: View {
                         }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                            counterViewModel.counter?.reset()
+                            counterViewModel.resetCounter()
                         }
                     }
                 }
             }
-            .navigationTitle(counterViewModel.counterName ?? "Counter name")
+            .navigationTitle(counterViewModel.getCounterName())
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterNotCreated) {
@@ -84,6 +84,6 @@ struct ProgressScreen: View {
 
 struct ProgressScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressScreen(counterNotCreated: true)
+        ProgressScreen(counterNotCreated: false)
     }
 }

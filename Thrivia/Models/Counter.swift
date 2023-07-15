@@ -20,6 +20,10 @@ struct Counter {
     var edits = 0
     var resets = 0
     
+    var originalStart: Date {
+        return start
+    }
+    
     func getTimePassed(unitOfTime: UnitOfTime) -> Int {
         let now = Date.now
         
