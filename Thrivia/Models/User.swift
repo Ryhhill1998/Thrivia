@@ -31,20 +31,21 @@ struct User: Identifiable {
         password = newPassword
     }
     
-    mutating func createChat(otherUser: User) {
-        let chat = Chat(id: UUID().uuidString, otherUser: otherUser)
-        chats.append(chat)
-    }
-    
-    func sendMessage(chatId: String, messageContent: String) {
+    mutating func getChat(otherUser: User) -> Chat {
         let filteredChats = chats.filter { chat in
-            return chat.id == chatId
+            return chat.otherUser.id == otherUser.id
         }
         
-        if !filteredChats.isEmpty {
-            var foundChat = filteredChats[0] // chat potentially needs to be a class to allow this edit to occur
-            let message = Message(id: UUID().uuidString, content: messageContent, sent: true, timestamp: Date.now)
-            foundChat.sendMessage(message: message)
+        if filteredChats.isEmpty {
+            return createChat(otherUser: otherUser)
+        } else {
+            return filteredChats[0]
         }
+    }
+    
+    mutating func createChat(otherUser: User) -> Chat {
+        let chat = Chat(id: UUID().uuidString, otherUser: otherUser)
+        chats.append(chat)
+        return chat
     }
 }

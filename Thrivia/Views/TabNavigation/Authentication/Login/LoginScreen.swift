@@ -11,7 +11,7 @@ struct LoginScreen: View {
     
     let updateAuthStatus: (Bool) -> Void
     
-    func loginClicked() {
+    func login() {
         updateAuthStatus(true)
     }
     
@@ -22,11 +22,11 @@ struct LoginScreen: View {
             VStack(spacing: 15.0) {
                 AppIcon()
                 
-                InputField(placeholder: "Email or Username") { print($0) }
+                InputField(placeholder: "Email") { print($0) }
                 
                 InputField(placeholder: "Password") { print($0) }
                 
-                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: loginClicked)
+                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: login)
 
                 
                 HStack(spacing: 5.0) {

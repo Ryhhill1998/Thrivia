@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NavigationTab: View {
     
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    
     @State var counterNotCreated = true
     
     @State var navigationTitle = "Alcohol"
@@ -16,12 +18,11 @@ struct NavigationTab: View {
     
     func updateAuthStatus(authStatus: Bool) {
         print("updating auth status")
-        isAuthenticated = authStatus
     }
     
     var body: some View {
         TabView(selection: $navigationTitle) {
-            if isAuthenticated {
+            if authenticationViewModel.isAuthenticated {
                 ProgressScreen(counterNotCreated: counterNotCreated)
                     .tabItem {
                         Label("Progress", systemImage: "chart.bar.fill")
@@ -31,7 +32,7 @@ struct NavigationTab: View {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
             }
             
-            if isAuthenticated {
+            if authenticationViewModel.isAuthenticated {
                 ProfileScreen(updateAuthStatus: updateAuthStatus)
                     .tabItem {
                         Label("Profile", systemImage: "person.fill")
@@ -41,7 +42,7 @@ struct NavigationTab: View {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
             }
             
-            if isAuthenticated {
+            if authenticationViewModel.isAuthenticated {
                 AllChatsScreen()
                     .tabItem {
                         Label("Chats", systemImage: "message.fill")
@@ -61,5 +62,6 @@ struct NavigationTab: View {
 struct NavigationTab_Previews: PreviewProvider {
     static var previews: some View {
         NavigationTab()
+            .environmentObject(AuthenticationViewModel())
     }
 }
