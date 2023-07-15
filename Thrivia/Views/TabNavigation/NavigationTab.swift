@@ -31,17 +31,25 @@ struct NavigationTab: View {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
             }
             
-            ProfileScreen()
-                .tabItem {
-                    Label("Profile", systemImage: "person.fill")
-                }
-                .tag("Profile")
+            if isAuthenticated {
+                ProfileScreen(updateAuthStatus: updateAuthStatus)
+                    .tabItem {
+                        Label("Profile", systemImage: "person.fill")
+                    }
+                    .tag("Profile")
+            } else {
+                AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+            }
             
-            AllChatsScreen()
-                .tabItem {
-                    Label("Chats", systemImage: "message.fill")
-                }
-                .tag("Chats")
+            if isAuthenticated {
+                AllChatsScreen()
+                    .tabItem {
+                        Label("Chats", systemImage: "message.fill")
+                    }
+                    .tag("Chats")
+            } else {
+                AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+            }
         }
         .accentColor(Color("Green"))
         .navigationBarBackButtonHidden(true)

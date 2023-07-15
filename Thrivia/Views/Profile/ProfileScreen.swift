@@ -8,13 +8,21 @@
 import SwiftUI
 
 struct ProfileScreen: View {
+    
+    let updateAuthStatus: (Bool) -> Void
+    
+    func logOutUser() {
+        print("logging out user")
+        updateAuthStatus(false)
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 Color("Background").ignoresSafeArea()
                 
                 VStack(spacing: 25.0) {
-                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24", overlayImage: Image(systemName: "plus"), overlayColour: Color("LightGreen"))
+                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24", overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
                     
                     VStack(spacing: 15.0) {
                         AccountDetailField(fieldName: "Username", fieldValue: "ZigzagZebra24")
@@ -34,7 +42,7 @@ struct ProfileScreen: View {
                     
                     VStack(spacing: 15.0) {
                         ActionButton(text: "Logout", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                            print("logging out user")
+                            logOutUser()
                         }
                         
                         ActionButton(text: "Delete account", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
@@ -54,7 +62,7 @@ struct ProfileScreen: View {
 
 struct ProfileScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileScreen()
+        ProfileScreen() { _ in print("auth status updated") }
     }
 }
 
