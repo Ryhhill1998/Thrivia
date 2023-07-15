@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ProfileScreen: View {
     
+    @ObservedObject var profileViewModel = ProfileViewModel()
+    
     let updateAuthStatus: (Bool) -> Void
     
     func logOutUser() {
@@ -22,18 +24,18 @@ struct ProfileScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 VStack(spacing: 25.0) {
-                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: "ZigzagZebra24", overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
+                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: .purple, name: profileViewModel.username, overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
                     
                     VStack(spacing: 15.0) {
-                        AccountDetailField(fieldName: "Username", fieldValue: "ZigzagZebra24")
+                        AccountDetailField(fieldName: "Username", fieldValue: profileViewModel.username)
                         
                         LineSeparator()
                         
-                        AccountDetailField(fieldName: "Email", fieldValue: "zigzagzebra24@outlook.com")
+                        AccountDetailField(fieldName: "Email", fieldValue: profileViewModel.email)
                         
                         LineSeparator()
                         
-                        AccountDetailField(fieldName: "Password", fieldValue: "**********")
+                        AccountDetailField(fieldName: "Password", fieldValue: profileViewModel.password)
                     }
                     .padding()
                     .background(Color("White"))
