@@ -44,9 +44,13 @@ struct ProgressScreen: View {
                             }
                             
                             HStack {
-                                ForEach(counterViewModel.timeDisplays) { time in
-                                    TimeDisplay(value: time.value, units: time.unit)
-                                }
+                                TimeDisplay(value: counterViewModel.timeValue1, units: counterViewModel.timeUnits1)
+                                
+                                TimeDisplay(value: counterViewModel.timeValue2, units: counterViewModel.timeUnits2)
+                                
+                                TimeDisplay(value: counterViewModel.timeValue3, units: counterViewModel.timeUnits3)
+                                
+                                TimeDisplay(value: counterViewModel.timeValue4, units: counterViewModel.timeUnits4)
                             }
                         }
                         .padding()
@@ -56,7 +60,6 @@ struct ProgressScreen: View {
                         
                         ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) {
                             print("editing counter")
-                            print(counterViewModel.secondsPassed)
                         }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {

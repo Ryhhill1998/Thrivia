@@ -8,21 +8,28 @@
 import Foundation
 
 class CounterViewModel: ObservableObject {
+    
     @Published var counter: Counter?
     @Published var counterName: String?
-    @Published var daysPassed: Int = 0
-    @Published var hoursPassed: Int = 0
-    @Published var minutesPassed: Int = 0
-    @Published var secondsPassed: Int = 0
     
-    @Published var timeDisplays = [Time(unit: "days", value: 0), Time(unit: "hours", value: 0), Time(unit: "minutes", value: 0), Time(unit: "seconds", value: 0)]
+    @Published var timeUnits1 = "Days"
+    @Published var timeUnits2 = "Hours"
+    @Published var timeUnits3 = "Minutes"
+    @Published var timeUnits4 = "Seconds"
+    
+    @Published var timeValue1 = 0
+    @Published var timeValue2 = 0
+    @Published var timeValue3 = 0
+    @Published var timeValue4 = 0
     
     func generatePreview(name: String, startDate: Date) {
         counter = Counter(name: name, start: startDate)
         counterName = counter?.name
         
         updateTimeDisplay()
-        print("preview updated")
+        if timeUnits4 == "Seconds" {
+            timeValue4 = 0
+        }
     }
     
     func createCounter(name: String, startDate: Date) {
@@ -35,8 +42,6 @@ class CounterViewModel: ObservableObject {
     }
     
     func updateTimeDisplay() {
-        timeDisplays = []
-        
         let yearsPassed = getYearsPassed()
         let monthsPassed = getMonthsPassed()
         let weeksPassed = getWeeksPassed()
@@ -46,25 +51,45 @@ class CounterViewModel: ObservableObject {
         let secondsPassed = getSecondsPassed()
         
         if yearsPassed > 0 {
-            timeDisplays.append(Time(unit: "years", value: yearsPassed))
-            timeDisplays.append(Time(unit: "months", value: monthsPassed))
-            timeDisplays.append(Time(unit: "weeks", value: weeksPassed))
-            timeDisplays.append(Time(unit: "days", value: daysPassed))
+            timeUnits1 = "Years"
+            timeUnits2 = "Months"
+            timeUnits3 = "Weeks"
+            timeUnits4 = "Days"
+            
+            timeValue1 = yearsPassed
+            timeValue2 = monthsPassed
+            timeValue3 = weeksPassed
+            timeValue4 = daysPassed
         } else if monthsPassed > 0 {
-            timeDisplays.append(Time(unit: "months", value: monthsPassed))
-            timeDisplays.append(Time(unit: "weeks", value: weeksPassed))
-            timeDisplays.append(Time(unit: "days", value: daysPassed))
-            timeDisplays.append(Time(unit: "hours", value: hoursPassed))
+            timeUnits1 = "Months"
+            timeUnits2 = "Weeks"
+            timeUnits3 = "Days"
+            timeUnits4 = "Hours"
+            
+            timeValue1 = monthsPassed
+            timeValue2 = weeksPassed
+            timeValue3 = daysPassed
+            timeValue4 = hoursPassed
         } else if weeksPassed > 0 {
-            timeDisplays.append(Time(unit: "weeks", value: weeksPassed))
-            timeDisplays.append(Time(unit: "days", value: daysPassed))
-            timeDisplays.append(Time(unit: "hours", value: hoursPassed))
-            timeDisplays.append(Time(unit: "minutes", value: minutesPassed))
+            timeUnits1 = "Weeks"
+            timeUnits2 = "Days"
+            timeUnits3 = "Hours"
+            timeUnits4 = "Minutes"
+            
+            timeValue1 = weeksPassed
+            timeValue2 = daysPassed
+            timeValue3 = hoursPassed
+            timeValue4 = minutesPassed
         } else {
-            timeDisplays.append(Time(unit: "days", value: daysPassed))
-            timeDisplays.append(Time(unit: "hours", value: hoursPassed))
-            timeDisplays.append(Time(unit: "minutes", value: minutesPassed))
-            timeDisplays.append(Time(unit: "seconds", value: secondsPassed))
+            timeUnits1 = "Days"
+            timeUnits2 = "Hours"
+            timeUnits3 = "Minutes"
+            timeUnits4 = "Seconds"
+            
+            timeValue1 = daysPassed
+            timeValue2 = hoursPassed
+            timeValue3 = minutesPassed
+            timeValue4 = secondsPassed
         }
     }
     

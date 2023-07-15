@@ -12,12 +12,10 @@ struct CreateCounterScreen: View {
     @Environment(\.presentationMode) var presentationMode
     
     var counterViewModel: CounterViewModel
-    @State var counterViewModelPreview: CounterViewModel = CounterViewModel()
+    @ObservedObject var counterViewModelPreview: CounterViewModel = CounterViewModel()
     
     @State private var selectedDate = Date.now
     @State var counterName = ""
-    
-    @State var showPreview = false
     
     func createCounter() {
         print("Creating counter")
@@ -27,32 +25,25 @@ struct CreateCounterScreen: View {
         presentationMode.wrappedValue.dismiss()
     }
     
-    func generatePreview() {
-        print("Generating preview")
-        showPreview = false
-        
-        counterViewModelPreview.generatePreview(name: counterName, startDate: selectedDate)
-        
-        showPreview = true
-    }
-    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
             
             VStack(spacing: 25) {
-                if showPreview {
-                    HStack {
-                        ForEach(counterViewModelPreview.timeDisplays) { time in
-                            TimeDisplay(value: time.value, units: time.unit)
-                        }
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
+                HStack {
+                    TimeDisplay(value: counterViewModelPreview.timeValue1, units: counterViewModelPreview.timeUnits1)
+                    
+                    TimeDisplay(value: counterViewModelPreview.timeValue2, units: counterViewModelPreview.timeUnits2)
+                    
+                    TimeDisplay(value: counterViewModelPreview.timeValue3, units: counterViewModelPreview.timeUnits3)
+                    
+                    TimeDisplay(value: counterViewModelPreview.timeValue4, units: counterViewModelPreview.timeUnits4)
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.white)
+                .cornerRadius(10)
+                .padding(.horizontal)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     TextField("Counter name", text: $counterName)
@@ -89,17 +80,14 @@ struct CreateCounterScreen: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                VStack(spacing: 15.0) {
-                    ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                        createCounter()
-                    }
-                    
-                    ActionButton(text: "Generate preview", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                        generatePreview()
-                    }
+                ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
+                    createCounter()
                 }
                 
                 Spacer()
+            }
+            .onChange(of: selectedDate) { newDate in
+                counterViewModelPreview.generatePreview(name: counterName, startDate: newDate)
             }
             .padding(.top)
         }
