@@ -9,10 +9,16 @@ import SwiftUI
 
 struct RegisterScreen: View {
     
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    
     let updateAuthStatus: (Bool) -> Void
+    @State var emailFieldText: String = ""
+    @State var usernameFieldField: String = ""
+    @State var passwordFieldText: String = ""
+    @State var confirmPasswordFieldText: String = ""
     
     func registerClicked() {
-        updateAuthStatus(true)
+        authenticationViewModel.registerUser(email: emailFieldText, username: usernameFieldField, password: passwordFieldText, confirmPassword: confirmPasswordFieldText)
     }
     
     var body: some View {
@@ -22,13 +28,45 @@ struct RegisterScreen: View {
             VStack(spacing: 15.0) {
                 AppIcon()
                 
-                InputField(placeholder: "Email") { print($0) }
+                TextField("Email", text: $emailFieldText)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
+                    .padding(.horizontal)
                 
-                InputField(placeholder: "Username") { print($0) }
+                TextField("Username", text: $usernameFieldField)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
+                    .padding(.horizontal)
                 
-                InputField(placeholder: "Password") { print($0) }
+                TextField("Password", text: $passwordFieldText)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
+                    .padding(.horizontal)
                 
-                InputField(placeholder: "Confirm password") { print($0) }
+                TextField("Confirm password", text: $confirmPasswordFieldText)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
+                    .padding(.horizontal)
                 
                 ActionButton(text: "Register", fontColour: .white, backgroundColour: Color("Green"), action: registerClicked)
                 

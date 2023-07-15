@@ -37,6 +37,7 @@ struct NavigationTab: View {
                     }
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+                    .environmentObject(authenticationViewModel)
             }
             
             if authenticationViewModel.isAuthenticated {
@@ -46,6 +47,7 @@ struct NavigationTab: View {
                     }
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+                    .environmentObject(authenticationViewModel)
             }
         }
         .accentColor(Color("Green"))
