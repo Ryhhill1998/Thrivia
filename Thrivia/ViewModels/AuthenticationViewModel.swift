@@ -8,15 +8,18 @@
 import Foundation
 
 class AuthenticationViewModel: ObservableObject {
-    @Published var isAuthenticated: Bool = false
     var userModel: UserModel = UserModel()
     
+    @Published var isAuthenticated: Bool = false
+    @Published var authUser: User?
+    
     func loginUser(email: String, password: String) {
-        let authUser = userModel.loginUser(email: email, password: password)
+        let user = userModel.loginUser(email: email, password: password)
         
-        if authUser != nil {
-            isAuthenticated = true
-        }
+        guard let unwrappedUser = user else { return }
+        
+        isAuthenticated = true
+        authUser = unwrappedUser
     }
     
     func loginAsGuest() {
@@ -25,10 +28,11 @@ class AuthenticationViewModel: ObservableObject {
     }
     
     func registerUser(email: String, username: String, password: String, confirmPassword: String) {
-        let authUser = userModel.registerUser(email: email, username: username, password: password, confirmPassword: confirmPassword)
+        let user = userModel.registerUser(email: email, username: username, password: password, confirmPassword: confirmPassword)
         
-        if authUser != nil {
-            isAuthenticated = true
-        }
+        guard let unwrappedUser = user else { return }
+        
+        isAuthenticated = true
+        authUser = unwrappedUser
     }
 }

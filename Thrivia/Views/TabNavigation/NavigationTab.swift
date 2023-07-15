@@ -25,26 +25,30 @@ struct NavigationTab: View {
                     .tabItem {
                         Label("Progress", systemImage: "chart.bar.fill")
                     }
-            } else {
-                AuthenticationScreen(updateAuthStatus: updateAuthStatus)
-                    .environmentObject(authenticationViewModel)
-            }
-            
-            if authenticationViewModel.isAuthenticated {
-                ProfileScreen(updateAuthStatus: updateAuthStatus)
-                    .tabItem {
-                        Label("Profile", systemImage: "person.fill")
-                    }
-            } else {
-                AuthenticationScreen(updateAuthStatus: updateAuthStatus)
-                    .environmentObject(authenticationViewModel)
-            }
-            
-            if authenticationViewModel.isAuthenticated {
-                AllChatsScreen()
-                    .tabItem {
-                        Label("Chats", systemImage: "message.fill")
-                    }
+                
+                if authenticationViewModel.authUser != nil {
+                    ProfileScreen(updateAuthStatus: updateAuthStatus)
+                        .tabItem {
+                            Label("Profile", systemImage: "person.fill")
+                        }
+                    
+                    AllChatsScreen()
+                        .tabItem {
+                            Label("Chats", systemImage: "message.fill")
+                        }
+                } else {
+                    AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+                        .tabItem {
+                            Label("Profile", systemImage: "person.fill")
+                        }
+                        .environmentObject(authenticationViewModel)
+                    
+                    AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+                        .tabItem {
+                            Label("Chats", systemImage: "message.fill")
+                        }
+                        .environmentObject(authenticationViewModel)
+                }
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
                     .environmentObject(authenticationViewModel)
