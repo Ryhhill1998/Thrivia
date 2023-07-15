@@ -9,27 +9,25 @@ import SwiftUI
 
 struct NavigationTab: View {
     
-    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    @StateObject var authenticationViewModel = AuthenticationViewModel()
     
     @State var counterNotCreated = true
-    
-    @State var navigationTitle = "Alcohol"
     @State var isAuthenticated = false
     
     func updateAuthStatus(authStatus: Bool) {
-        print("updating auth status")
+        authenticationViewModel.loginAsGuest()
     }
     
     var body: some View {
-        TabView(selection: $navigationTitle) {
+        TabView {
             if authenticationViewModel.isAuthenticated {
                 ProgressScreen(counterNotCreated: counterNotCreated)
                     .tabItem {
                         Label("Progress", systemImage: "chart.bar.fill")
                     }
-                    .tag("Alcohol")
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+                    .environmentObject(authenticationViewModel)
             }
             
             if authenticationViewModel.isAuthenticated {
@@ -37,7 +35,6 @@ struct NavigationTab: View {
                     .tabItem {
                         Label("Profile", systemImage: "person.fill")
                     }
-                    .tag("Profile")
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
             }
@@ -47,14 +44,12 @@ struct NavigationTab: View {
                     .tabItem {
                         Label("Chats", systemImage: "message.fill")
                     }
-                    .tag("Chats")
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
             }
         }
         .accentColor(Color("Green"))
         .navigationBarBackButtonHidden(true)
-        .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.automatic)
     }
 }

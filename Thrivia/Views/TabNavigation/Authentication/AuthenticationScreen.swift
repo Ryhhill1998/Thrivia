@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AuthenticationScreen: View {
     
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    
     let updateAuthStatus: (Bool) -> Void
     
     var body: some View {
@@ -29,12 +31,14 @@ struct AuthenticationScreen: View {
                     VStack(spacing: 15.0) {
                         NavigationLink {
                             LoginScreen(updateAuthStatus: updateAuthStatus)
+                                .environmentObject(authenticationViewModel)
                         } label: {
                             ButtonAppearance(text: "Login", fontColour: .white, backgroundColour: Color("Green"))
                         }
                         
                         NavigationLink {
                             RegisterScreen(updateAuthStatus: updateAuthStatus)
+                                .environmentObject(authenticationViewModel)
                         } label: {
                             ButtonAppearance(text: "Register", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen"))
                         }
@@ -50,5 +54,6 @@ struct AuthenticationScreen: View {
 struct AuthenticationScreen_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticationScreen() { _ in print("auth status updated") }
+            .environmentObject(AuthenticationViewModel())
     }
 }

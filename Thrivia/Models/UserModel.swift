@@ -26,11 +26,11 @@ class UserModel {
     func registerUser(email: String, username: String, password: String, confirmPassword: String) -> User? {
         if password == confirmPassword {
             // use Firebase auth to validate credentials and return user object
-            
+
             let userId = UUID().uuidString // actually retrieve from user object
-            
+
             // store user details in database
-            
+
             // create auth user object from database details for use in UI
             return createUser(id: userId, username: username, email: email, password: password)
         } else {

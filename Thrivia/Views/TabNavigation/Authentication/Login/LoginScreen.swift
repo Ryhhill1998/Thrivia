@@ -9,10 +9,15 @@ import SwiftUI
 
 struct LoginScreen: View {
     
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    
     let updateAuthStatus: (Bool) -> Void
     
+    @State var emailFieldText: String = ""
+    @State var passwordFieldText: String = ""
+    
     func login() {
-        updateAuthStatus(true)
+        authenticationViewModel.loginUser(email: emailFieldText, password: passwordFieldText)
     }
     
     var body: some View {
@@ -22,9 +27,25 @@ struct LoginScreen: View {
             VStack(spacing: 15.0) {
                 AppIcon()
                 
-                InputField(placeholder: "Email") { print($0) }
+                TextField("Email", text: $emailFieldText)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
+                    .padding(.horizontal)
                 
-                InputField(placeholder: "Password") { print($0) }
+                TextField("Password", text: $passwordFieldText)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .font(.custom("Montserrat", size: 18))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
+                    .padding(.horizontal)
                 
                 ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: login)
 
@@ -51,7 +72,7 @@ struct LoginScreen: View {
                     .padding(.vertical)
                 
                 Button {
-                    updateAuthStatus(true)
+                    authenticationViewModel.loginAsGuest()
                 } label: {
                     Text("Login as guest")
                         .font(.custom("Montserrat", size: 20))
