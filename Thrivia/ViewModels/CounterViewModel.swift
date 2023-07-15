@@ -15,7 +15,15 @@ class CounterViewModel: ObservableObject {
     @Published var minutesPassed: Int = 0
     @Published var secondsPassed: Int = 0
     
-    @Published var timeDisplays: [Time] = [Time(unit: "days", value: 0), Time(unit: "hours", value: 0), Time(unit: "minutes", value: 0), Time(unit: "weeks", value: 0)]
+    @Published var timeDisplays = [Time(unit: "days", value: 0), Time(unit: "hours", value: 0), Time(unit: "minutes", value: 0), Time(unit: "seconds", value: 0)]
+    
+    func generatePreview(name: String, startDate: Date) {
+        counter = Counter(name: name, start: startDate)
+        counterName = counter?.name
+        
+        updateTimeDisplay()
+        print("preview updated")
+    }
     
     func createCounter(name: String, startDate: Date) {
         counter = Counter(name: name, start: startDate)
