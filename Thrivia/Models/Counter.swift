@@ -40,4 +40,15 @@ struct Counter {
             return calendar.dateComponents([.second], from: start, to: now).second ?? 0
         }
     }
+    
+    mutating func edit(newName: String, newStart: Date) {
+        name = newName
+        start = newStart
+        edits += 1
+    }
+    
+    mutating func reset() {
+        start = Date.now
+        resets += 1
+    }
 }
