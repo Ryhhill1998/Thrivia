@@ -15,34 +15,76 @@ class CounterViewModel: ObservableObject {
     @Published var minutesPassed: Int = 0
     @Published var secondsPassed: Int = 0
     
-    @Published var timeDisplaysAvailable: Int = 4
+    @Published var timeDisplays: [Time] = [Time(unit: "days", value: 0), Time(unit: "hours", value: 0), Time(unit: "minutes", value: 0), Time(unit: "weeks", value: 0)]
     
-    func createCounter(name: String, startDate: Date, startTime: Date) {
-        counter = Counter(name: name, startDate: startDate, startTime: startTime)
+    func createCounter(name: String, startDate: Date) {
+        counter = Counter(name: name, start: startDate)
         counterName = counter?.name
         
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            print("Timer fired!")
-            self.daysPassed = self.getDaysPassed()
-            self.hoursPassed = self.getHoursPassed()
-            self.minutesPassed = self.getMinutesPassed()
-            self.secondsPassed = self.getSecondsPassed()
+            self.updateTimeDisplay()
         }
     }
     
+    func updateTimeDisplay() {
+        timeDisplays = []
+        
+        let yearsPassed = getYearsPassed()
+        let monthsPassed = getMonthsPassed()
+        let weeksPassed = getWeeksPassed()
+        let daysPassed = getDaysPassed()
+        let hoursPassed = getHoursPassed()
+        let minutesPassed = getMinutesPassed()
+        let secondsPassed = getSecondsPassed()
+        
+        if yearsPassed > 0 {
+            timeDisplays.append(Time(unit: "years", value: yearsPassed))
+            timeDisplays.append(Time(unit: "months", value: monthsPassed))
+            timeDisplays.append(Time(unit: "weeks", value: weeksPassed))
+            timeDisplays.append(Time(unit: "days", value: daysPassed))
+        } else if monthsPassed > 0 {
+            timeDisplays.append(Time(unit: "months", value: monthsPassed))
+            timeDisplays.append(Time(unit: "weeks", value: weeksPassed))
+            timeDisplays.append(Time(unit: "days", value: daysPassed))
+            timeDisplays.append(Time(unit: "hours", value: hoursPassed))
+        } else if weeksPassed > 0 {
+            timeDisplays.append(Time(unit: "weeks", value: weeksPassed))
+            timeDisplays.append(Time(unit: "days", value: daysPassed))
+            timeDisplays.append(Time(unit: "hours", value: hoursPassed))
+            timeDisplays.append(Time(unit: "minutes", value: minutesPassed))
+        } else {
+            timeDisplays.append(Time(unit: "days", value: daysPassed))
+            timeDisplays.append(Time(unit: "hours", value: hoursPassed))
+            timeDisplays.append(Time(unit: "minutes", value: minutesPassed))
+            timeDisplays.append(Time(unit: "seconds", value: secondsPassed))
+        }
+    }
+    
+    func getYearsPassed() -> Int {
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.years) ?? 0
+    }
+    
+    func getMonthsPassed() -> Int {
+        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.months) ?? 0) % 12
+    }
+    
+    func getWeeksPassed() -> Int {
+        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.weeks) ?? 0) % 4
+    }
+    
     func getDaysPassed() -> Int {
-        return counter?.getTimePassed(unitOfTime: "days") ?? 0
+        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.days) ?? 0) % 7
     }
     
     func getHoursPassed() -> Int {
-        return counter?.getTimePassed(unitOfTime: "hours") ?? 0 % 24
+        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.hours) ?? 0) % 24
     }
     
     func getMinutesPassed() -> Int {
-        return counter?.getTimePassed(unitOfTime: "minutes") ?? 0 % 60
+        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.minutes) ?? 0) % 60
     }
     
     func getSecondsPassed() -> Int {
-        return counter?.getTimePassed(unitOfTime: "seconds") ?? 0 % 60
+        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.seconds) ?? 0) % 60
     }
 }

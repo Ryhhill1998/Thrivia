@@ -8,37 +8,36 @@
 import Foundation
 
 struct Counter {
+    
+    enum UnitOfTime {
+        case years, months, weeks, days, hours, minutes, seconds
+    }
+    
     let calendar = Calendar.current
     
     var name: String
-    var startDate: Date
-    var startTime: Date
+    var start: Date
     var edits = 0
     var resets = 0
     
-    func getTimePassed(unitOfTime: String) -> Int {
+    func getTimePassed(unitOfTime: UnitOfTime) -> Int {
         let now = Date.now
-        var timePassed: Int
         
         switch unitOfTime {
-        case "years":
-            timePassed = calendar.dateComponents([.year], from: startDate, to: now).year ?? 0
-        case "months":
-            timePassed = calendar.dateComponents([.month], from: startDate, to: now).month ?? 0
-        case "weeks":
-            timePassed = calendar.dateComponents([.weekOfYear], from: startDate, to: now).weekOfYear ?? 0
-        case "days":
-            timePassed = calendar.dateComponents([.day], from: startDate, to: now).day ?? 0
-        case "hours":
-            timePassed = calendar.dateComponents([.hour], from: startDate, to: now).hour ?? 0
-        case "minutes":
-            timePassed = calendar.dateComponents([.minute], from: startDate, to: now).minute ?? 0
-        case "seconds":
-            timePassed = calendar.dateComponents([.second], from: startDate, to: now).second ?? 0
-        default:
-            timePassed = 0
+        case UnitOfTime.years:
+            return calendar.dateComponents([.year], from: start, to: now).year ?? 0
+        case UnitOfTime.months:
+            return calendar.dateComponents([.month], from: start, to: now).month ?? 0
+        case UnitOfTime.weeks:
+            return calendar.dateComponents([.weekOfYear], from: start, to: now).weekOfYear ?? 0
+        case UnitOfTime.days:
+            return calendar.dateComponents([.day], from: start, to: now).day ?? 0
+        case UnitOfTime.hours:
+            return calendar.dateComponents([.hour], from: start, to: now).hour ?? 0
+        case UnitOfTime.minutes:
+            return calendar.dateComponents([.minute], from: start, to: now).minute ?? 0
+        case UnitOfTime.seconds:
+            return calendar.dateComponents([.second], from: start, to: now).second ?? 0
         }
-        
-        return timePassed
     }
 }

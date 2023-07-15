@@ -14,14 +14,13 @@ struct CreateCounterScreen: View {
     var counterViewModel: CounterViewModel
     
     @State private var selectedDate = Date.now
-    @State private var selectedTime = Date.now
     
     @State var counterName = ""
     
     func createCounter() {
         print("Creating counter")
         
-        counterViewModel.createCounter(name: counterName, startDate: selectedDate, startTime: selectedTime)
+        counterViewModel.createCounter(name: counterName, startDate: selectedDate)
         
         presentationMode.wrappedValue.dismiss()
     }
@@ -64,7 +63,7 @@ struct CreateCounterScreen: View {
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedTime, in: ...Date.now, displayedComponents: .hourAndMinute) {
+                    DatePicker(selection: $selectedDate, in: ...Date.now, displayedComponents: .hourAndMinute) {
                         Text("Start time")
                             .font(.custom("Montserrat", size: 18))
                             .foregroundColor(Color("Black"))

@@ -44,10 +44,9 @@ struct ProgressScreen: View {
                             }
                             
                             HStack {
-                                TimeDisplay(value: counterViewModel.daysPassed, units: "Days")
-                                TimeDisplay(value: counterViewModel.hoursPassed, units: "Hours")
-                                TimeDisplay(value: counterViewModel.minutesPassed, units: "Minutes")
-                                TimeDisplay(value: counterViewModel.secondsPassed, units: "Seconds")
+                                ForEach(counterViewModel.timeDisplays) { time in
+                                    TimeDisplay(value: time.value, units: time.unit)
+                                }
                             }
                         }
                         .padding()
