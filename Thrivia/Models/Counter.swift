@@ -16,12 +16,15 @@ struct Counter {
     let calendar = Calendar.current
     
     var name: String
+    var originalStart: Date
     var start: Date
     var edits = 0
     var resets = 0
     
-    var originalStart: Date {
-        return start
+    init(name: String, start: Date) {
+        self.name = name
+        self.start = start
+        originalStart = start
     }
     
     func getTimePassed(unitOfTime: UnitOfTime) -> Int {
@@ -45,9 +48,12 @@ struct Counter {
         }
     }
     
-    mutating func edit(newName: String, newStart: Date) {
+    mutating func edit(newName: String, newStart: Date, updateOriginalStart: Bool) {
         name = newName
         start = newStart
+        if updateOriginalStart {
+            originalStart = start
+        }
         edits += 1
     }
     

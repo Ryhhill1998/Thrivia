@@ -84,6 +84,6 @@ struct ProgressScreen: View {
 
 struct ProgressScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressScreen(counterNotCreated: false)
+        ProgressScreen(counterNotCreated: true)
     }
 }

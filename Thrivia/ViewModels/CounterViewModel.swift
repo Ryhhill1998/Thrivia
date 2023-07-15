@@ -38,8 +38,8 @@ class CounterViewModel: ObservableObject {
         }
     }
     
-    func editCounter(newName: String, newStart: Date) {
-        counter?.edit(newName: newName, newStart: newStart)
+    func editCounter(newName: String, newStart: Date, updateOriginalStart: Bool) {
+        counter?.edit(newName: newName, newStart: newStart, updateOriginalStart: updateOriginalStart)
     }
     
     func resetCounter() {
@@ -54,12 +54,16 @@ class CounterViewModel: ObservableObject {
         return counter?.start ?? Date.now
     }
     
+    func getCounterOriginalStart() -> Date {
+        return counter?.originalStart ?? Date.now
+    }
+    
     func formatDate(date: Date) -> String {
         return date.formatted(date: .long, time: .omitted)
     }
     
     func getFormattedOriginalStartDate() -> String {
-        return formatDate(date: (counter?.originalStart ?? Date.now))
+        return formatDate(date: getCounterOriginalStart())
     }
     
     func getFormattedRunStartDate() -> String {

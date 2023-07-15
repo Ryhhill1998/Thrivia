@@ -20,6 +20,7 @@ struct CreateCounterScreen: View {
     @State private var selectedDate: Date
     @State var counterName: String
     @State private var showEmptyNameAlert = false
+    @State private var showUpdateOriginalStartAlert = false
     
     init(navigationTitle: String, counterViewModel: CounterViewModel, buttonActionDescription: String) {
         self.navigationTitle = navigationTitle
@@ -34,12 +35,16 @@ struct CreateCounterScreen: View {
         if counterName.isEmpty {
             showEmptyNameAlert = true
         } else {
-            if counterViewModel.counter != nil {
-                counterViewModel.editCounter(newName: counterName, newStart: selectedDate)
-            } else {
-                counterViewModel.createCounter(name: counterName, startDate: selectedDate)
-            }
-            
+            counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+    
+    func editCounter(updateOriginalStart: Bool) {
+        if counterName.isEmpty {
+            showEmptyNameAlert = true
+        } else {
+            counterViewModel.editCounter(newName: counterName, newStart: selectedDate, updateOriginalStart: updateOriginalStart)
             presentationMode.wrappedValue.dismiss()
         }
     }
@@ -103,7 +108,20 @@ struct CreateCounterScreen: View {
                 .padding(.horizontal)
                 
                 ActionButton(text: "\(buttonActionDescription) counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    createCounter()
+                    if buttonActionDescription == "Save" && selectedDate > counterViewModel.getCounterOriginalStart() {
+                        showUpdateOriginalStartAlert = true
+                    } else {
+                        createCounter()
+                    }
+                }
+                .alert("Update original tracking start date?", isPresented: $showUpdateOriginalStartAlert) {
+                    Button("No", role: .destructive) {
+                        editCounter(updateOriginalStart: false)
+                    }
+                    
+                    Button("Yes", role: .cancel) {
+                        editCounter(updateOriginalStart: true)
+                    }
                 }
                 
                 Spacer()
