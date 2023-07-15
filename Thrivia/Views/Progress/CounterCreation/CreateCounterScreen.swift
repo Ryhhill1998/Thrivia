@@ -9,15 +9,23 @@ import SwiftUI
 
 struct CreateCounterScreen: View {
     
+    let navigationTitle: String
+    var counterViewModel: CounterViewModel
+    
     @Environment(\.presentationMode) var presentationMode
     
-    var counterViewModel: CounterViewModel
-    @ObservedObject var counterViewModelPreview: CounterViewModel = CounterViewModel()
+    @StateObject var counterViewModelPreview: CounterViewModel = CounterViewModel()
     
     @State private var selectedDate = Date.now
-    @State var counterName = ""
-    
+    @State var counterName: String
     @State private var showEmptyNameAlert = false
+    
+    init(navigationTitle: String, counterViewModel: CounterViewModel) {
+        self.navigationTitle = navigationTitle
+        self.counterViewModel = counterViewModel
+        
+        _counterName = State(initialValue: counterViewModel.counterName ?? "")
+    }
     
     func createCounter() {
         if counterName.isEmpty {
@@ -97,7 +105,7 @@ struct CreateCounterScreen: View {
             }
             .padding(.top)
         }
-        .navigationTitle("Create a counter")
+        .navigationTitle(navigationTitle)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
     }
@@ -105,6 +113,6 @@ struct CreateCounterScreen: View {
 
 struct CreateCounterScreen_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCounterScreen(counterViewModel: CounterViewModel())
+        CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: CounterViewModel())
     }
 }

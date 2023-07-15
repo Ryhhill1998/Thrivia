@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
-    @ObservedObject var counterViewModel = CounterViewModel()
+    @StateObject var counterViewModel = CounterViewModel()
     
     @State var counterNotCreated: Bool
+    @State var inEditMode: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -59,7 +60,7 @@ struct ProgressScreen: View {
                         .padding(.horizontal)
                         
                         ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) {
-                            print("editing counter")
+                            inEditMode = true
                         }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
@@ -68,11 +69,14 @@ struct ProgressScreen: View {
                     }
                 }
             }
-            .navigationTitle(counterViewModel.counterName ?? "")
+            .navigationTitle(counterViewModel.counterName ?? "Counter name")
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterNotCreated) {
-                CreateCounterScreen(counterViewModel: counterViewModel)
+                CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: counterViewModel)
+            }
+            .navigationDestination(isPresented: $inEditMode) {
+                CreateCounterScreen(navigationTitle: "Edit counter", counterViewModel: counterViewModel)
             }
         }
     }
