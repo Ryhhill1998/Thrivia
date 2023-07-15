@@ -11,6 +11,7 @@ struct CreateCounterScreen: View {
     
     let navigationTitle: String
     var counterViewModel: CounterViewModel
+    let buttonActionDescription: String
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -20,9 +21,10 @@ struct CreateCounterScreen: View {
     @State var counterName: String
     @State private var showEmptyNameAlert = false
     
-    init(navigationTitle: String, counterViewModel: CounterViewModel) {
+    init(navigationTitle: String, counterViewModel: CounterViewModel, buttonActionDescription: String) {
         self.navigationTitle = navigationTitle
         self.counterViewModel = counterViewModel
+        self.buttonActionDescription = buttonActionDescription
         
         _counterName = State(initialValue: counterViewModel.counterName ?? "")
     }
@@ -94,7 +96,7 @@ struct CreateCounterScreen: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
+                ActionButton(text: "\(buttonActionDescription) counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
                     createCounter()
                 }
                 
@@ -113,6 +115,6 @@ struct CreateCounterScreen: View {
 
 struct CreateCounterScreen_Previews: PreviewProvider {
     static var previews: some View {
-        CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: CounterViewModel())
+        CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: CounterViewModel(), buttonActionDescription: "Create")
     }
 }

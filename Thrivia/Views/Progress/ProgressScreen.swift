@@ -73,10 +73,10 @@ struct ProgressScreen: View {
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterNotCreated) {
-                CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: counterViewModel)
+                CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: counterViewModel, buttonActionDescription: "Create")
             }
             .navigationDestination(isPresented: $inEditMode) {
-                CreateCounterScreen(navigationTitle: "Edit counter", counterViewModel: counterViewModel)
+                CreateCounterScreen(navigationTitle: "Edit counter", counterViewModel: counterViewModel, buttonActionDescription: "Save")
             }
         }
     }
