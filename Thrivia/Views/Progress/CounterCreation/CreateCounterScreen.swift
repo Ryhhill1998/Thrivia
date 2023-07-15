@@ -17,7 +17,7 @@ struct CreateCounterScreen: View {
     
     @StateObject var counterViewModelPreview: CounterViewModel = CounterViewModel()
     
-    @State private var selectedDate = Date.now
+    @State private var selectedDate: Date
     @State var counterName: String
     @State private var showEmptyNameAlert = false
     
@@ -27,6 +27,7 @@ struct CreateCounterScreen: View {
         self.buttonActionDescription = buttonActionDescription
         
         _counterName = State(initialValue: counterViewModel.counterName ?? "")
+        _selectedDate = State(initialValue: counterViewModel.counter?.start ?? Date.now)
     }
     
     func createCounter() {
