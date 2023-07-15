@@ -17,12 +17,15 @@ struct CreateCounterScreen: View {
     @State private var selectedDate = Date.now
     @State var counterName = ""
     
+    @State private var showEmptyNameAlert = false
+    
     func createCounter() {
-        print("Creating counter")
-        
-        counterViewModel.createCounter(name: counterName, startDate: selectedDate)
-        
-        presentationMode.wrappedValue.dismiss()
+        if counterName.isEmpty {
+            showEmptyNameAlert = true
+        } else {
+            counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+            presentationMode.wrappedValue.dismiss()
+        }
     }
     
     var body: some View {
@@ -53,6 +56,9 @@ struct CreateCounterScreen: View {
                         .font(.custom("Montserrat", size: 18))
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
+                        .alert("Counter name cannot be empty", isPresented: $showEmptyNameAlert) {
+                            Button("OK", role: .cancel) { }
+                        }
                     
                     LineSeparator()
                     
