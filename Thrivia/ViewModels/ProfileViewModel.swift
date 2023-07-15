@@ -15,7 +15,7 @@ class ProfileViewModel: ObservableObject {
     @Published var iconColour: Color
     
     init() {
-        user = User(username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678", iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
+        user = User(id: UUID().uuidString, username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678", iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
         
         username = user.username
         email = user.email

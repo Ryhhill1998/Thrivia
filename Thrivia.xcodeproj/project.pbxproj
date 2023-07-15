@@ -20,6 +20,8 @@
 		5B5411DD2A62E26100A024E8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411DC2A62E26100A024E8 /* User.swift */; };
 		5B5411DF2A62E2D700A024E8 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411DE2A62E2D700A024E8 /* ProfileViewModel.swift */; };
 		5B5411E22A62EBC400A024E8 /* AccountDetailField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E12A62EBC400A024E8 /* AccountDetailField.swift */; };
+		5B5411E42A62EDC300A024E8 /* AllChatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */; };
+		5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E52A630C7B00A024E8 /* Chat.swift */; };
 		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
@@ -55,6 +57,8 @@
 		5B5411DC2A62E26100A024E8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B5411DE2A62E2D700A024E8 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5B5411E12A62EBC400A024E8 /* AccountDetailField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailField.swift; sourceTree = "<group>"; };
+		5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChatsViewModel.swift; sourceTree = "<group>"; };
+		5B5411E52A630C7B00A024E8 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveUserIcon.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,6 +164,7 @@
 				5B5411C62A615A6700A024E8 /* Message.swift */,
 				5B5411D42A61E62800A024E8 /* Counter.swift */,
 				5B5411DC2A62E26100A024E8 /* User.swift */,
+				5B5411E52A630C7B00A024E8 /* Chat.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -185,6 +190,7 @@
 			children = (
 				5B5411D62A61EA2B00A024E8 /* CounterViewModel.swift */,
 				5B5411DE2A62E2D700A024E8 /* ProfileViewModel.swift */,
+				5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -352,11 +358,13 @@
 				5BC6FDFB2A5EB372006459F8 /* AllChatsScreen.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,
 				5BC6FDF82A5EADA8006459F8 /* NavigationTab.swift in Sources */,
+				5B5411E42A62EDC300A024E8 /* AllChatsViewModel.swift in Sources */,
 				5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */,
 				5B5411C72A615A6700A024E8 /* Message.swift in Sources */,
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
 				5B5411CC2A6188BE00A024E8 /* CreateCounterScreen.swift in Sources */,
 				5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */,
+				5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
