@@ -26,8 +26,8 @@ struct NavigationTab: View {
                         Label("Progress", systemImage: "chart.bar.fill")
                     }
                 
-                if authenticationViewModel.authUser != nil {
-                    ProfileScreen(updateAuthStatus: updateAuthStatus)
+                if authenticationViewModel.authUserId != nil {
+                    ProfileScreen(userId: authenticationViewModel.authUserId!)
                         .tabItem {
                             Label("Profile", systemImage: "person.fill")
                         }

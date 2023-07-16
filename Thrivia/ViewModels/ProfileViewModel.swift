@@ -8,41 +8,35 @@
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
-    var user: User
+    var profileModel = ProfileModel()
+    
+    var userId: String
+    
     @Published var username: String
     @Published var email: String
     @Published var password: String
     @Published var iconColour: Color
     
-    init() {
-        user = User(id: UUID().uuidString, username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678", iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
+    init(userId: String) {
+        self.userId = userId
         
-        username = user.username
-        email = user.email
-        password = user.getPassword()
-        iconColour = user.iconColour
-    }
-    
-    func logOutUser() {
-        print("logging out user")
-    }
-    
-    func deleteUserAccount() {
-        print("deleting user account")
+        username = profileModel.getUserUsername(userId: userId)
+        email = profileModel.getUserEmail(userId: userId)
+        password = "**********"
+        iconColour = profileModel.getUserIconColour(userId: userId)
     }
     
     func updateUserUsername(newUsername: String) {
-        user.updateUsername(newUsername: newUsername)
-        username = user.username
+        profileModel.updateUserUsername(userId: userId, newUsername: newUsername)
+        username = newUsername
     }
-    
+
     func updateUserEmail(newEmail: String) {
-        user.updateEmail(newEmail: newEmail)
-        email = user.email
+        profileModel.updateUserEmail(userId: userId, newEmail: email)
+        email = newEmail
     }
-    
+
     func updateUserPassword(newPassword: String) {
-        user.updatePassword(newPassword: newPassword)
-        password = user.getPassword()
+        profileModel.updateUserPassword(userId: userId, newPassword: newPassword)
     }
 }

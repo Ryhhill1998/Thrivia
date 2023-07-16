@@ -9,20 +9,21 @@ import SwiftUI
 
 struct ProfileScreen: View {
     
-    @ObservedObject var profileViewModel = ProfileViewModel()
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    @ObservedObject var profileViewModel: ProfileViewModel
     
-    let updateAuthStatus: (Bool) -> Void
+    init(userId: String) {
+        profileViewModel = ProfileViewModel(userId: userId)
+    }
     
     @State var showDeleteAccountAlert = false
     
-    func logOutUser() {
-        profileViewModel.logOutUser()
-        updateAuthStatus(false)
+    func logoutUser() {
+        authenticationViewModel.logoutUser()
     }
     
     func deleteUserAccount() {
-        profileViewModel.deleteUserAccount()
-        updateAuthStatus(false)
+        authenticationViewModel.deleteUserAccount()
     }
     
     var body: some View {
@@ -51,7 +52,7 @@ struct ProfileScreen: View {
                     
                     VStack(spacing: 15.0) {
                         ActionButton(text: "Logout", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                            logOutUser()
+                            logoutUser()
                         }
                         
                         ActionButton(text: "Delete account", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
@@ -80,6 +81,6 @@ struct ProfileScreen: View {
 
 struct ProfileScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileScreen() { _ in print("auth status updated") }
+        ProfileScreen(userId: UUID().uuidString)
     }
 }

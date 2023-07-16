@@ -8,11 +8,13 @@
 import SwiftUI
 
 class AllChatsViewModel: ObservableObject {
+    var user: User
     var chatModel = ChatsModel()
     
     @Published var allChats: [Chat]
     
     init(user: User) {
+        self.user = user
         allChats = chatModel.getUserChats(user: user)
     }
     

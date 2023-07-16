@@ -8,18 +8,18 @@
 import Foundation
 
 class AuthenticationViewModel: ObservableObject {
-    var userModel: AuthenticationModel = AuthenticationModel()
+    var authenticationModel: AuthenticationModel = AuthenticationModel()
     
     @Published var isAuthenticated: Bool = false
-    @Published var authUser: User?
+    @Published var authUserId: String?
     
     func loginUser(email: String, password: String) {
-        let user = userModel.loginUser(email: email, password: password)
+        let userId = authenticationModel.loginUser(email: email, password: password)
         
-        guard let unwrappedUser = user else { return }
+        guard let unwrappedUserId = userId else { return }
         
         isAuthenticated = true
-        authUser = unwrappedUser
+        authUserId = unwrappedUserId
     }
     
     func loginAsGuest() {
@@ -28,11 +28,27 @@ class AuthenticationViewModel: ObservableObject {
     }
     
     func registerUser(email: String, username: String, password: String, confirmPassword: String) {
-        let user = userModel.registerUser(email: email, username: username, password: password, confirmPassword: confirmPassword)
+        let userId = authenticationModel.registerUser(email: email, username: username, password: password, confirmPassword: confirmPassword)
         
-        guard let unwrappedUser = user else { return }
+        guard let unwrappedUserId = userId else { return }
         
         isAuthenticated = true
-        authUser = unwrappedUser
+        authUserId = unwrappedUserId
+    }
+    
+    func logoutUser() {
+        guard let userId = authUserId else { return }
+        
+        authenticationModel.logoutUser(userId: userId)
+        isAuthenticated = false
+        authUserId = nil
+    }
+    
+    func deleteUserAccount() {
+        guard let userId = authUserId else { return }
+        
+        authenticationModel.deleteUserAccount(userId: userId)
+        isAuthenticated = false
+        authUserId = nil
     }
 }

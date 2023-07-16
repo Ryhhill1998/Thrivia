@@ -8,11 +8,11 @@
 import SwiftUI
 
 class AuthenticationModel {
-    func createUser(id: String, username: String, email: String, password: String) -> User {
-        return User(id: id, username: username, email: email, password: password, iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
+    func createUser(id: String, username: String, email: String, password: String) -> String {
+        return id
     }
     
-    func loginUser(email: String, password: String) -> User? {
+    func loginUser(email: String, password: String) -> String? {
         // use Firebase auth to validate credentials and return user object
         
         let userId = UUID().uuidString // actually retrieve from user object
@@ -23,7 +23,7 @@ class AuthenticationModel {
         return createUser(id: userId, username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678")
     }
     
-    func registerUser(email: String, username: String, password: String, confirmPassword: String) -> User? {
+    func registerUser(email: String, username: String, password: String, confirmPassword: String) -> String? {
         if password == confirmPassword {
             // use Firebase auth to validate credentials and return user object
 
@@ -36,5 +36,13 @@ class AuthenticationModel {
         } else {
             return nil
         }
+    }
+    
+    func logoutUser(userId: String) {
+        // connect to db and logout
+    }
+    
+    func deleteUserAccount(userId: String) {
+        // connect to db and delete account
     }
 }
