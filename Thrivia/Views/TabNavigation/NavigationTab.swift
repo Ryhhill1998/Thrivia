@@ -32,7 +32,7 @@ struct NavigationTab: View {
                             Label("Profile", systemImage: "person.fill")
                         }
                     
-                    AllChatsScreen()
+                    AllChatsScreen(userId: authenticationViewModel.authUserId!)
                         .tabItem {
                             Label("Chats", systemImage: "message.fill")
                         }

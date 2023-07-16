@@ -12,9 +12,11 @@ class ChatsViewModel: ObservableObject {
     var userId: String
     
     @Published var allChats: [Chat]
+    @Published var activeUsers: [OtherUser]
     
     init(userId: String) {
         self.userId = userId
         allChats = chatsModel.getUserChats(userId: userId)
+        activeUsers = chatsModel.getActiveUsers(userId: userId)
     }
 }

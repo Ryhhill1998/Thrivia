@@ -9,27 +9,22 @@ import SwiftUI
 
 struct AllChatsScreen: View {
     
-    @State private var chatIsLoaded = false
+    @ObservedObject var chatsViewModel: ChatsViewModel
+    
+    @State var chatIsLoaded = false
     
     @State var selectedIconColour: Color?
     @State var selectedUserName: String?
+    
+    init(userId: String) {
+        chatsViewModel = ChatsViewModel(userId: userId)
+    }
     
     func loadChat(iconColour: Color, name: String) {
         selectedIconColour = iconColour
         selectedUserName = name
         
         chatIsLoaded = true
-    }
-    
-    func loadAllChats() {
-        print("loading all chats")
-    }
-    
-    init(chatIsLoaded: Bool = false) {
-        self.chatIsLoaded = chatIsLoaded
-        
-        // will instead be done with initialising an observable object - ViewModel
-        loadAllChats()
     }
     
     var body: some View {
@@ -41,22 +36,12 @@ struct AllChatsScreen: View {
                     VStack(spacing: 25.0) {
                         ScrollView(.horizontal) {
                             HStack(spacing: 15.0) {
-                                Button {
-                                    loadChat(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
-                                } label: {
-                                    AvailableUser(backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
-                                }
-                                
-                                Button {
-                                    loadChat(iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
-                                } label: {
-                                    AvailableUser(backgroundColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
-                                }
-                                
-                                Button {
-                                    loadChat(iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
-                                } label: {
-                                    AvailableUser(backgroundColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
+                                ForEach(chatsViewModel.activeUsers) { user in
+                                    Button {
+                                        loadChat(iconColour: user.iconColour, name: user.username)
+                                    } label: {
+                                        AvailableUser(backgroundColour: user.iconColour, name: user.username)
+                                    }
                                 }
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -65,22 +50,14 @@ struct AllChatsScreen: View {
                         }
                         
                         VStack(spacing: 15.0) {
-                            Button {
-                                loadChat(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
-                            } label: {
-                                MessagePreview(name: "ZigzagZebra24", backgroundColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), lastMessage: "That’s what thrivia is here for! What would you like to talk about?")
-                            }
-                            
-                            Button {
-                                loadChat(iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), name: "CoolCucumber8080")
-                            } label: {
-                                MessagePreview(name: "CoolCucumber8080", backgroundColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)), lastMessage: "I’ve never heard of that before but it sounds cool!")
-                            }
-                            
-                            Button {
-                                loadChat(iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), name: "BoxingGiraffe99")
-                            } label: {
-                                MessagePreview(name: "BoxingGiraffe99", backgroundColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)), lastMessage: "Hi there! Are you okay?")
+                            ForEach(chatsViewModel.allChats) { chat in
+                                if chat.messages.last != nil {
+                                    Button {
+                                        loadChat(iconColour: chat.otherUser.iconColour, name: chat.otherUser.username)
+                                    } label: {
+                                        MessagePreview(name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content)
+                                    }
+                                }
                             }
                         }
                     }
@@ -98,7 +75,7 @@ struct AllChatsScreen: View {
 
 struct ChatsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        AllChatsScreen()
+        AllChatsScreen(userId: "1")
     }
 }
 
