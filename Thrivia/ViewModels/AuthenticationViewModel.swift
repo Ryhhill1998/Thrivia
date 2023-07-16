@@ -14,12 +14,9 @@ class AuthenticationViewModel: ObservableObject {
     @Published var authUserId: String?
     
     func loginUser(email: String, password: String) {
-        let userId = authenticationModel.loginUser(email: email, password: password)
-        
-        guard let unwrappedUserId = userId else { return }
-        
+        authenticationModel.signInAuthUser(email: email, password: password)
+
         isAuthenticated = true
-        authUserId = unwrappedUserId
     }
     
     func loginAsGuest() {
@@ -27,13 +24,10 @@ class AuthenticationViewModel: ObservableObject {
         print("logging in as guest")
     }
     
-    func registerUser(email: String, username: String, password: String, confirmPassword: String) {
-        let userId = authenticationModel.registerUser(email: email, username: username, password: password, confirmPassword: confirmPassword)
-        
-        guard let unwrappedUserId = userId else { return }
+    func registerUser(email: String, username: String, password: String) {
+        authenticationModel.createAuthUser(email: email, username: username, password: password)
         
         isAuthenticated = true
-        authUserId = unwrappedUserId
     }
     
     func logoutUser() {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct RegisterScreen: View {
     
@@ -18,7 +19,11 @@ struct RegisterScreen: View {
     @State var confirmPasswordFieldText: String = ""
     
     func registerClicked() {
-        authenticationViewModel.registerUser(email: emailFieldText, username: usernameFieldField, password: passwordFieldText, confirmPassword: confirmPasswordFieldText)
+        if emailFieldText.isEmpty || usernameFieldField.isEmpty || passwordFieldText.isEmpty || confirmPasswordFieldText.isEmpty { return }
+        
+        if passwordFieldText != confirmPasswordFieldText { return }
+        
+        authenticationViewModel.registerUser(email: emailFieldText, username: usernameFieldField, password: passwordFieldText)
     }
     
     var body: some View {

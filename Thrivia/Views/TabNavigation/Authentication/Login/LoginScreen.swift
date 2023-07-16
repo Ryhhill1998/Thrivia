@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct LoginScreen: View {
     
@@ -17,6 +18,8 @@ struct LoginScreen: View {
     @State var passwordFieldText: String = ""
     
     func login() {
+        if emailFieldText.isEmpty || passwordFieldText.isEmpty { return }
+        
         authenticationViewModel.loginUser(email: emailFieldText, password: passwordFieldText)
     }
     
