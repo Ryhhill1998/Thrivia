@@ -6,40 +6,71 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
+import FirebaseAuth
 
 class AuthenticationModel {
-    func createUser(id: String, username: String, email: String, password: String) -> String {
-        return id
+    func createAuthUserWithEmailAndPassword(email: String, password: String) -> String? {
+        var userId: String?
+        
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let authError = error {
+                print(authError.localizedDescription)
+            } else {
+                userId = authResult?.user.uid
+            }
+        }
+        
+        return userId
+    }
+    
+    func signInAuthUserWithEmailAndPassword(email: String, password: String) -> String? {
+        var userId: String?
+        
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let authError = error {
+                print(authError.localizedDescription)
+            } else {
+                userId = authResult?.user.uid
+            }
+        }
+        
+        return userId
     }
     
     func loginUser(email: String, password: String) -> String? {
         // use Firebase auth to validate credentials and return user object
-        
-        let userId = UUID().uuidString // actually retrieve from user object
+        guard let userId = signInAuthUserWithEmailAndPassword(email: email, password: password) else { return nil }
         
         // retrieve user details from database
         
         // create auth user object from database details for use in UI
-        return createUser(id: userId, username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678")
+        return userId
     }
     
     func registerUser(email: String, username: String, password: String, confirmPassword: String) -> String? {
         if password == confirmPassword {
             // use Firebase auth to validate credentials and return user object
-
-            let userId = UUID().uuidString // actually retrieve from user object
+            guard let userId = createAuthUserWithEmailAndPassword(email: email, password: password) else { return nil }
 
             // store user details in database
 
             // create auth user object from database details for use in UI
-            return createUser(id: userId, username: username, email: email, password: password)
+            return userId
         } else {
+            print("passwords don't match")
             return nil
         }
     }
     
     func logoutUser(userId: String) {
-        // connect to db and logout
+        let firebaseAuth = Auth.auth()
+        
+        do {
+          try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+          print("Error signing out: %@", signOutError)
+        }
     }
     
     func deleteUserAccount(userId: String) {
