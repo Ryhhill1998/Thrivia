@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class UserModel {
+class AuthenticationModel {
     func createUser(id: String, username: String, email: String, password: String) -> User {
         return User(id: id, username: username, email: email, password: password, iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
     }

@@ -41,19 +41,17 @@ struct NavigationTab: View {
                         .tabItem {
                             Label("Profile", systemImage: "person.fill")
                         }
-                        .environmentObject(authenticationViewModel)
                     
                     AuthenticationScreen(updateAuthStatus: updateAuthStatus)
                         .tabItem {
                             Label("Chats", systemImage: "message.fill")
                         }
-                        .environmentObject(authenticationViewModel)
                 }
             } else {
                 AuthenticationScreen(updateAuthStatus: updateAuthStatus)
-                    .environmentObject(authenticationViewModel)
             }
         }
+        .environmentObject(authenticationViewModel)
         .accentColor(Color("Green"))
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.automatic)

@@ -8,7 +8,7 @@
 import Foundation
 
 class AuthenticationViewModel: ObservableObject {
-    var userModel: UserModel = UserModel()
+    var userModel: AuthenticationModel = AuthenticationModel()
     
     @Published var isAuthenticated: Bool = false
     @Published var authUser: User?

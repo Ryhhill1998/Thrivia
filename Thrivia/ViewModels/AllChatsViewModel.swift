@@ -8,16 +8,15 @@
 import SwiftUI
 
 class AllChatsViewModel: ObservableObject {
-    var user: User
+    var chatModel = ChatsModel()
+    
     @Published var allChats: [Chat]
     
-    init() {
-        user = User(id: UUID().uuidString, username: "ZigzagZebra24", email: "zigzagzebra24@outlook.com", password: "12345678", iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)))
-        
-        allChats = []
+    init(user: User) {
+        allChats = chatModel.getUserChats(user: user)
     }
     
-    func getAllChats(user: User) -> [Chat] {
-        return user.chats
+    func sendMessage(to otherUser: User, messageContent: String) {
+        
     }
 }
