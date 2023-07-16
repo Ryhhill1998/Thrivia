@@ -31,13 +31,13 @@ struct ChatScreen: View {
                             .padding(.top, index == 0 ? 15.0 : 0)
                     }
                 }
-                .background(.white)
                 .padding(.top, 5.0)
             }
+            .background(Color("White"))
             
             MessageField(sendPressed: sendPressed)
+                .background(Color("Background"))
         }
-        .background(Color("Background"))
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -71,8 +71,8 @@ struct ChatScreen: View {
                     .foregroundColor(Color("Black"))
             }
         }
-        .toolbarBackground(Color("Background"), for: .navigationBar)
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
+        .toolbarBackground(Color("White"), for: .navigationBar)
     }
 }
