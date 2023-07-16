@@ -13,18 +13,16 @@ struct AllChatsScreen: View {
     
     @State var chatIsLoaded = false
     
-    @State var selectedIconColour: Color?
-    @State var selectedUserName: String?
-    
     init(userId: String) {
         chatsViewModel = ChatsViewModel(userId: userId)
     }
     
-    func loadChat(iconColour: Color, name: String) {
-        selectedIconColour = iconColour
-        selectedUserName = name
+    func loadChat(otherUser: OtherUser) {
+        chatsViewModel.loadChat(otherUser: otherUser)
         
-        chatIsLoaded = true
+        if chatsViewModel.loadedChat != nil {
+            chatIsLoaded = true
+        }
     }
     
     var body: some View {
@@ -36,11 +34,11 @@ struct AllChatsScreen: View {
                     VStack(spacing: 25.0) {
                         ScrollView(.horizontal) {
                             HStack(spacing: 15.0) {
-                                ForEach(chatsViewModel.activeUsers) { user in
+                                ForEach(chatsViewModel.activeUsers) { otherUser in
                                     Button {
-                                        loadChat(iconColour: user.iconColour, name: user.username)
+                                        loadChat(otherUser: otherUser)
                                     } label: {
-                                        AvailableUser(backgroundColour: user.iconColour, name: user.username)
+                                        AvailableUser(backgroundColour: otherUser.iconColour, name: otherUser.username)
                                     }
                                 }
                             }
@@ -53,7 +51,7 @@ struct AllChatsScreen: View {
                             ForEach(chatsViewModel.allChats) { chat in
                                 if chat.messages.last != nil {
                                     Button {
-                                        loadChat(iconColour: chat.otherUser.iconColour, name: chat.otherUser.username)
+                                        loadChat(otherUser: chat.otherUser)
                                     } label: {
                                         MessagePreview(name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content)
                                     }
@@ -67,7 +65,8 @@ struct AllChatsScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatIsLoaded) {
-                ChatScreen(iconColour: selectedIconColour ?? Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: selectedUserName ?? "ZigzagZebra24")
+                ChatScreen()
+                    .environmentObject(chatsViewModel)
             }
         }
     }

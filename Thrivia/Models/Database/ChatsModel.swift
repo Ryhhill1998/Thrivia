@@ -62,7 +62,7 @@ class ChatsModel {
     
     private func createChatObjectFromChatDoc(chatId: String, otherUserId: String, otherUserUsername: String, otherUserIconColour: Color) -> Chat {
         // convert data from user docs to OtherUser objects
-        var otherUser = OtherUser(id: otherUserId, username: otherUserUsername, iconColour: otherUserIconColour)
+        let otherUser = OtherUser(id: otherUserId, username: otherUserUsername, iconColour: otherUserIconColour)
         
         // for each chat doc, get message doc for each messageId
         var messages: [Message] = []
@@ -101,7 +101,7 @@ class ChatsModel {
         // user doc form: id, email, username, iconColour
         let otherUserId = otherUser.id
         
-        var chatId = getChatDoc(userId: userId, otherUserId: otherUserId)
+        let chatId = getChatDoc(userId: userId, otherUserId: otherUserId)
         
         guard let unwrappedChatId = chatId else {
             // create new chat doc if doc does not exist in db

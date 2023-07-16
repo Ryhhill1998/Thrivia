@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ChatScreen: View {
     
+    @EnvironmentObject private var chatsViewModel: ChatsViewModel
+    
     @Environment(\.presentationMode) var presentationMode
     
     @State var messages = [
@@ -16,9 +18,6 @@ struct ChatScreen: View {
         Message(id: "2", content: "Hi! My favourite colour is blue", sent: false, timestamp: Date()),
         Message(id: "3", content: "That's my favourite colour too!", sent: true, timestamp: Date())
     ]
-    
-    let iconColour: Color
-    let name: String
     
     func sendPressed(text: String) {
         messages.append(Message(id: "\(messages.count + 1)", content: text, sent: true, timestamp: Date()))
@@ -55,10 +54,10 @@ struct ChatScreen: View {
     
             ToolbarItem(placement: .navigationBarLeading) {
                 HStack(spacing: 10.0) {
-                    UserIcon(size: "small", borderColour: .white, backgroundColour: iconColour, name: name)
-                    
+                    UserIcon(size: "small", borderColour: .white, backgroundColour: chatsViewModel.loadedChat?.otherUser.iconColour ?? .purple, name: chatsViewModel.loadedChat?.otherUser.username ?? "Username")
+
                     VStack(alignment: .leading, spacing: 1.0) {
-                        Text(name)
+                        Text(chatsViewModel.loadedChat?.otherUser.username ?? "Username")
                             .font(.custom("Montserrat", size: 13))
                             .foregroundColor(Color("Black"))
                             .fontWeight(.medium)
@@ -82,6 +81,6 @@ struct ChatScreen: View {
 
 struct ChatScreen_Previews: PreviewProvider {
     static var previews: some View {
-        ChatScreen(iconColour: Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00)), name: "ZigzagZebra24")
+        ChatScreen()
     }
 }

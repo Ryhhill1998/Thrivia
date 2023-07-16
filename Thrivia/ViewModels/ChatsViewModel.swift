@@ -13,10 +13,15 @@ class ChatsViewModel: ObservableObject {
     
     @Published var allChats: [Chat]
     @Published var activeUsers: [OtherUser]
+    @Published var loadedChat: Chat?
     
     init(userId: String) {
         self.userId = userId
         allChats = chatsModel.getUserChats(userId: userId)
         activeUsers = chatsModel.getActiveUsers(userId: userId)
+    }
+    
+    func loadChat(otherUser: OtherUser) {
+        loadedChat = chatsModel.getChat(userId: userId, otherUser: otherUser)
     }
 }
