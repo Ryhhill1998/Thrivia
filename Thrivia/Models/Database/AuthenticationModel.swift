@@ -14,6 +14,15 @@ class AuthenticationModel {
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     
+    func listenForAuthStateChanges(setAuthState: @escaping (String?, Bool) -> Void) {
+        auth.addStateDidChangeListener { auth, user in
+            let userId = user?.uid
+            let authState = userId != nil
+            
+            setAuthState(userId, authState)
+        }
+    }
+    
     func createAuthUser(email: String, username: String, password: String) {
         auth.createUser(withEmail: email, password: password) { authResult, error in
             if let authError = error {
@@ -40,9 +49,9 @@ class AuthenticationModel {
         let firebaseAuth = Auth.auth()
         
         do {
-          try firebaseAuth.signOut()
+            try firebaseAuth.signOut()
         } catch let signOutError as NSError {
-          print("Error signing out: %@", signOutError)
+            print("Error signing out: %@", signOutError)
         }
     }
     

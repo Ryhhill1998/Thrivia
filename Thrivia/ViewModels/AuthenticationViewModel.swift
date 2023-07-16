@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 
 class AuthenticationViewModel: ObservableObject {
     var authenticationModel: AuthenticationModel = AuthenticationModel()
@@ -13,10 +14,19 @@ class AuthenticationViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var authUserId: String?
     
+    init() {
+        authenticationModel.listenForAuthStateChanges(setAuthState: setAuthState(userId:authState:))
+    }
+    
+    func setAuthState(userId: String?, authState: Bool) {
+        authUserId = userId
+        isAuthenticated = authState
+    }
+    
     func loginUser(email: String, password: String) {
         authenticationModel.signInAuthUser(email: email, password: password)
 
-        isAuthenticated = true
+//        isAuthenticated = true
     }
     
     func loginAsGuest() {
@@ -27,22 +37,22 @@ class AuthenticationViewModel: ObservableObject {
     func registerUser(email: String, username: String, password: String) {
         authenticationModel.createAuthUser(email: email, username: username, password: password)
         
-        isAuthenticated = true
+//        isAuthenticated = true
     }
     
     func logoutUser() {
         guard let userId = authUserId else { return }
         
         authenticationModel.logoutUser(userId: userId)
-        isAuthenticated = false
-        authUserId = nil
+//        isAuthenticated = false
+//        authUserId = nil
     }
     
     func deleteUserAccount() {
         guard let userId = authUserId else { return }
         
         authenticationModel.deleteUserAccount(userId: userId)
-        isAuthenticated = false
-        authUserId = nil
+//        isAuthenticated = false
+//        authUserId = nil
     }
 }
