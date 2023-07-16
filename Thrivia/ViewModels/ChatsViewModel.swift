@@ -8,8 +8,8 @@
 import SwiftUI
 
 class ChatsViewModel: ObservableObject {
-    var userId: String
     var chatsModel = ChatsModel()
+    var userId: String
     
     @Published var allChats: [Chat]
     
