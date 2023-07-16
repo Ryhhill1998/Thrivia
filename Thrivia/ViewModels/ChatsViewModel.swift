@@ -24,4 +24,11 @@ class ChatsViewModel: ObservableObject {
     func loadChat(otherUser: OtherUser) {
         loadedChat = chatsModel.getChat(userId: userId, otherUser: otherUser)
     }
+    
+    func sendMessage(content: String) {
+        guard let chat = loadedChat else { return }
+        
+        let updatedChat = chatsModel.sendMessage(chat: chat, senderId: userId, content: content)
+        loadedChat = updatedChat
+    }
 }

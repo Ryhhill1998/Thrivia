@@ -13,21 +13,19 @@ struct ChatScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @State var messages = [
-        Message(id: "1", content: "Hello there! What is your favourite colour?", sent: true, timestamp: Date()),
-        Message(id: "2", content: "Hi! My favourite colour is blue", sent: false, timestamp: Date()),
-        Message(id: "3", content: "That's my favourite colour too!", sent: true, timestamp: Date())
-    ]
-    
     func sendPressed(text: String) {
-        messages.append(Message(id: "\(messages.count + 1)", content: text, sent: true, timestamp: Date()))
+        chatsViewModel.sendMessage(content: text)
+    }
+    
+    func backPressed() {
+        presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
         VStack {
             VStack {
                 ScrollView {
-                    ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
+                    ForEach(Array(chatsViewModel.loadedChat!.messages.enumerated()), id: \.offset) { index, message in
                         MessageBubble(message: message)
                             .padding(.bottom, 5.0)
                             .padding(.top, index == 0 ? 15.0 : 0)
@@ -44,7 +42,7 @@ struct ChatScreen: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    backPressed()
                 } label: {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color("Black"))
@@ -76,11 +74,5 @@ struct ChatScreen: View {
         .toolbarBackground(Color("Background"), for: .navigationBar)
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
-    }
-}
-
-struct ChatScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        ChatScreen()
     }
 }

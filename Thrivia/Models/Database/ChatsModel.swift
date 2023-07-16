@@ -101,18 +101,18 @@ class ChatsModel {
         // user doc form: id, email, username, iconColour
         let otherUserId = otherUser.id
         
-        let chatId = getChatDoc(userId: userId, otherUserId: otherUserId)
+        let chatId = getChatDocId(userId: userId, otherUserId: otherUserId)
         
-        guard let unwrappedChatId = chatId else {
+        if let unwrappedChatId = chatId {
+            return createChatObjectFromChatDoc(chatId: unwrappedChatId, otherUserId: otherUserId, otherUserUsername: otherUser.username, otherUserIconColour: otherUser.iconColour)
+        } else {
             // create new chat doc if doc does not exist in db
             let newChatId = createChatDoc(userId: userId, otherUserId: otherUserId)
             return Chat(id: newChatId, otherUser: otherUser, messages: [])
         }
-        
-        return createChatObjectFromChatDoc(chatId: unwrappedChatId, otherUserId: otherUserId, otherUserUsername: otherUser.username, otherUserIconColour: otherUser.iconColour)
     }
     
-    private func getChatDoc(userId: String, otherUserId: String) -> String? {
+    private func getChatDocId(userId: String, otherUserId: String) -> String? {
         // search db for chat doc containing both userId and otherUserId in userIds array
         let chatExists = Bool.random()
         
@@ -124,5 +124,29 @@ class ChatsModel {
     private func createChatDoc(userId: String, otherUserId: String) -> String {
         // create chat doc in db and return chat ID
         return "1"
+    }
+    
+    func sendMessage(chat: Chat, senderId: String, content: String) -> Chat {
+        // find chat doc with ID == chat.id
+        let chatId = chat.id
+        
+        // create message doc
+        let newMessage = createMessageDoc(messageContent: content)
+        
+        // add message doc ID to chat doc messageIds array
+        
+        // update chat object with sent message
+        var messages = chat.messages
+        messages.append(newMessage)
+        
+        // return updated Chat object
+        return Chat(id: chatId, otherUser: chat.otherUser, messages: messages)
+    }
+    
+    private func createMessageDoc(messageContent: String) -> Message {
+        // create message doc in db and return Message object
+        
+        // return new Message object
+        return Message(id: UUID().uuidString, content: messageContent, sent: true, timestamp: Date.now)
     }
 }
