@@ -6,21 +6,35 @@
 //
 
 import SwiftUI
+import Firebase
 
 class ProfileModel {
-    func getUserUsername(userId: String) -> String {
-        // connect to db and retrieve user username
-        return "ZigzagZebra24"
-    }
     
-    func getUserEmail(userId: String) -> String {
-        // connect to db and retrieve user email
-        return "ZigzagZebra24@outlook.com"
-    }
+    private let db = Firestore.firestore()
     
-    func getUserIconColour(userId: String) -> Color {
-        // connect to db and retrieve user icon colour
-        return Color(uiColor: UIColor(red: 0.57, green: 0.13, blue: 0.50, alpha: 1.00))
+    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void) {
+        // connect to db and retrieve user data
+        let docRef = db.collection("users").document(userId)
+
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                
+                if let username = data?["username"] as? String {
+                    usernameSetter(username)
+                }
+                
+                if let email = data?["email"] as? String {
+                    emailSetter(email)
+                }
+                
+                if let iconColour = data?["iconColour"] as? String {
+                    iconColourSetter(iconColour)
+                }
+            } else {
+                print("Document does not exist")
+            }
+        }
     }
     
     func updateUserUsername(userId: String, newUsername: String) {

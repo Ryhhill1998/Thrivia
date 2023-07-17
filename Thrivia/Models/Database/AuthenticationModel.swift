@@ -38,9 +38,12 @@ class AuthenticationModel {
     }
     
     private func createUserDoc(userId: String, email: String, username: String) {
+        let randomIconColour = "IconColour\(Int.random(in: 1...6))"
+        
         db.collection("users").document(userId).setData([
             "email": email,
-            "username": username
+            "username": username,
+            "iconColour": randomIconColour
         ]) { err in
             if let err = err {
                 print("Error writing document: \(err)")

@@ -12,18 +12,29 @@ class ProfileViewModel: ObservableObject {
     
     var userId: String
     
-    @Published var username: String
-    @Published var email: String
-    @Published var password: String
-    @Published var iconColour: Color
+    @Published var username = ""
+    @Published var email = ""
+    @Published var password = "**********"
+    @Published var iconColour = Color("DefaultIconColour")
     
     init(userId: String) {
         self.userId = userId
         
-        username = profileModel.getUserUsername(userId: userId)
-        email = profileModel.getUserEmail(userId: userId)
-        password = "**********"
-        iconColour = profileModel.getUserIconColour(userId: userId)
+        if username.isEmpty && email.isEmpty && iconColour == Color("DefaultIconColour") {
+            profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:))
+        }
+    }
+    
+    func setUsername(username: String) {
+        self.username = username
+    }
+    
+    func setEmail(email: String) {
+        self.email = email
+    }
+    
+    func setIconColour(iconColour: String) {
+        self.iconColour = Color(iconColour)
     }
     
     func updateUserUsername(newUsername: String) {

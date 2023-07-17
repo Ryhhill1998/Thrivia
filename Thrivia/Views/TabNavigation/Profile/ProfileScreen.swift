@@ -78,9 +78,3 @@ struct ProfileScreen: View {
         }
     }
 }
-
-struct ProfileScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileScreen(userId: UUID().uuidString)
-    }
-}
