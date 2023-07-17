@@ -43,7 +43,8 @@ class AuthenticationModel {
         db.collection("users").document(userId).setData([
             "email": email,
             "username": username,
-            "iconColour": randomIconColour
+            "iconColour": randomIconColour,
+            "isActive": true
         ]) { err in
             if let err = err {
                 print("Error writing document: \(err)")

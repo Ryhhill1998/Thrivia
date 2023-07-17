@@ -6,147 +6,132 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 class ChatsModel {
-    func getActiveUsers(userId: String) -> [OtherUser] {
-        // search db for all active user docs with id != userId
-        let otherUser1 = OtherUser(id: "2", username: "CoolCucumber8080", iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)))
-        let otherUser2 = OtherUser(id: "3", username: "BoxingGiraffe99", iconColour: Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00)))
+    
+    private let db = Firestore.firestore()
+    
+    func getActiveUsers(userId: String, activeUsersSetter: @escaping ([OtherUser]) -> Void) {
+        var activeUsers: [OtherUser] = []
         
-        // return array of OtherUser objects
-        return [otherUser1, otherUser2]
+        // search db for all active user docs with id != userId
+        db.collection("users").whereField("isActive", isEqualTo: true)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for document in querySnapshot!.documents {
+                        let data = document.data()
+                        
+                        if document.documentID == userId { continue }
+                        
+                        if let username = data["username"] as? String, let iconColour = data["iconColour"] as? String {
+                            let otherUser = OtherUser(id: document.documentID, username: username, iconColour: Color(iconColour))
+                            activeUsers.append(otherUser)
+                        }
+                    }
+                    
+                    activeUsersSetter(activeUsers)
+                }
+            }
     }
     
     private func getUser(userId: String) -> User {
         // search db for user doc with ID == userId
-        return User(id: "2", username: "CoolCucumber8080", email: "CoolCucumber8080@outlook.com", iconColour: Color(uiColor: UIColor(red: 0.14, green: 0.50, blue: 0.70, alpha: 1.00)))
+        return User(id: "2", username: "CoolCucumber8080", email: "CoolCucumber8080@outlook.com", iconColour: Color("IconColour2"))
     }
     
-    func getUserChats(userId: String) -> [Chat] {
+    func getUserChats(userId: String, userChatsSetter: @escaping ([Chat]) -> Void) {
         var userChats: [Chat] = []
         
         // search db for all chat docs with userId in userIds array
-        // chat doc form: id, userIds, messageIds
-        
-        // for each chat doc, get user doc for other user
-        // user doc form: id, email, username, iconColour
-        var chatId = "1"
-        var otherUserId = "2"
-        // get User object from db
-        var user = getUser(userId: otherUserId)
-        var otherUserUsername = user.username
-        var otherUserIconColour = user.iconColour
-
-        // create chat object
-        var chat = createChatObjectFromChatDoc(chatId: chatId, otherUserId: otherUserId, otherUserUsername: otherUserUsername, otherUserIconColour: otherUserIconColour)
-        
-        // add chat object to userChats array
-        userChats.append(chat)
-        
-        // do this for next chat doc
-        chatId = "2"
-        otherUserId = "3"
-        user = getUser(userId: otherUserId)
-        otherUserUsername = "BoxingGiraffe99"
-        otherUserIconColour = Color(uiColor: UIColor(red: 0.13, green: 0.57, blue: 0.31, alpha: 1.00))
-        
-        // create chat object
-        chat = createChatObjectFromChatDoc(chatId: chatId, otherUserId: otherUserId, otherUserUsername: otherUserUsername, otherUserIconColour: otherUserIconColour)
-        
-        // add chat object to userChats array
-        userChats.append(chat)
-        
-        // return userChats array
-        return userChats
+        db.collection("chats").whereField("userIds", arrayContains: userId)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    for chatDoc in querySnapshot!.documents {
+                        let chatData = chatDoc.data()
+                        let chatId = chatDoc.documentID
+                        
+                        if let chat = self.createChatObjectFromData(userId: userId, chatId: chatId, data: chatData) {
+                            userChats.append(chat)
+                        }
+                    }
+                    
+                    userChatsSetter(userChats)
+                }
+            }
     }
     
-    private func createChatObjectFromChatDoc(chatId: String, otherUserId: String, otherUserUsername: String, otherUserIconColour: Color) -> Chat {
-        // convert data from user docs to OtherUser objects
-        let otherUser = OtherUser(id: otherUserId, username: otherUserUsername, iconColour: otherUserIconColour)
+    private func createOtherUserObjectFromData(otherUserId: String, data: [String: Any]?) -> OtherUser? {
+        var otherUser: OtherUser?
         
-        // for each chat doc, get message doc for each messageId
-        var messages: [Message] = []
-        
-        // message doc form: id, content, senderId, timestamp
-        var messageId = "1"
-        var messageContent = "Hello there! What is your favourite colour?"
-        var sent = true
-        var timestamp = Date.now
-        var message = Message(id: messageId, content: messageContent, sent: sent, timestamp: timestamp)
-        // add to messages array
-        messages.append(message)
-        
-        messageId = "2"
-        messageContent = "Hi! My favourite colour is blue"
-        sent = false
-        timestamp = Date.now
-        message = Message(id: messageId, content: messageContent, sent: sent, timestamp: timestamp)
-        // add to messages array
-        messages.append(message)
-        
-        messageId = "3"
-        messageContent = "That's my favourite colour too!"
-        sent = true
-        timestamp = Date.now
-        message = Message(id: messageId, content: messageContent, sent: sent, timestamp: timestamp)
-        // add to messages array
-        messages.append(message)
-        
-        // create Chat object and add to userChats array
-        return Chat(id: chatId, otherUser: otherUser, messages: messages)
-    }
-    
-    func getChat(userId: String, otherUser: OtherUser) -> Chat {
-        // search db for chat doc containing both userId and otherUserId in userIds array
-        // user doc form: id, email, username, iconColour
-        let otherUserId = otherUser.id
-        
-        let chatId = getChatDocId(userId: userId, otherUserId: otherUserId)
-        
-        if let unwrappedChatId = chatId {
-            return createChatObjectFromChatDoc(chatId: unwrappedChatId, otherUserId: otherUserId, otherUserUsername: otherUser.username, otherUserIconColour: otherUser.iconColour)
-        } else {
-            // create new chat doc if doc does not exist in db
-            let newChatId = createChatDoc(userId: userId, otherUserId: otherUserId)
-            return Chat(id: newChatId, otherUser: otherUser, messages: [])
+        if let username = data?["username"] as? String,
+            let iconColour = data?["iconColour"] as? String {
+            otherUser = OtherUser(id: otherUserId, username: username, iconColour: Color(iconColour))
         }
+        
+        return otherUser
     }
     
-    private func getChatDocId(userId: String, otherUserId: String) -> String? {
-        // search db for chat doc containing both userId and otherUserId in userIds array
-        let chatExists = Bool.random()
+    private func createMessageObjectFromData(userId: String, messageId: String, data: [String: Any]?) -> Message? {
+        var message: Message?
         
-        let chatId = chatExists ? "1" : nil
+        if let content = data?["content"] as? String,
+           let senderId = data?["senderId"] as? String,
+           let timestamp = (data?["timestamp"] as? Timestamp)?.dateValue() {
+            message = Message(id: messageId, content: content, sent: senderId == userId, timestamp: timestamp)
+        }
         
-        return chatId
+        return message
     }
     
-    private func createChatDoc(userId: String, otherUserId: String) -> String {
-        // create chat doc in db and return chat ID
-        return "1"
-    }
-    
-    func sendMessage(chat: Chat, senderId: String, content: String) -> Chat {
-        // find chat doc with ID == chat.id
-        let chatId = chat.id
+    private func createChatObjectFromData(userId: String, chatId: String, data: [String: Any]) -> Chat? {
+        var chat: Chat?
         
-        // create message doc
-        let newMessage = createMessageDoc(messageContent: content)
+        var otherUser: OtherUser?
         
-        // add message doc ID to chat doc messageIds array
+        if let userIds = data["userIds"] as? [String], let messageIds = data["messageIds"] as? [String] {
+            // get other user data
+            let otherUserId = userIds[0] == userId ? userIds[1] : userIds[0]
+            
+            let docRef = self.db.collection("users").document(otherUserId)
+
+            docRef.getDocument { (document, error) in
+                if let otherUserDoc = document, otherUserDoc.exists {
+                    let otherUserData = otherUserDoc.data()
+                    otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData)
+                } else {
+                    print("Document does not exist")
+                }
+            }
+            
+            var messages: [Message] = []
+            
+            // get message data
+            for messageId in messageIds {
+                let docRef = self.db.collection("messages").document(messageId)
+
+                docRef.getDocument { (document, error) in
+                    if let messageDoc = document, messageDoc.exists {
+                        let messageData = messageDoc.data()
+                        
+                        if let message = self.createMessageObjectFromData(userId: userId, messageId: messageId, data: messageData) {
+                            messages.append(message)
+                        }
+                    } else {
+                        print("Document does not exist")
+                    }
+                }
+            }
+            
+            if let unwrappedOtherUser = otherUser {
+                chat = Chat(id: chatId, otherUser: unwrappedOtherUser, messages: messages)
+            }
+        }
         
-        // update chat object with sent message
-        var messages = chat.messages
-        messages.append(newMessage)
-        
-        // return updated Chat object
-        return Chat(id: chatId, otherUser: chat.otherUser, messages: messages)
-    }
-    
-    private func createMessageDoc(messageContent: String) -> Message {
-        // create message doc in db and return Message object
-        
-        // return new Message object
-        return Message(id: UUID().uuidString, content: messageContent, sent: true, timestamp: Date.now)
+        return chat
     }
 }
