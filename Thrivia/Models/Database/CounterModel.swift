@@ -47,7 +47,7 @@ class CounterModel {
             "name": newName,
             "originalStartDate": newStartDate,
             "startDate": newStartDate,
-            "edits": FieldValue.increment(Int64()),
+            "edits": FieldValue.increment(Int64(1)),
             "resets": 0
         ] as [String : Any]
         
@@ -56,6 +56,21 @@ class CounterModel {
         }
 
         docRef.updateData(updatedData) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
+    }
+    
+    func resetCounter(counterId: String) {
+        let docRef = db.collection("counters").document(counterId)
+
+        docRef.updateData([
+            "startDate": Date.now,
+            "resets": FieldValue.increment(Int64(1))
+        ]) { err in
             if let err = err {
                 print("Error updating document: \(err)")
             } else {

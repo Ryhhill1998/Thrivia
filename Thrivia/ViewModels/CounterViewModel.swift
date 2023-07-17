@@ -78,6 +78,8 @@ class CounterViewModel: ObservableObject {
     
     func resetCounter() {
         counter?.reset()
+        
+        counterModel.resetCounter(counterId: counter!.id)
     }
     
     func getCounterStart() -> Date {
