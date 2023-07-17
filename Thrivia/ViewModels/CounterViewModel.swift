@@ -58,12 +58,8 @@ class CounterViewModel: ObservableObject {
     }
     
     func createCounter(name: String, startDate: Date) {
-        // create counter for view
-        counter = Counter(name: name, start: startDate)
-        createTimerDisplay()
-        
-        // create counter in database
-        counterModel.createCounter(userId: userId, name: name, startDate: startDate)
+        // create counter in db
+        counterModel.createCounter(userId: userId, name: name, startDate: startDate, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:), createDisplay: createTimerDisplay)
     }
     
     func createTimerDisplay() {

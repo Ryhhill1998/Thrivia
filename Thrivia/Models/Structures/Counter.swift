@@ -15,6 +15,7 @@ struct Counter {
     
     let calendar = Calendar.current
     
+    let id: String
     var name: String
     var originalStart: Date
     var start: Date
@@ -22,12 +23,11 @@ struct Counter {
     var resets = 0
     
     init(name: String, start: Date) {
-        self.name = name
-        self.start = start
-        originalStart = start
+        self.init(id: UUID().uuidString, name: name, originalStart: start, start: start, edits: 0, resets: 0)
     }
     
-    init(name: String, originalStart: Date, start: Date, edits: Int, resets: Int) {
+    init(id: String, name: String, originalStart: Date, start: Date, edits: Int, resets: Int) {
+        self.id = id
         self.name = name
         self.originalStart = originalStart
         self.start = start

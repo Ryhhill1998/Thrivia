@@ -12,7 +12,7 @@ class CounterModel {
     
     private let db = Firestore.firestore()
     
-    func createCounter(userId: String, name: String, startDate: Date) {
+    func createCounter(userId: String, name: String, startDate: Date, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {
         // create counter doc in db
         var ref: DocumentReference? = nil
         
@@ -31,6 +31,11 @@ class CounterModel {
                 
                 // add counter id to user doc
                 self.db.collection("users").document(userId).setData([ "counterId": counterId ], merge: true)
+                
+                let counter = Counter(id: counterId, name: name, originalStart: startDate, start: startDate, edits: 0, resets: 0)
+                counterSetter(counter)
+                counterExistsSetter(true)
+                createDisplay()
             }
         }
     }
@@ -53,25 +58,33 @@ class CounterModel {
                         if let document = document, document.exists {
                             let data = document.data()
                             
-                            if let counterName = data?["name"] as? String,
-                               let originalCounterStartDate = (data?["originalStartDate"] as? Timestamp)?.dateValue(),
-                               let counterStartDate = (data?["startDate"] as? Timestamp)?.dateValue(),
-                               let counterEdits = data?["edits"] as? Int,
-                               let counterResets = data?["resets"] as? Int {
-                                let counter = Counter(name: counterName, originalStart: originalCounterStartDate, start: counterStartDate, edits: counterEdits, resets: counterResets)
-                                
+                            if let counter = self.createCounterObjectFromData(counterId: counterId, data: data) {
                                 counterSetter(counter)
                                 counterExistsSetter(true)
                                 createDisplay()
                             }
-                        } else {
-                            print("Document does not exist")
                         }
                     }
+                } else {
+                    print("Document does not exist")
                 }
             } else {
                 print("Document does not exist")
             }
         }
+    }
+    
+    func createCounterObjectFromData(counterId: String, data: [String : Any]?) -> Counter? {
+        var counter: Counter?
+        
+        if let counterName = data?["name"] as? String,
+           let originalCounterStartDate = (data?["originalStartDate"] as? Timestamp)?.dateValue(),
+           let counterStartDate = (data?["startDate"] as? Timestamp)?.dateValue(),
+           let counterEdits = data?["edits"] as? Int,
+           let counterResets = data?["resets"] as? Int {
+            counter = Counter(id: counterId, name: counterName, originalStart: originalCounterStartDate, start: counterStartDate, edits: counterEdits, resets: counterResets)
+        }
+        
+        return counter
     }
 }
