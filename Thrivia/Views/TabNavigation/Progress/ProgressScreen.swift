@@ -84,7 +84,7 @@ struct ProgressScreen: View {
                     }
                 }
             }
-            .navigationTitle(counterViewModel.counterName)
+            .navigationTitle(counterViewModel.counter?.name ?? "")
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterViewModel.counterNotCreated) {

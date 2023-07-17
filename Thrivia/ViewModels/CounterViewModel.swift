@@ -15,8 +15,6 @@ class CounterViewModel: ObservableObject {
     
     var counter: Counter?
     
-    @Published var counterName = ""
-    
     @Published var counterNotCreated = true
     
     @Published var timeUnits1 = "Days"
@@ -38,7 +36,7 @@ class CounterViewModel: ObservableObject {
     }
     
     func getStoredCounter() {
-        counterModel.setCounter(userId: userId, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:))
+        counterModel.setCounter(userId: userId, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:), createDisplay: createTimerDisplay)
     }
     
     func setCounter(counter: Counter) {
@@ -60,13 +58,10 @@ class CounterViewModel: ObservableObject {
     }
     
     func createCounter(name: String, startDate: Date) {
-        // database function
         counterModel.createCounter(userId: userId, name: name, startDate: startDate)
-        
-        // simple UI struct
-        counter = Counter(name: name, start: startDate)
-        counterName = name
-        
+    }
+    
+    func createTimerDisplay() {
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.updateTimeDisplay()
         }
@@ -76,7 +71,6 @@ class CounterViewModel: ObservableObject {
         let updateOriginalStart = newStart < getCounterOriginalStart()
         
         counter?.edit(newName: newName, newStart: newStart, updateOriginalStart: updateOriginalStart)
-        counterName = newName
     }
     
     func resetCounter() {

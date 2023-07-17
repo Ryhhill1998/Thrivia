@@ -13,8 +13,6 @@ class CounterModel {
     private let db = Firestore.firestore()
     
     func createCounter(userId: String, name: String, startDate: Date) {
-        print("user id: \(userId)")
-        
         // create counter doc in db
         var ref: DocumentReference? = nil
         
@@ -34,29 +32,33 @@ class CounterModel {
         }
     }
     
-    func setCounter(userId: String, counterSetter: (Counter) -> Void, counterExistsSetter: (Bool) -> Void) {
+    func setCounter(userId: String, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {
         let userDocRef = db.collection("users").document(userId)
 
         userDocRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
                 let counterId = data?["counterId"] as? String ?? ""
-                print(counterId)
+                
+                let counterDocRef = self.db.collection("counters").document(counterId)
+
+                counterDocRef.getDocument { (document, error) in
+                    if let document = document, document.exists {
+                        let data = document.data()
+                        
+                        if let counterName = data?["name"] as? String, let counterStartDate = data?["startDate"] as? Timestamp {
+                            let counter = Counter(name: counterName, start: counterStartDate.dateValue())
+                            counterSetter(counter)
+                            counterExistsSetter(true)
+                            createDisplay()
+                        }
+                    } else {
+                        print("Document does not exist")
+                    }
+                }
             } else {
                 print("Document does not exist")
             }
         }
-        
-        
-//        let docRef = db.collection("counters").document("SF")
-//
-//        docRef.getDocument { (document, error) in
-//            if let document = document, document.exists {
-//                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-//                print("Document data: \(dataDescription)")
-//            } else {
-//                print("Document does not exist")
-//            }
-//        }
     }
 }

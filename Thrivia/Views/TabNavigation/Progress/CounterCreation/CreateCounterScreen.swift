@@ -28,7 +28,7 @@ struct CreateCounterScreen: View {
         self.counterViewModel = counterViewModel
         self.buttonActionDescription = buttonActionDescription
         
-        _counterName = State(initialValue: counterViewModel.counterName)
+        _counterName = State(initialValue: counterViewModel.counter?.name ?? "")
         _selectedDate = State(initialValue: counterViewModel.getCounterStart())
     }
     
