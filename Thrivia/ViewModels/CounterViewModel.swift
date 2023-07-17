@@ -17,7 +17,7 @@ class CounterViewModel: ObservableObject {
     
     @Published var counterName = ""
     
-    @Published var counterNotCreated: Bool
+    @Published var counterNotCreated = true
     
     @Published var timeUnits1 = "Days"
     @Published var timeUnits2 = "Hours"
@@ -31,7 +31,22 @@ class CounterViewModel: ObservableObject {
     
     init(userId: String) {
         self.userId = userId
-        counterNotCreated = true
+        
+        if counterNotCreated {
+            getStoredCounter()
+        }
+    }
+    
+    func getStoredCounter() {
+        counterModel.setCounter(userId: userId, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:))
+    }
+    
+    func setCounter(counter: Counter) {
+        self.counter = counter
+    }
+    
+    func setCounterExists(counterExists: Bool) {
+        counterNotCreated = !counterExists
     }
     
     func generatePreview(name: String, startDate: Date) {

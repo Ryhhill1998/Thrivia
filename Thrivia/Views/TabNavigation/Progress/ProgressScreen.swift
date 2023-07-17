@@ -18,7 +18,6 @@ struct ProgressScreen: View {
     init(userId: String) {
         self.userId = userId
         counterViewModel = CounterViewModel(userId: userId)
-        print(userId)
     }
     
     var body: some View {
