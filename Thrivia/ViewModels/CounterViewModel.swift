@@ -9,9 +9,15 @@ import Foundation
 
 class CounterViewModel: ObservableObject {
     
+    var counterModel = CounterModel()
+    
+    var userId: String
+    
     var counter: Counter?
     
     @Published var counterName = ""
+    
+    @Published var counterNotCreated: Bool
     
     @Published var timeUnits1 = "Days"
     @Published var timeUnits2 = "Hours"
@@ -23,19 +29,28 @@ class CounterViewModel: ObservableObject {
     @Published var timeValue3 = 0
     @Published var timeValue4 = 0
     
+    init(userId: String) {
+        self.userId = userId
+        counterNotCreated = true
+    }
+    
     func generatePreview(name: String, startDate: Date) {
         counter = Counter(name: name, start: startDate)
         
         updateTimeDisplay()
+        
         if timeUnits4 == "Seconds" {
             timeValue4 = 0
         }
     }
     
     func createCounter(name: String, startDate: Date) {
+        // database function
+        counterModel.createCounter(userId: userId, name: name, startDate: startDate)
+        
+        // simple UI struct
         counter = Counter(name: name, start: startDate)
         counterName = name
-        print("setting counter name to \(name)")
         
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.updateTimeDisplay()

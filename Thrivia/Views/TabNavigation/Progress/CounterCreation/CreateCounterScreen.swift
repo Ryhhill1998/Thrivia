@@ -15,13 +15,15 @@ struct CreateCounterScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @StateObject var counterViewModelPreview: CounterViewModel = CounterViewModel()
+    @ObservedObject var counterViewModelPreview: CounterViewModel
     
     @State private var selectedDate: Date
     @State var counterName: String
     @State private var showEmptyNameAlert = false
     
-    init(navigationTitle: String, counterViewModel: CounterViewModel, buttonActionDescription: String) {
+    init(userId: String, navigationTitle: String, counterViewModel: CounterViewModel, buttonActionDescription: String) {
+        counterViewModelPreview = CounterViewModel(userId: userId)
+        
         self.navigationTitle = navigationTitle
         self.counterViewModel = counterViewModel
         self.buttonActionDescription = buttonActionDescription
@@ -116,11 +118,5 @@ struct CreateCounterScreen: View {
         .navigationTitle(navigationTitle)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
-    }
-}
-
-struct CreateCounterScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateCounterScreen(navigationTitle: "Create a counter", counterViewModel: CounterViewModel(), buttonActionDescription: "Create")
     }
 }
