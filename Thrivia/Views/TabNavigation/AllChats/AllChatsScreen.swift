@@ -9,20 +9,14 @@ import SwiftUI
 
 struct AllChatsScreen: View {
     
-    @ObservedObject var chatsViewModel: ChatsViewModel
-    
-    @State var chatIsLoaded = false
+    @ObservedObject var chatsViewModel: AllChatsViewModel
     
     init(userId: String) {
-        chatsViewModel = ChatsViewModel(userId: userId)
+        chatsViewModel = AllChatsViewModel(userId: userId)
     }
     
     func loadChat(otherUser: OtherUser) {
         chatsViewModel.loadChat(otherUser: otherUser)
-        
-        if chatsViewModel.loadedChat != nil {
-            chatIsLoaded = true
-        }
     }
     
     var body: some View {
@@ -64,7 +58,7 @@ struct AllChatsScreen: View {
             .navigationTitle("Chats")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
-            .navigationDestination(isPresented: $chatIsLoaded) {
+            .navigationDestination(isPresented: $chatsViewModel.chatIsLoaded) {
                 ChatScreen()
                     .environmentObject(chatsViewModel)
             }

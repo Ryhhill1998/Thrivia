@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseFirestore
 
-class ChatsModel {
+class AllChatsModel {
     
     private let db = Firestore.firestore()
     
@@ -35,11 +35,6 @@ class ChatsModel {
                     activeUsersSetter(activeUsers)
                 }
             }
-    }
-    
-    private func getUser(userId: String) -> User {
-        // search db for user doc with ID == userId
-        return User(id: "2", username: "CoolCucumber8080", email: "CoolCucumber8080@outlook.com", iconColour: Color("IconColour2"))
     }
     
     func getUserChats(userId: String, userChatsSetter: @escaping ([Chat]) -> Void) {
@@ -122,6 +117,127 @@ class ChatsModel {
             }
     }
     
+    func getChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
+        let otherUserId = otherUser.id
+        
+        // search db for chat doc with userId and otherUserId in userIds array
+        db.collection("chats").whereField("userIds", in: [[userId, otherUserId], [otherUserId, userId]])
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    // initialise user chats array
+                    var userChats: [Chat] = []
+                    
+                    // initialise chats dispatch group
+                    let chatsDispatchGroup = DispatchGroup()
+                    
+                    for chatDoc in querySnapshot!.documents {
+                        let chatData = chatDoc.data()
+                        let chatId = chatDoc.documentID
+                        print("Chat id: \(chatId)")
+                        
+                        if let userIds = chatData["userIds"] as? [String] {
+                            // get other user data
+                            let otherUserId = userIds[0] == userId ? userIds[1] : userIds[0]
+                            
+                            let docRef = self.db.collection("users").document(otherUserId)
+                            
+                            chatsDispatchGroup.enter()
+                            
+                            docRef.getDocument { (document, error) in
+                                if let otherUserDoc = document, otherUserDoc.exists {
+                                    let otherUserData = otherUserDoc.data()
+                                    if let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
+                                        // initialise empty messages array
+                                        var messages: [Message] = []
+                                        
+                                        // initialise messages dispatch group
+                                        let messagesDispatchGroup = DispatchGroup()
+                                        
+                                        if let messageIds = chatData["messageIds"] as? [String] {
+                                            // get message data
+                                            for messageId in messageIds {
+                                                let docRef = self.db.collection("messages").document(messageId)
+
+                                                messagesDispatchGroup.enter()
+                                                
+                                                docRef.getDocument { (document, error) in
+                                                    if let messageDoc = document, messageDoc.exists {
+                                                        let messageData = messageDoc.data()
+
+                                                        if let message = self.createMessageObjectFromData(userId: userId, messageId: messageId, data: messageData) {
+                                                            messages.append(message)
+                                                            messagesDispatchGroup.leave()
+                                                        }
+                                                    } else {
+                                                        print("Document does not exist")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        messagesDispatchGroup.notify(queue: .main) {
+                                            // sort messages
+                                            messages.sort {
+                                                $0.timestamp < $1.timestamp
+                                            }
+                                            let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
+                                            userChats.append(chat)
+                                            chatsDispatchGroup.leave()
+                                        }
+                                    }
+                                } else {
+                                    print("Document does not exist")
+                                }
+                            }
+                        }
+                    }
+                    
+                    chatsDispatchGroup.notify(queue: .main) {
+                        print(userChats)
+                        if let foundChat = userChats.first {
+                            // set chat
+                            chatSetter(foundChat, true)
+                            print("Found chat: \(foundChat)")
+                        } else {
+                            // create new chat doc
+                            // create counter doc in db
+                            var ref: DocumentReference? = nil
+                            
+                            ref = self.db.collection("chats").addDocument(data: [
+                                "userIds": [userId, otherUserId]
+                            ]) { err in
+                                if let err = err {
+                                    print("Error adding document: \(err)")
+                                } else {
+                                    let chatId = ref!.documentID
+                                    print("Document added with ID: \(chatId)")
+                                    
+                                    // add chatId to user and otherUser docs
+                                    self.addChatIdToUserDoc(userId: userId, chatId: chatId)
+                                    self.addChatIdToUserDoc(userId: otherUserId, chatId: chatId)
+                                    
+                                    // set chat
+                                    let chat = Chat(id: chatId, otherUser: otherUser, messages: [])
+                                    chatSetter(chat, true)
+                                    print("New chat: \(chat)")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    private func addChatIdToUserDoc(userId: String, chatId: String) {
+        let userDocRef = self.db.collection("users").document(userId)
+
+        userDocRef.updateData([
+            "chatIds": FieldValue.arrayUnion([chatId])
+        ])
+    }
+    
     private func createOtherUserObjectFromData(otherUserId: String, data: [String: Any]?) -> OtherUser? {
         var otherUser: OtherUser?
         
@@ -144,5 +260,4 @@ class ChatsModel {
         
         return message
     }
-    
 }

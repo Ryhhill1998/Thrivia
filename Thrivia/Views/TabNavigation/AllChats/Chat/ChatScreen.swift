@@ -9,12 +9,11 @@ import SwiftUI
 
 struct ChatScreen: View {
     
-    @EnvironmentObject private var chatsViewModel: ChatsViewModel
+    @EnvironmentObject private var chatsViewModel: AllChatsViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
     func sendPressed(text: String) {
-        chatsViewModel.sendMessage(content: text)
     }
     
     func backPressed() {

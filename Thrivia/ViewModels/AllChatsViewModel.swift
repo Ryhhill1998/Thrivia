@@ -7,23 +7,24 @@
 
 import SwiftUI
 
-class ChatsViewModel: ObservableObject {
-    var chatsModel = ChatsModel()
+class AllChatsViewModel: ObservableObject {
+    var allChatsModel = AllChatsModel()
     var userId: String
     
     @Published var activeUsers: [OtherUser] = []
     @Published var allChats: [Chat] = []
     @Published var loadedChat: Chat?
+    @Published var chatIsLoaded = false
     
     init(userId: String) {
         self.userId = userId
         
         if activeUsers.isEmpty {
-            chatsModel.getActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:))
+            allChatsModel.getActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:))
         }
         
         if allChats.isEmpty {
-            chatsModel.getUserChats(userId: userId, userChatsSetter: setAllChats(allChats:))
+            allChatsModel.getUserChats(userId: userId, userChatsSetter: setAllChats(allChats:))
         }
     }
     
@@ -35,9 +36,12 @@ class ChatsViewModel: ObservableObject {
         self.allChats = allChats
     }
     
-    func loadChat(otherUser: OtherUser) {
+    func setLoadedChat(loadedChat: Chat, chatIsLoaded: Bool) {
+        self.loadedChat = loadedChat
+        self.chatIsLoaded = chatIsLoaded
     }
     
-    func sendMessage(content: String) {
+    func loadChat(otherUser: OtherUser) {
+        allChatsModel.getChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
     }
 }
