@@ -12,7 +12,7 @@ import FirebaseAuth
 class AuthenticationModel {
     
     private let auth = Auth.auth()
-    private let firestore = Firestore.firestore()
+    private let db = Firestore.firestore()
     
     func listenForAuthStateChanges(setAuthState: @escaping (String?) -> Void) {
         auth.addStateDidChangeListener { auth, user in
@@ -28,6 +28,24 @@ class AuthenticationModel {
             } else {
                 let userId = authResult?.user.uid
                 print(userId ?? "none")
+                
+                // create new user doc in database
+                if let unwrappedUserId = userId {
+                    self.createUserDoc(userId: unwrappedUserId, email: email, username: username)
+                }
+            }
+        }
+    }
+    
+    private func createUserDoc(userId: String, email: String, username: String) {
+        db.collection("users").document(userId).setData([
+            "email": email,
+            "username": username
+        ]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            } else {
+                print("Document successfully written!")
             }
         }
     }

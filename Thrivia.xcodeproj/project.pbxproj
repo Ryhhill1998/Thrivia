@@ -161,9 +161,9 @@
 			isa = PBXGroup;
 			children = (
 				5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */,
+				5BC6FDDD2A5DD6BF006459F8 /* Models */,
 				5BC6FDDF2A5DD6DD006459F8 /* ViewModels */,
 				5BC6FDDE2A5DD6CD006459F8 /* Views */,
-				5BC6FDDD2A5DD6BF006459F8 /* Models */,
 				5BC6FDDC2A5DCAE0006459F8 /* Info.plist */,
 				5B9792E42A6455AA00F078C6 /* GoogleService-Info.plist */,
 				5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */,
