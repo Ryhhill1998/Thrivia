@@ -40,8 +40,28 @@ class CounterModel {
         }
     }
     
-    func editCounter() {
+    func editCounter(counterId: String, newName: String, newStartDate: Date, updateOriginalStart: Bool) {
+        let docRef = db.collection("counters").document(counterId)
         
+        var updatedData = [
+            "name": newName,
+            "originalStartDate": newStartDate,
+            "startDate": newStartDate,
+            "edits": FieldValue.increment(Int64()),
+            "resets": 0
+        ] as [String : Any]
+        
+        if !updateOriginalStart {
+            updatedData.removeValue(forKey: "originalStartDate")
+        }
+
+        docRef.updateData(updatedData) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
     }
     
     func getStoredCounter(userId: String, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {

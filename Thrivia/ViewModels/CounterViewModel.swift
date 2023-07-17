@@ -72,6 +72,8 @@ class CounterViewModel: ObservableObject {
         let updateOriginalStart = newStart < getCounterOriginalStart()
         
         counter?.edit(newName: newName, newStart: newStart, updateOriginalStart: updateOriginalStart)
+        
+        counterModel.editCounter(counterId: counter!.id, newName: newName, newStartDate: newStart, updateOriginalStart: updateOriginalStart)
     }
     
     func resetCounter() {
