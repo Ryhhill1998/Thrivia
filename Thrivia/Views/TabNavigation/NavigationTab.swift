@@ -14,41 +14,25 @@ struct NavigationTab: View {
     @State var counterNotCreated = true
     @State var isAuthenticated = false
     
-    func updateAuthStatus(authStatus: Bool) {
-        authenticationViewModel.loginAsGuest()
-    }
-    
     var body: some View {
         TabView {
-            if authenticationViewModel.isAuthenticated {
+            if authenticationViewModel.authUserId != nil {
                 ProgressScreen(counterNotCreated: counterNotCreated)
                     .tabItem {
                         Label("Progress", systemImage: "chart.bar.fill")
                     }
                 
-                if authenticationViewModel.authUserId != nil {
-                    ProfileScreen(userId: authenticationViewModel.authUserId!)
-                        .tabItem {
-                            Label("Profile", systemImage: "person.fill")
-                        }
-                    
-                    AllChatsScreen(userId: authenticationViewModel.authUserId!)
-                        .tabItem {
-                            Label("Chats", systemImage: "message.fill")
-                        }
-                } else {
-                    AuthenticationScreen(updateAuthStatus: updateAuthStatus)
-                        .tabItem {
-                            Label("Profile", systemImage: "person.fill")
-                        }
-                    
-                    AuthenticationScreen(updateAuthStatus: updateAuthStatus)
-                        .tabItem {
-                            Label("Chats", systemImage: "message.fill")
-                        }
-                }
+                ProfileScreen(userId: authenticationViewModel.authUserId!)
+                    .tabItem {
+                        Label("Profile", systemImage: "person.fill")
+                    }
+                
+                AllChatsScreen(userId: authenticationViewModel.authUserId!)
+                    .tabItem {
+                        Label("Chats", systemImage: "message.fill")
+                    }
             } else {
-                AuthenticationScreen(updateAuthStatus: updateAuthStatus)
+                AuthenticationScreen()
             }
         }
         .environmentObject(authenticationViewModel)

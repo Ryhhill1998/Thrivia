@@ -12,7 +12,6 @@ struct RegisterScreen: View {
     
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     
-    let updateAuthStatus: (Bool) -> Void
     @State var emailFieldText: String = ""
     @State var usernameFieldField: String = ""
     @State var passwordFieldText: String = ""
@@ -82,7 +81,7 @@ struct RegisterScreen: View {
                         .foregroundColor(Color("Black"))
                     
                     NavigationLink {
-                        LoginScreen(updateAuthStatus: updateAuthStatus)
+                        LoginScreen()
                     } label: {
                         Text("Login")
                             .font(.custom("Montserrat", size: 15))
@@ -97,6 +96,6 @@ struct RegisterScreen: View {
 
 struct RegisterScreen_Previews: PreviewProvider {
     static var previews: some View {
-        RegisterScreen() { _ in print("auth status updated") }
+        RegisterScreen()
     }
 }

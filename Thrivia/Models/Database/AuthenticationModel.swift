@@ -14,12 +14,10 @@ class AuthenticationModel {
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     
-    func listenForAuthStateChanges(setAuthState: @escaping (String?, Bool) -> Void) {
+    func listenForAuthStateChanges(setAuthState: @escaping (String?) -> Void) {
         auth.addStateDidChangeListener { auth, user in
             let userId = user?.uid
-            let authState = userId != nil
-            
-            setAuthState(userId, authState)
+            setAuthState(userId)
         }
     }
     
