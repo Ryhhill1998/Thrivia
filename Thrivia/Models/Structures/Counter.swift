@@ -27,6 +27,14 @@ struct Counter {
         originalStart = start
     }
     
+    init(name: String, originalStart: Date, start: Date, edits: Int, resets: Int) {
+        self.name = name
+        self.originalStart = originalStart
+        self.start = start
+        self.edits = edits
+        self.resets = resets
+    }
+    
     func getTimePassed(unitOfTime: UnitOfTime) -> Int {
         let now = Date.now
         

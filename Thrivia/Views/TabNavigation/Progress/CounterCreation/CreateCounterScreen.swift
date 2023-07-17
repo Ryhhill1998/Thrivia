@@ -28,8 +28,17 @@ struct CreateCounterScreen: View {
         self.counterViewModel = counterViewModel
         self.buttonActionDescription = buttonActionDescription
         
-        _counterName = State(initialValue: counterViewModel.counter?.name ?? "")
-        _selectedDate = State(initialValue: counterViewModel.getCounterStart())
+        let name = counterViewModel.counter?.name ?? ""
+        let start = counterViewModel.getCounterStart()
+        
+        _counterName = State(initialValue:  name)
+        _selectedDate = State(initialValue: start)
+        
+        createCounterPreview(name: name, startDate: start)
+    }
+    
+    func createCounterPreview(name: String, startDate: Date) {
+        counterViewModelPreview.generatePreview(name: name, startDate: startDate)
     }
     
     func createCounter() {
@@ -111,7 +120,7 @@ struct CreateCounterScreen: View {
                 Spacer()
             }
             .onChange(of: selectedDate) { newDate in
-                counterViewModelPreview.generatePreview(name: counterName, startDate: newDate)
+                createCounterPreview(name: counterName, startDate: newDate)
             }
             .padding(.top)
         }

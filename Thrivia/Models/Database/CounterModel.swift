@@ -18,42 +18,55 @@ class CounterModel {
         
         ref = db.collection("counters").addDocument(data: [
             "name": name,
-            "startDate": startDate
+            "originalStartDate": startDate,
+            "startDate": startDate,
+            "edits": 0,
+            "resets": 0
         ]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
             } else {
                 let counterId = ref!.documentID
                 print("Document added with ID: \(counterId)")
-
+                
                 // add counter id to user doc
                 self.db.collection("users").document(userId).setData([ "counterId": counterId ], merge: true)
             }
         }
     }
     
-    func setCounter(userId: String, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {
+    func editCounter() {
+        
+    }
+    
+    func getStoredCounter(userId: String, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {
         let userDocRef = db.collection("users").document(userId)
-
+        
         userDocRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
-                let counterId = data?["counterId"] as? String ?? ""
                 
-                let counterDocRef = self.db.collection("counters").document(counterId)
-
-                counterDocRef.getDocument { (document, error) in
-                    if let document = document, document.exists {
-                        let data = document.data()
-                        
-                        if let counterName = data?["name"] as? String, let counterStartDate = data?["startDate"] as? Timestamp {
-                            let counter = Counter(name: counterName, start: counterStartDate.dateValue())
-                            counterSetter(counter)
-                            counterExistsSetter(true)
-                            createDisplay()
+                if let counterId = data?["counterId"] as? String {
+                    let counterDocRef = self.db.collection("counters").document(counterId)
+                    
+                    counterDocRef.getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            let data = document.data()
+                            
+                            if let counterName = data?["name"] as? String,
+                               let originalCounterStartDate = (data?["originalStartDate"] as? Timestamp)?.dateValue(),
+                               let counterStartDate = (data?["startDate"] as? Timestamp)?.dateValue(),
+                               let counterEdits = data?["edits"] as? Int,
+                               let counterResets = data?["resets"] as? Int {
+                                let counter = Counter(name: counterName, originalStart: originalCounterStartDate, start: counterStartDate, edits: counterEdits, resets: counterResets)
+                                
+                                counterSetter(counter)
+                                counterExistsSetter(true)
+                                createDisplay()
+                            }
+                        } else {
+                            print("Document does not exist")
                         }
-                    } else {
-                        print("Document does not exist")
                     }
                 }
             } else {

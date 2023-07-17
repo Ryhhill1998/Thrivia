@@ -31,12 +31,12 @@ class CounterViewModel: ObservableObject {
         self.userId = userId
         
         if counterNotCreated {
-            getStoredCounter()
+            getCounter()
         }
     }
     
-    func getStoredCounter() {
-        counterModel.setCounter(userId: userId, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:), createDisplay: createTimerDisplay)
+    func getCounter() {
+        counterModel.getStoredCounter(userId: userId, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:), createDisplay: createTimerDisplay)
     }
     
     func setCounter(counter: Counter) {
@@ -58,6 +58,11 @@ class CounterViewModel: ObservableObject {
     }
     
     func createCounter(name: String, startDate: Date) {
+        // create counter for view
+        counter = Counter(name: name, start: startDate)
+        createTimerDisplay()
+        
+        // create counter in database
         counterModel.createCounter(userId: userId, name: name, startDate: startDate)
     }
     
