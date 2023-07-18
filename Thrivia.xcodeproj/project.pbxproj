@@ -26,7 +26,6 @@
 		5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */; };
 		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */; };
-		5B8BEC302A65DEDC00BE5418 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8BEC2F2A65DEDC00BE5418 /* ChatModel.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
 		5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DE2A5027FC001F92B8 /* ContentView.swift */; };
 		5B8F31E12A5027FE001F92B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E02A5027FE001F92B8 /* Assets.xcassets */; };
@@ -73,7 +72,6 @@
 		5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveUserIcon.swift; sourceTree = "<group>"; };
-		5B8BEC2F2A65DEDC00BE5418 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThriviaApp.swift; sourceTree = "<group>"; };
 		5B8F31DE2A5027FC001F92B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -202,7 +200,6 @@
 				5B5411F22A63207800A024E8 /* AllChatsModel.swift */,
 				5B9792DA2A63D31100F078C6 /* CounterModel.swift */,
 				5B9792DC2A63D32E00F078C6 /* ProfileModel.swift */,
-				5B8BEC2F2A65DEDC00BE5418 /* ChatModel.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -407,7 +404,6 @@
 				5B5411C92A61708600A024E8 /* AppIcon.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
 				5B5411D52A61E62800A024E8 /* Counter.swift in Sources */,
-				5B8BEC302A65DEDC00BE5418 /* ChatModel.swift in Sources */,
 				5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */,
 				5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */,
 				5B5411D72A61EA2B00A024E8 /* CounterViewModel.swift in Sources */,

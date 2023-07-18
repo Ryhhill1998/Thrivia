@@ -14,6 +14,7 @@ struct ChatScreen: View {
     @Environment(\.presentationMode) var presentationMode
     
     func sendPressed(text: String) {
+        chatsViewModel.sendMessage(content: text)
     }
     
     func backPressed() {

@@ -230,6 +230,36 @@ class AllChatsModel {
             }
     }
     
+    func sendMessage(senderId: String, content: String, chatId: String) {
+        // create message doc in db
+        var docRef: DocumentReference? = nil
+        
+        docRef = db.collection("messages").addDocument(data: [
+            "senderId": senderId,
+            "content": content,
+            "timestamp": FieldValue.serverTimestamp()
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                // add message id to chat doc
+                if let messageId = docRef?.documentID {
+                    self.addMessageIdToChatDoc(chatId: chatId, messageId: messageId)
+                }
+            }
+        }
+    }
+    
+    private func addMessageIdToChatDoc(chatId: String, messageId: String) {
+        let chatDocRef = self.db.collection("chats").document(chatId)
+        
+        print(chatDocRef.documentID)
+
+        chatDocRef.updateData([
+            "messageIds": FieldValue.arrayUnion([messageId])
+        ])
+    }
+    
     private func addChatIdToUserDoc(userId: String, chatId: String) {
         let userDocRef = self.db.collection("users").document(userId)
 
