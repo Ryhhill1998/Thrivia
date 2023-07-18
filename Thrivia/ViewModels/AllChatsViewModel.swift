@@ -24,7 +24,7 @@ class AllChatsViewModel: ObservableObject {
         }
         
         if allChats.isEmpty {
-            allChatsModel.getUserChats(userId: userId, userChatsSetter: setAllChats(allChats:))
+            allChatsModel.listenForChatUpdates(userId: userId, userChatsSetter: setAllChats(allChats:))
         }
     }
     
