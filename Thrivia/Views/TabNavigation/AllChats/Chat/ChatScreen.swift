@@ -9,12 +9,16 @@ import SwiftUI
 
 struct ChatScreen: View {
     
-    @EnvironmentObject private var chatsViewModel: AllChatsViewModel
+    @ObservedObject private var chatViewModel: ChatViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
+    init(userId: String, loadedChat: Chat?) {
+        self.chatViewModel = ChatViewModel(userId: userId, loadedChat: loadedChat)
+    }
+    
     func sendPressed(text: String) {
-        chatsViewModel.sendMessage(content: text)
+        chatViewModel.sendMessage(content: text)
     }
     
     func backPressed() {
@@ -25,7 +29,7 @@ struct ChatScreen: View {
         VStack {
             VStack {
                 ScrollView {
-                    ForEach(Array(chatsViewModel.loadedChat!.messages.enumerated()), id: \.offset) { index, message in
+                    ForEach(Array(chatViewModel.loadedChat!.messages.enumerated()), id: \.offset) { index, message in
                         MessageBubble(message: message)
                             .padding(.bottom, 5.0)
                             .padding(.top, index == 0 ? 15.0 : 0)
@@ -52,10 +56,10 @@ struct ChatScreen: View {
     
             ToolbarItem(placement: .navigationBarLeading) {
                 HStack(spacing: 10.0) {
-                    UserIcon(size: "small", borderColour: .white, backgroundColour: chatsViewModel.loadedChat?.otherUser.iconColour ?? .purple, name: chatsViewModel.loadedChat?.otherUser.username ?? "Username")
+                    UserIcon(size: "small", borderColour: .white, backgroundColour: chatViewModel.loadedChat?.otherUser.iconColour ?? .purple, name: chatViewModel.loadedChat?.otherUser.username ?? "Username")
 
                     VStack(alignment: .leading, spacing: 1.0) {
-                        Text(chatsViewModel.loadedChat?.otherUser.username ?? "Username")
+                        Text(chatViewModel.loadedChat?.otherUser.username ?? "Username")
                             .font(.custom("Montserrat", size: 13))
                             .foregroundColor(Color("Black"))
                             .fontWeight(.medium)

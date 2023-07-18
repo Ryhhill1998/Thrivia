@@ -37,6 +37,7 @@
 		5B9792E82A64566B00F078C6 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5B9792E72A64566B00F078C6 /* FirebaseAuth */; };
 		5B9792EA2A64566B00F078C6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B9792E92A64566B00F078C6 /* FirebaseFirestore */; };
 		5B9792EE2A646C2F00F078C6 /* AuthenticationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9792ED2A646C2F00F078C6 /* AuthenticationModel.swift */; };
+		5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B97990D2A66D33300BB4537 /* ChatViewModel.swift */; };
 		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 		5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */; };
 		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
@@ -82,6 +83,7 @@
 		5B9792E22A63FCC600F078C6 /* OtherUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUser.swift; sourceTree = "<group>"; };
 		5B9792E42A6455AA00F078C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5B9792ED2A646C2F00F078C6 /* AuthenticationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationModel.swift; sourceTree = "<group>"; };
+		5B97990D2A66D33300BB4537 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 		5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 				5B5411DE2A62E2D700A024E8 /* ProfileViewModel.swift */,
 				5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */,
 				5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */,
+				5B97990D2A66D33300BB4537 /* ChatViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 				5B5411D32A61BBAB00A024E8 /* LineSeparator.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5B9792E32A63FCC600F078C6 /* OtherUser.swift in Sources */,
+				5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */,
 				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
 				5B5411D12A61B3D800A024E8 /* UserIconWithOverlay.swift in Sources */,

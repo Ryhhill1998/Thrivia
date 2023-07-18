@@ -42,12 +42,10 @@ class AllChatsViewModel: ObservableObject {
     }
     
     func loadChat(otherUser: OtherUser) {
-        allChatsModel.getChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
-    }
-    
-    func sendMessage(content: String) {
-        if let chatId = loadedChat?.id {
-            allChatsModel.sendMessage(senderId: userId, content: content, chatId: chatId)
+        if let foundChat = (allChats.filter { $0.otherUser.id == otherUser.id }).first {
+            setLoadedChat(loadedChat: foundChat, chatIsLoaded: true)
+        } else {
+            allChatsModel.createNewChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
         }
     }
 }

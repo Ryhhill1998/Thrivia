@@ -59,8 +59,7 @@ struct AllChatsScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatsViewModel.chatIsLoaded) {
-                ChatScreen()
-                    .environmentObject(chatsViewModel)
+                ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
             }
         }
     }
