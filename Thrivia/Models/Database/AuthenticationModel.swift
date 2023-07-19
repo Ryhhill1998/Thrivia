@@ -44,11 +44,13 @@ class AuthenticationModel {
         // generate keys for the server
         // identity keys
         let privateIdentityKey = generatePrivateKey()
+        storeKeyLocally(key: privateIdentityKey.rawRepresentation.base64EncodedString(), keyName: "privateIdentityKey")
         let publicIdentityKey = privateIdentityKey.publicKey
         let publicIdentityKeyString = convertPublicKeyToBase64String(publicKey: publicIdentityKey) // to be stored on server
         
         // signed prekeys
         let privateSignedPrekey = generatePrivateSignedPrekey()
+        storeKeyLocally(key: privateSignedPrekey.rawRepresentation.base64EncodedString(), keyName: "privateSignedPrekey")
         let publicSignedPrekey = privateSignedPrekey.publicKey
         let publicSignedPrekeyString = publicSignedPrekey.rawRepresentation.base64EncodedString() // to be stored on server
         
@@ -58,14 +60,23 @@ class AuthenticationModel {
         
         // 10 x one-time prekeys
         let privateOneTimePrekeys = generatePrivateOneTimePrekeysArray(numberOfKeys: 10)
+        
+        for i in 0..<privateOneTimePrekeys.count {
+            storeKeyLocally(key: privateOneTimePrekeys[i].rawRepresentation.base64EncodedString(), keyName: "privateOneTimePrekey\(i)")
+        }
+        
         let publicOneTimePrekeys = privateOneTimePrekeys.map { $0.publicKey }
-        let publicOneTimePrekeyString = publicOneTimePrekeys.map { convertPublicKeyToBase64String(publicKey: $0) } // to be stored on server
+        let publicOneTimePrekeyStrings = publicOneTimePrekeys.map { convertPublicKeyToBase64String(publicKey: $0) } // to be stored on server
         
         db.collection("users").document(userId).setData([
             "email": email,
             "username": username,
             "iconColour": randomIconColour,
-            "isActive": true
+            "isActive": true,
+            "identityKey": publicIdentityKeyString,
+            "signedPrekey": publicSignedPrekeyString,
+            "signedPrekeySignature": signedPrekeySignatureString ?? "none",
+            "oneTimePrekeys": publicOneTimePrekeyStrings
         ]) { err in
             if let err = err {
                 print("Error writing document: \(err)")
@@ -73,6 +84,11 @@ class AuthenticationModel {
                 print("Document successfully written!")
             }
         }
+    }
+    
+    private func storeKeyLocally(key: String, keyName: String) {
+        let defaults = UserDefaults.standard
+        defaults.set(key, forKey: keyName)
     }
     
     private func convertPublicKeyToBase64String(publicKey: Curve25519.KeyAgreement.PublicKey) -> String {

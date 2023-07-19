@@ -217,7 +217,7 @@ class AllChatsModel {
             }
     }
     
-    func sendMessage(senderId: String, content: String, chatId: String) {
+    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String) {
         // create message doc in db
         var docRef: DocumentReference? = nil
         
@@ -274,5 +274,33 @@ class AllChatsModel {
         }
         
         return message
+    }
+    
+    private func retrievePrekeyBundleForUser(userId: String) {
+        let docRef = db.collection("users").document(userId)
+
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let data = document.data() {
+                    if let identityKey = data["identityKey"] as? String,
+                    let signedPrekey = data["signedPrekey"] as? String,
+                    let signedPrekeySignature = data["signedPrekeySignature"] as? String,
+                    let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
+                        let oneTimePrekey = oneTimePrekeys.randomElement() ?? "none"
+                        
+                        var prekeyBundle: [String: String] = [:]
+                        
+                        prekeyBundle.updateValue(identityKey, forKey: "identityKey")
+                        prekeyBundle.updateValue(signedPrekey, forKey: "signedPrekey")
+                        prekeyBundle.updateValue(signedPrekeySignature, forKey: "signedPrekeySignature")
+                        prekeyBundle.updateValue(oneTimePrekey, forKey: "oneTimePrekey")
+                        
+                        print(prekeyBundle)
+                    }
+                }
+            } else {
+                print("Document does not exist")
+            }
+        }
     }
 }

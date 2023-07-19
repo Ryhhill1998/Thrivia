@@ -36,8 +36,9 @@ class ChatViewModel: ObservableObject {
     }
     
     func sendMessage(content: String) {
-        if let chatId = loadedChat?.id {
-            allChatsModel.sendMessage(senderId: userId, content: content, chatId: chatId)
+        if let chatId = loadedChat?.id,
+           let otherUserId = loadedChat?.otherUser.id {
+            allChatsModel.sendMessage(senderId: userId, receiverId: userId, content: content, chatId: chatId)
         }
     }
 }
