@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
+import CryptoKit
 
 class AuthenticationModel {
     
@@ -40,6 +41,21 @@ class AuthenticationModel {
     private func createUserDoc(userId: String, email: String, username: String) {
         let randomIconColour = "IconColour\(Int.random(in: 1...6))"
         
+        // generate keys for the server
+        // identity keys
+        let privateIdentityKey = generatePrivateKey()
+        let publicIdentityKey = privateIdentityKey.publicKey
+        
+        // signed prekeys
+        let privateSignedPrekey = generatePrivateSignedPrekey()
+        let publicSignedPrekey = privateSignedPrekey.publicKey
+        
+        // prekey signature
+        let signedPrekeySignature = generateSignedPrekeySignature(privateSignedPrekey: privateSignedPrekey, publicIdentityKey: publicIdentityKey)
+        
+        // 10 x one-time prekeys
+        let oneTimePrekeys = generatePrivateOneTimePrekeysArray(numberOfKeys: 10)
+        
         db.collection("users").document(userId).setData([
             "email": email,
             "username": username,
@@ -52,6 +68,34 @@ class AuthenticationModel {
                 print("Document successfully written!")
             }
         }
+    }
+    
+    private func generatePrivateKey() -> Curve25519.KeyAgreement.PrivateKey {
+        return Curve25519.KeyAgreement.PrivateKey()
+    }
+    
+    private func generatePrivateSignedPrekey() -> Curve25519.Signing.PrivateKey {
+        return Curve25519.Signing.PrivateKey()
+    }
+    
+    private func generateSignedPrekeySignature(privateSignedPrekey: Curve25519.Signing.PrivateKey, publicIdentityKey: Curve25519.KeyAgreement.PublicKey) -> Data? {
+        do {
+            return try privateSignedPrekey.signature(for: publicIdentityKey.rawRepresentation)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    private func generatePrivateOneTimePrekeysArray(numberOfKeys: Int) -> [Curve25519.KeyAgreement.PrivateKey] {
+        var privateOneTimePrekeys: [Curve25519.KeyAgreement.PrivateKey] = []
+        
+        for _ in 0..<numberOfKeys {
+            let oneTimePrekey = generatePrivateKey()
+            privateOneTimePrekeys.append(oneTimePrekey)
+        }
+        
+        return privateOneTimePrekeys
     }
     
     func signInAuthUser(email: String, password: String) {
