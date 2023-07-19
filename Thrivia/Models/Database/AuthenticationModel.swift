@@ -45,16 +45,21 @@ class AuthenticationModel {
         // identity keys
         let privateIdentityKey = generatePrivateKey()
         let publicIdentityKey = privateIdentityKey.publicKey
+        let publicIdentityKeyString = convertPublicKeyToBase64String(publicKey: publicIdentityKey) // to be stored on server
         
         // signed prekeys
         let privateSignedPrekey = generatePrivateSignedPrekey()
         let publicSignedPrekey = privateSignedPrekey.publicKey
+        let publicSignedPrekeyString = publicSignedPrekey.rawRepresentation.base64EncodedString() // to be stored on server
         
-        // prekey signature
+        // prekey signature - to be stored on server as String
         let signedPrekeySignature = generateSignedPrekeySignature(privateSignedPrekey: privateSignedPrekey, publicIdentityKey: publicIdentityKey)
+        let signedPrekeySignatureString = signedPrekeySignature?.base64EncodedString() // to be stored on server
         
         // 10 x one-time prekeys
-        let oneTimePrekeys = generatePrivateOneTimePrekeysArray(numberOfKeys: 10)
+        let privateOneTimePrekeys = generatePrivateOneTimePrekeysArray(numberOfKeys: 10)
+        let publicOneTimePrekeys = privateOneTimePrekeys.map { $0.publicKey }
+        let publicOneTimePrekeyString = publicOneTimePrekeys.map { convertPublicKeyToBase64String(publicKey: $0) } // to be stored on server
         
         db.collection("users").document(userId).setData([
             "email": email,
@@ -68,6 +73,10 @@ class AuthenticationModel {
                 print("Document successfully written!")
             }
         }
+    }
+    
+    private func convertPublicKeyToBase64String(publicKey: Curve25519.KeyAgreement.PublicKey) -> String {
+        return publicKey.rawRepresentation.base64EncodedString()
     }
     
     private func generatePrivateKey() -> Curve25519.KeyAgreement.PrivateKey {
