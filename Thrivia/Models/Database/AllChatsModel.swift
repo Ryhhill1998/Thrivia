@@ -277,30 +277,48 @@ class AllChatsModel {
     }
     
     private func retrievePrekeyBundleForUser(userId: String) {
+        // get conversation data stored locally in user defaults
+        
+        
         let docRef = db.collection("users").document(userId)
 
         docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                if let data = document.data() {
-                    if let identityKey = data["identityKey"] as? String,
-                    let signedPrekey = data["signedPrekey"] as? String,
-                    let signedPrekeySignature = data["signedPrekeySignature"] as? String,
-                    let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
-                        let oneTimePrekey = oneTimePrekeys.randomElement() ?? "none"
-                        
-                        var prekeyBundle: [String: String] = [:]
-                        
-                        prekeyBundle.updateValue(identityKey, forKey: "identityKey")
-                        prekeyBundle.updateValue(signedPrekey, forKey: "signedPrekey")
-                        prekeyBundle.updateValue(signedPrekeySignature, forKey: "signedPrekeySignature")
-                        prekeyBundle.updateValue(oneTimePrekey, forKey: "oneTimePrekey")
-                        
-                        print(prekeyBundle)
-                    }
+            guard let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) else { return }
+            
+            
+        }
+    }
+    
+    private func retrieveConversationDataFromUserDefaults(chatId: String) {
+        let defaults = UserDefaults.standard
+//        let conversationData = defaults.
+        
+        // previous ephemeral keys received to check if message is new or old chain
+        var previouslyReceivedEphemeralKeys: Set<Data> = []
+        
+        // store message keys for missed messages
+        var storedMessageKeys: [StoredKey] = []
+    }
+    
+    private func getPrekeyBundleFromDocument(document: DocumentSnapshot?) -> [String: String]? {
+        var prekeyBundle: [String: String] = [:]
+        
+        if let document = document, document.exists {
+            if let data = document.data() {
+                if let identityKey = data["identityKey"] as? String,
+                let signedPrekey = data["signedPrekey"] as? String,
+                let signedPrekeySignature = data["signedPrekeySignature"] as? String,
+                let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
+                    let oneTimePrekey = oneTimePrekeys.randomElement() ?? "none"
+                    
+                    prekeyBundle.updateValue(identityKey, forKey: "identityKey")
+                    prekeyBundle.updateValue(signedPrekey, forKey: "signedPrekey")
+                    prekeyBundle.updateValue(signedPrekeySignature, forKey: "signedPrekeySignature")
+                    prekeyBundle.updateValue(oneTimePrekey, forKey: "oneTimePrekey")
                 }
-            } else {
-                print("Document does not exist")
             }
         }
+        
+        return prekeyBundle.isEmpty ? nil : prekeyBundle
     }
 }

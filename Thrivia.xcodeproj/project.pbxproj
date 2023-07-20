@@ -51,6 +51,8 @@
 		5BC6FE052A5FE1B1006459F8 /* ButtonAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */; };
 		5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE062A60508C006459F8 /* TimeDisplay.swift */; };
 		5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE082A6050DB006459F8 /* UserIcon.swift */; };
+		5BFBC0772A691B37005E89FC /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0762A691B37005E89FC /* Conversation.swift */; };
+		5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0782A691CE4005E89FC /* StoredKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +100,8 @@
 		5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAppearance.swift; sourceTree = "<group>"; };
 		5BC6FE062A60508C006459F8 /* TimeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplay.swift; sourceTree = "<group>"; };
 		5BC6FE082A6050DB006459F8 /* UserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIcon.swift; sourceTree = "<group>"; };
+		5BFBC0762A691B37005E89FC /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		5BFBC0782A691CE4005E89FC /* StoredKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredKey.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +195,8 @@
 				5B5411E52A630C7B00A024E8 /* Chat.swift */,
 				5B5411E72A631CC800A024E8 /* User.swift */,
 				5B9792E22A63FCC600F078C6 /* OtherUser.swift */,
+				5BFBC0762A691B37005E89FC /* Conversation.swift */,
+				5BFBC0782A691CE4005E89FC /* StoredKey.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -390,6 +396,7 @@
 				5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */,
 				5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */,
 				5B5411C12A61389F00A024E8 /* ChatScreen.swift in Sources */,
+				5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */,
 				5B5411E82A631CC800A024E8 /* User.swift in Sources */,
 				5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */,
 				5B5411DF2A62E2D700A024E8 /* ProfileViewModel.swift in Sources */,
@@ -398,6 +405,7 @@
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5B5411D32A61BBAB00A024E8 /* LineSeparator.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
+				5BFBC0772A691B37005E89FC /* Conversation.swift in Sources */,
 				5B9792E32A63FCC600F078C6 /* OtherUser.swift in Sources */,
 				5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */,
 				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
