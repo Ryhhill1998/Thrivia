@@ -253,10 +253,7 @@ class AllChatsModel {
     }
     
     private func createMessageDocInDB(senderId: String, chatId: String, encryptedMessage: EncryptedMessage) {
-        // create message doc in db
-        var docRef: DocumentReference? = nil
-        
-        docRef = self.db.collection("messages").addDocument(data: [
+        db.collection("messages").document(encryptedMessage.id).setData([
             "senderId": senderId,
             "cipherText": encryptedMessage.cipherText,
             "identityKey": encryptedMessage.identityKey,
@@ -270,9 +267,7 @@ class AllChatsModel {
                 print("Error adding document: \(err)")
             } else {
                 // add message id to chat doc
-                if let messageId = docRef?.documentID {
-                    self.addMessageIdToChatDoc(chatId: chatId, messageId: messageId)
-                }
+                self.addMessageIdToChatDoc(chatId: chatId, messageId: encryptedMessage.id)
             }
         }
     }

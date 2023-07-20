@@ -13,6 +13,8 @@ struct CodableConversation: Codable {
     var user: CodableCryptoUser
     var otherUser: CodableCryptoOtherUser
     
+    var messages: [Message]
+    
     // boolean to show whether last message was received from other user
     var lastMessageReceived: Bool?
     
@@ -42,6 +44,8 @@ struct CodableConversation: Codable {
         // users
         user = CodableCryptoUser(cryptoUser: conversation.user)
         otherUser = CodableCryptoOtherUser(cryptoOtherUser: conversation.otherUser)
+        
+        messages = conversation.messages
         
         // boolean to show whether last message was received from other user
         lastMessageReceived = conversation.lastMessageReceived

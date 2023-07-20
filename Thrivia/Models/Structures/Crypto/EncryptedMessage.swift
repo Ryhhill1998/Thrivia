@@ -8,6 +8,7 @@
 import Foundation
 
 struct EncryptedMessage {
+    let id: String
     let cipherText: String
     let identityKey: String
     let ephemeralKey: String

@@ -18,6 +18,9 @@ struct Conversation {
     var user: CryptoUser
     var otherUser: CryptoOtherUser
     
+    // decrypted messages
+    var messages: [Message]
+    
     // boolean to show whether last message was received from other user
     var lastMessageReceived: Bool?
     
@@ -54,6 +57,8 @@ struct Conversation {
         self.user = user
         self.otherUser = otherUser
         
+        messages = []
+        
         dhRatchetPrivateKey = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: user.signedPrekeyPrivate.rawRepresentation)
         dhRatchetPublicKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: user.signedPrekeyPublic.rawRepresentation)
     }
@@ -63,6 +68,8 @@ struct Conversation {
         // users
         user = CryptoUser(codableCryptoUser: codableConversation.user)
         otherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser)
+        
+        messages = codableConversation.messages
         
         // last message received
         lastMessageReceived = codableConversation.lastMessageReceived
@@ -256,13 +263,17 @@ struct Conversation {
         let encryptedMessage = encryptMessage(messageData: messageData, messageKey: messageKey, associatedData: associatedData)
         
         // create new message
-        let message = EncryptedMessage(cipherText: encryptedMessage.base64EncodedString(), identityKey: user.identityKeyPublic.rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
+        let messageId = UUID().uuidString
+        
+        let message = EncryptedMessage(id: messageId, cipherText: encryptedMessage.base64EncodedString(), identityKey: user.identityKeyPublic.rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
         
         // set last message received to false since user sending this message
         lastMessageReceived = false
         
         // increase length of current send chain
         currentSendChainLength += 1
+        
+        messages.append(Message(id: messageId, content: messageContent, sent: true, timestamp: Date.now))
         
         return message
     }
@@ -401,6 +412,10 @@ struct Conversation {
         
         // decrypt message
         let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData)
+        
+        // add new message object to messages array
+        let messageContent = String(data: decryptedData, encoding: .utf8)!
+        messages.append(Message(id: message.id, content: messageContent, sent: false, timestamp: Date.now))
         
         return decryptedData
     }
