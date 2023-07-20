@@ -54,6 +54,10 @@
 		5BFBC0772A691B37005E89FC /* CodableConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0762A691B37005E89FC /* CodableConversation.swift */; };
 		5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0782A691CE4005E89FC /* StoredKey.swift */; };
 		5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC07A2A691D4E005E89FC /* Conversation.swift */; };
+		5BFBC07D2A6923EE005E89FC /* CryptoOtherUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC07C2A6923EE005E89FC /* CryptoOtherUser.swift */; };
+		5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC07E2A692A29005E89FC /* CryptoUser.swift */; };
+		5BFBC0832A692BAB005E89FC /* CodableCryptoOtherUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0822A692BAB005E89FC /* CodableCryptoOtherUser.swift */; };
+		5BFBC0852A692CC6005E89FC /* CodableCryptoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0842A692CC6005E89FC /* CodableCryptoUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +108,10 @@
 		5BFBC0762A691B37005E89FC /* CodableConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableConversation.swift; sourceTree = "<group>"; };
 		5BFBC0782A691CE4005E89FC /* StoredKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredKey.swift; sourceTree = "<group>"; };
 		5BFBC07A2A691D4E005E89FC /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		5BFBC07C2A6923EE005E89FC /* CryptoOtherUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoOtherUser.swift; sourceTree = "<group>"; };
+		5BFBC07E2A692A29005E89FC /* CryptoUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUser.swift; sourceTree = "<group>"; };
+		5BFBC0822A692BAB005E89FC /* CodableCryptoOtherUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableCryptoOtherUser.swift; sourceTree = "<group>"; };
+		5BFBC0842A692CC6005E89FC /* CodableCryptoUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableCryptoUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,9 +205,7 @@
 				5B5411E52A630C7B00A024E8 /* Chat.swift */,
 				5B5411E72A631CC800A024E8 /* User.swift */,
 				5B9792E22A63FCC600F078C6 /* OtherUser.swift */,
-				5BFBC0762A691B37005E89FC /* CodableConversation.swift */,
-				5BFBC0782A691CE4005E89FC /* StoredKey.swift */,
-				5BFBC07A2A691D4E005E89FC /* Conversation.swift */,
+				5BFBC0812A692B86005E89FC /* Crypto */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -316,6 +322,20 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		5BFBC0812A692B86005E89FC /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				5BFBC0762A691B37005E89FC /* CodableConversation.swift */,
+				5BFBC07A2A691D4E005E89FC /* Conversation.swift */,
+				5BFBC0782A691CE4005E89FC /* StoredKey.swift */,
+				5BFBC07C2A6923EE005E89FC /* CryptoOtherUser.swift */,
+				5BFBC07E2A692A29005E89FC /* CryptoUser.swift */,
+				5BFBC0822A692BAB005E89FC /* CodableCryptoOtherUser.swift */,
+				5BFBC0842A692CC6005E89FC /* CodableCryptoUser.swift */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -408,6 +428,7 @@
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5B5411D32A61BBAB00A024E8 /* LineSeparator.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
+				5BFBC0852A692CC6005E89FC /* CodableCryptoUser.swift in Sources */,
 				5BFBC0772A691B37005E89FC /* CodableConversation.swift in Sources */,
 				5B9792E32A63FCC600F078C6 /* OtherUser.swift in Sources */,
 				5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */,
@@ -434,8 +455,11 @@
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
 				5B9792EE2A646C2F00F078C6 /* AuthenticationModel.swift in Sources */,
 				5B5411CC2A6188BE00A024E8 /* CreateCounterScreen.swift in Sources */,
+				5BFBC0832A692BAB005E89FC /* CodableCryptoOtherUser.swift in Sources */,
 				5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */,
+				5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */,
 				5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */,
+				5BFBC07D2A6923EE005E89FC /* CryptoOtherUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

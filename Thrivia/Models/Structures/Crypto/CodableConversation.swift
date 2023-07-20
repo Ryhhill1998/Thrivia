@@ -8,6 +8,8 @@
 import Foundation
 
 struct CodableConversation: Codable {
+    var otherUser: CodableCryptoOtherUser
+    
     // boolean to show whether last message was received from other user
     var lastMessageReceived: Bool?
     

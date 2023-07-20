@@ -77,13 +77,13 @@ class AllChatsModel {
                                         // get message data
                                         for messageId in messageIds {
                                             let docRef = self.db.collection("messages").document(messageId)
-
+                                            
                                             messagesDispatchGroup.enter()
                                             
                                             docRef.getDocument { (document, error) in
                                                 if let messageDoc = document, messageDoc.exists {
                                                     let messageData = messageDoc.data()
-
+                                                    
                                                     if let message = self.createMessageObjectFromData(userId: userId, messageId: messageId, data: messageData) {
                                                         messages.append(message)
                                                         messagesDispatchGroup.leave()
@@ -149,15 +149,15 @@ class AllChatsModel {
     func listenToChat(chatId: String, userId: String, chatSetter: @escaping (Chat) -> Void) {
         db.collection("chats").document(chatId)
             .addSnapshotListener { documentSnapshot, error in
-              guard let document = documentSnapshot else {
-                print("Error fetching document: \(error!)")
-                return
-              }
+                guard let document = documentSnapshot else {
+                    print("Error fetching document: \(error!)")
+                    return
+                }
                 
-              guard let data = document.data() else {
-                print("Document data was empty.")
-                return
-              }
+                guard let data = document.data() else {
+                    print("Document data was empty.")
+                    return
+                }
                 
                 let chatId = document.documentID
                 
@@ -181,13 +181,13 @@ class AllChatsModel {
                                     // get message data
                                     for messageId in messageIds {
                                         let docRef = self.db.collection("messages").document(messageId)
-
+                                        
                                         messagesDispatchGroup.enter()
                                         
                                         docRef.getDocument { (document, error) in
                                             if let messageDoc = document, messageDoc.exists {
                                                 let messageData = messageDoc.data()
-
+                                                
                                                 if let message = self.createMessageObjectFromData(userId: userId, messageId: messageId, data: messageData) {
                                                     messages.append(message)
                                                     messagesDispatchGroup.leave()
@@ -239,7 +239,7 @@ class AllChatsModel {
     
     private func addMessageIdToChatDoc(chatId: String, messageId: String) {
         let chatDocRef = self.db.collection("chats").document(chatId)
-
+        
         chatDocRef.updateData([
             "messageIds": FieldValue.arrayUnion([messageId])
         ])
@@ -247,7 +247,7 @@ class AllChatsModel {
     
     private func addChatIdToUserDoc(userId: String, chatId: String) {
         let userDocRef = self.db.collection("users").document(userId)
-
+        
         userDocRef.updateData([
             "chatIds": FieldValue.arrayUnion([chatId])
         ])
@@ -276,12 +276,13 @@ class AllChatsModel {
         return message
     }
     
+    // only retrieve this bundle if conversation does not exist
     private func retrievePrekeyBundleForUser(userId: String) {
         // get conversation data stored locally in user defaults
         
         
         let docRef = db.collection("users").document(userId)
-
+        
         docRef.getDocument { (document, error) in
             guard let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) else { return }
             
@@ -289,7 +290,9 @@ class AllChatsModel {
         }
     }
     
-    private func retrieveConversationDataFromUserDefaults(chatId: String) {
+    private func retrieveConversationFromUserDefaults(chatId: String) -> Conversation? {
+        var conversation: Conversation?
+        
         let defaults = UserDefaults.standard
         var codableConversation: CodableConversation?
         
@@ -297,7 +300,7 @@ class AllChatsModel {
             do {
                 // Create JSON Decoder
                 let decoder = JSONDecoder()
-
+                
                 // Decode Note
                 codableConversation = try decoder.decode(CodableConversation.self, from: conversationData)
             } catch {
@@ -305,15 +308,17 @@ class AllChatsModel {
             }
         }
         
-        if let retrievedConversation = codableConversation {
+        if let retrievedConversation = codableConversation,
+           let previouslyReceivedEphemeralKeys = defaults.array(forKey: "previouslyReceivedEphemeralKeys-\(chatId)") as? [Data],
+           let storedMessageKeys = defaults.array(forKey: "storedMessageKeys-\(chatId)") as? [StoredKey] {
+            let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys)
+            
+            conversation = Conversation(codableConversation: retrievedConversation, previouslyReceivedEphemeralKeys: setOfPreviouslyReceivedEphemeralKeys, storedMessageKeys: storedMessageKeys)
+        } else {
             
         }
         
-        // previous ephemeral keys received to check if message is new or old chain
-        var previouslyReceivedEphemeralKeys: Set<Data> = []
-        
-        // store message keys for missed messages
-        var storedMessageKeys: [StoredKey] = []
+        return conversation
     }
     
     private func getPrekeyBundleFromDocument(document: DocumentSnapshot?) -> [String: String]? {
@@ -322,9 +327,9 @@ class AllChatsModel {
         if let document = document, document.exists {
             if let data = document.data() {
                 if let identityKey = data["identityKey"] as? String,
-                let signedPrekey = data["signedPrekey"] as? String,
-                let signedPrekeySignature = data["signedPrekeySignature"] as? String,
-                let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
+                   let signedPrekey = data["signedPrekey"] as? String,
+                   let signedPrekeySignature = data["signedPrekeySignature"] as? String,
+                   let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
                     let oneTimePrekey = oneTimePrekeys.randomElement() ?? "none"
                     
                     prekeyBundle.updateValue(identityKey, forKey: "identityKey")

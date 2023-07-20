@@ -40,45 +40,50 @@ struct Conversation {
     // store message keys for missed messages
     var storedMessageKeys: [StoredKey] = []
     
+    init() {
+        dhRatchetPrivateKey = user.signedPrekeyPrivate
+        dhRatchetPublicKey = user.signedPrekeyPublic
+    }
+    
     init(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
         // last message received
         lastMessageReceived = codableConversation.lastMessageReceived
-        
+
         // dh ratchet key pair
         dhRatchetPrivateKey = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableConversation.dhRatchetPrivateKey)
         dhRatchetPublicKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableConversation.dhRatchetPublicKey)
-        
+
         // other user dh ratchet key
         if let otherUserDhRatchetKey = codableConversation.otherUserDhRatchetKey {
             self.otherUserDhRatchetKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUserDhRatchetKey)
         }
-        
+
         // chain keys
         if let rootChainKey = codableConversation.rootChainKey {
             self.rootChainKey = SymmetricKey(data: rootChainKey)
         }
-        
+
         if let sendChainKey = codableConversation.sendChainKey {
             self.sendChainKey = SymmetricKey(data: sendChainKey)
         }
-        
+
         if let receiveChainKey = codableConversation.receiveChainKey {
             self.receiveChainKey = SymmetricKey(data: receiveChainKey)
         }
-        
+
         // send chain lengths
         previousSendChainLength = codableConversation.previousSendChainLength
         currentSendChainLength = codableConversation.currentSendChainLength
-        
+
         // receive chain length
         currentReceiveChainLength = codableConversation.currentReceiveChainLength
-        
+
         // last ephemeral key received
         lastEphemeralKeyReceived = codableConversation.lastEphemeralKeyReceived
-        
+
         // previous ephemeral keys received to check if message is new or old chain
         self.previouslyReceivedEphemeralKeys = previouslyReceivedEphemeralKeys
-        
+
         // store message keys for missed messages
         self.storedMessageKeys = storedMessageKeys
     }
