@@ -51,8 +51,9 @@
 		5BC6FE052A5FE1B1006459F8 /* ButtonAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */; };
 		5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE062A60508C006459F8 /* TimeDisplay.swift */; };
 		5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE082A6050DB006459F8 /* UserIcon.swift */; };
-		5BFBC0772A691B37005E89FC /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0762A691B37005E89FC /* Conversation.swift */; };
+		5BFBC0772A691B37005E89FC /* CodableConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0762A691B37005E89FC /* CodableConversation.swift */; };
 		5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0782A691CE4005E89FC /* StoredKey.swift */; };
+		5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC07A2A691D4E005E89FC /* Conversation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,8 +101,9 @@
 		5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAppearance.swift; sourceTree = "<group>"; };
 		5BC6FE062A60508C006459F8 /* TimeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplay.swift; sourceTree = "<group>"; };
 		5BC6FE082A6050DB006459F8 /* UserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIcon.swift; sourceTree = "<group>"; };
-		5BFBC0762A691B37005E89FC /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		5BFBC0762A691B37005E89FC /* CodableConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableConversation.swift; sourceTree = "<group>"; };
 		5BFBC0782A691CE4005E89FC /* StoredKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredKey.swift; sourceTree = "<group>"; };
+		5BFBC07A2A691D4E005E89FC /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,8 +197,9 @@
 				5B5411E52A630C7B00A024E8 /* Chat.swift */,
 				5B5411E72A631CC800A024E8 /* User.swift */,
 				5B9792E22A63FCC600F078C6 /* OtherUser.swift */,
-				5BFBC0762A691B37005E89FC /* Conversation.swift */,
+				5BFBC0762A691B37005E89FC /* CodableConversation.swift */,
 				5BFBC0782A691CE4005E89FC /* StoredKey.swift */,
+				5BFBC07A2A691D4E005E89FC /* Conversation.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -405,7 +408,7 @@
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
 				5B5411D32A61BBAB00A024E8 /* LineSeparator.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
-				5BFBC0772A691B37005E89FC /* Conversation.swift in Sources */,
+				5BFBC0772A691B37005E89FC /* CodableConversation.swift in Sources */,
 				5B9792E32A63FCC600F078C6 /* OtherUser.swift in Sources */,
 				5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */,
 				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
@@ -417,6 +420,7 @@
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
 				5B5411D52A61E62800A024E8 /* Counter.swift in Sources */,
 				5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */,
+				5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */,
 				5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */,
 				5B5411D72A61EA2B00A024E8 /* CounterViewModel.swift in Sources */,
 				5BC6FDFB2A5EB372006459F8 /* AllChatsScreen.swift in Sources */,

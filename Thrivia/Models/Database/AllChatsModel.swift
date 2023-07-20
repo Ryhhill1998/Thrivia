@@ -291,7 +291,23 @@ class AllChatsModel {
     
     private func retrieveConversationDataFromUserDefaults(chatId: String) {
         let defaults = UserDefaults.standard
-//        let conversationData = defaults.
+        var codableConversation: CodableConversation?
+        
+        if let conversationData = defaults.data(forKey: chatId) {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+
+                // Decode Note
+                codableConversation = try decoder.decode(CodableConversation.self, from: conversationData)
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        }
+        
+        if let retrievedConversation = codableConversation {
+            
+        }
         
         // previous ephemeral keys received to check if message is new or old chain
         var previouslyReceivedEphemeralKeys: Set<Data> = []
