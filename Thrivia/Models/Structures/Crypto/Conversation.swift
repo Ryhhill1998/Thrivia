@@ -330,7 +330,7 @@ struct Conversation {
         }
     }
     
-    mutating func receiveMessage(message: EncryptedMessage) -> Data {
+    mutating func receiveMessage(message: EncryptedMessage) {
         let senderIdentityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.identityKey)!)
         let ephemeralKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.ephemeralKey)!)
         otherUserDhRatchetKey = ephemeralKey
@@ -416,7 +416,5 @@ struct Conversation {
         // add new message object to messages array
         let messageContent = String(data: decryptedData, encoding: .utf8)!
         messages.append(Message(id: message.id, content: messageContent, sent: false, timestamp: Date.now))
-        
-        return decryptedData
     }
 }

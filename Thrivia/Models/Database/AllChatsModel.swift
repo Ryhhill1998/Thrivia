@@ -146,7 +146,7 @@ class AllChatsModel {
         }
     }
     
-    func listenToChat(chatId: String, userId: String, chatSetter: @escaping (Chat) -> Void) {
+    func listenToChat(chatId: String, userId: String, messagesSetter: @escaping ([Message]) -> Void) {
         db.collection("chats").document(chatId)
             .addSnapshotListener { documentSnapshot, error in
                 guard let document = documentSnapshot else {
@@ -172,7 +172,7 @@ class AllChatsModel {
                             let otherUserData = otherUserDoc.data()
                             if let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
                                 // initialise empty messages array
-                                var messages: [Message] = []
+                                var encryptedMessages: [EncryptedMessage] = []
                                 
                                 // initialise messages dispatch group
                                 let messagesDispatchGroup = DispatchGroup()
@@ -185,27 +185,26 @@ class AllChatsModel {
                                         messagesDispatchGroup.enter()
                                         
                                         docRef.getDocument { (document, error) in
-                                            if let messageDoc = document, messageDoc.exists {
-                                                let messageData = messageDoc.data()
-                                                
-                                                if let message = self.createMessageObjectFromData(userId: userId, messageId: messageId, data: messageData) {
-                                                    messages.append(message)
-                                                    messagesDispatchGroup.leave()
-                                                }
-                                            } else {
-                                                print("Document does not exist")
+                                            if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                                                encryptedMessages.append(encryptedMessage)
                                             }
                                         }
                                     }
                                 }
                                 
                                 messagesDispatchGroup.notify(queue: .main) {
-                                    // sort messages
-                                    messages.sort {
-                                        $0.timestamp < $1.timestamp
+                                    // decrypt messages
+                                    var decryptedMessages: [Message] = []
+                                    
+                                    if var conversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
+                                        for message in encryptedMessages {
+                                            conversation.receiveMessage(message: message)
+                                            decryptedMessages = conversation.messages
+                                        }
                                     }
-                                    let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
-                                    chatSetter(chat)
+                                    
+                                    // set messages
+                                    messagesSetter(decryptedMessages)
                                 }
                                 
                             }
@@ -217,7 +216,32 @@ class AllChatsModel {
             }
     }
     
-    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String) {
+    func createEncryptedMessageObjectFromDocument(document: DocumentSnapshot?, userId: String) -> EncryptedMessage? {
+        var encryptedMessage: EncryptedMessage? = nil
+        
+        if let messageDoc = document, messageDoc.exists {
+            if let messageData = messageDoc.data() {
+                if let senderId = messageData["senderId"] as? String {
+                    if senderId != userId {
+                        if let cipherText = messageData["cipherText"] as? String,
+                           let identityKey = messageData["identityKey"] as? String,
+                           let ephemeralKey = messageData["ephemeralKey"] as? String,
+                           let oneTimePreKeyIdentifier = messageData["oneTimePreKeyIdentifier"] as? String,
+                           let sendChainLength = messageData["sendChainLength"] as? String,
+                           let previousSendChainLength = messageData["previousSendChainLength"] as? String {
+                            encryptedMessage = EncryptedMessage(id: messageDoc.documentID, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: Int(oneTimePreKeyIdentifier)!, sendChainLength: Int(sendChainLength)!, previousSendChainLength: Int(previousSendChainLength)!)
+                        }
+                        
+                        // delete document from server
+                    }
+                }
+            }
+        }
+        
+        return encryptedMessage
+    }
+    
+    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, messagesSetter: @escaping ([Message]) -> Void) {
         // get conversation data stored locally in user defaults
         var conversation: Conversation?
         
@@ -248,6 +272,8 @@ class AllChatsModel {
             
             if let encryptedMessage = encryptedMessage {
                 self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+                
+                messagesSetter(conversation!.messages)
             }
         }
     }

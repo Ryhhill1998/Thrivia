@@ -24,14 +24,14 @@ class ChatViewModel: ObservableObject {
         }
     }
     
-    func setLoadedChat(loadedChat: Chat) {
-        self.loadedChat = loadedChat
+    func setMessages(messages: [Message]) {
+        self.loadedChat?.messages = messages
         self.listenerCreated = true
     }
     
     func listenToChat() {
         if let chatId = loadedChat?.id {
-            allChatsModel.listenToChat(chatId: chatId, userId: userId, chatSetter: setLoadedChat(loadedChat:))
+            allChatsModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
         }
     }
     
