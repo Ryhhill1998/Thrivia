@@ -16,7 +16,10 @@ struct CryptoOtherUser {
     let identityKey: Curve25519.KeyAgreement.PublicKey
     
     // public signed prekey retrieved from server
-    let signedPrekey: Curve25519.Signing.PublicKey
+    let signedPrekey: Curve25519.KeyAgreement.PublicKey
+    
+    // public signed prekey retrieved from server
+    let signedPrekeySigning: Curve25519.Signing.PublicKey
     
     // prekey signature retrieved from server
     let prekeySignature: Data
@@ -34,7 +37,10 @@ struct CryptoOtherUser {
         identityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.identityKey)
         
         // public signed prekey retrieved from server
-        signedPrekey = try! Curve25519.Signing.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekey)
+        signedPrekey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekey)
+        
+        // signed prekey signing
+        signedPrekeySigning = try! Curve25519.Signing.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekeySigning)
         
         // prekey signature retrieved from server
         prekeySignature = codableCryptoOtherUser.prekeySignature

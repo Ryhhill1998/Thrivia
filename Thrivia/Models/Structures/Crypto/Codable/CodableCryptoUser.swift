@@ -19,6 +19,10 @@ struct CodableCryptoUser: Codable {
     let signedPrekeyPrivate: Data
     let signedPrekeyPublic: Data
     
+    // signed prekey signings
+    let signedPrekeySigningPrivate: Data
+    let signedPrekeySigningPublic: Data
+    
     // private one-time prekeys
     let oneTimePrekeysPrivate: [Data]
     
@@ -33,6 +37,10 @@ struct CodableCryptoUser: Codable {
         // signed prekeys
         signedPrekeyPrivate = cryptoUser.signedPrekeyPrivate.rawRepresentation
         signedPrekeyPublic = cryptoUser.signedPrekeyPublic.rawRepresentation
+        
+        // signed prekey signings
+        signedPrekeySigningPrivate = cryptoUser.signedPrekeySigningPrivate.rawRepresentation
+        signedPrekeySigningPublic = cryptoUser.signedPrekeySigningPublic.rawRepresentation
         
         // private one-time prekeys
         oneTimePrekeysPrivate = cryptoUser.oneTimePrekeysPrivate.map { $0.rawRepresentation }

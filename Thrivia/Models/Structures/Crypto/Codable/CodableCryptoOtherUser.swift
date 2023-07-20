@@ -17,6 +17,9 @@ struct CodableCryptoOtherUser: Codable {
     // public signed prekey retrieved from server
     let signedPrekey: Data
     
+    // public signed prekey retrieved from server
+    let signedPrekeySigning: Data
+    
     // prekey signature retrieved from server
     let prekeySignature: Data
     
@@ -31,6 +34,8 @@ struct CodableCryptoOtherUser: Codable {
         identityKey = Data(base64Encoded: prekeyBundle["identityKey"]!)!
         
         signedPrekey = Data(base64Encoded: prekeyBundle["signedPrekey"]!)!
+        
+        signedPrekeySigning = Data(base64Encoded: prekeyBundle["signedPrekeySigning"]!)!
         
         prekeySignature = Data(base64Encoded: prekeyBundle["signedPrekeySignature"]!)!
         
@@ -47,6 +52,9 @@ struct CodableCryptoOtherUser: Codable {
         
         // public signed prekey retrieved from server
         signedPrekey = cryptoOtherUser.signedPrekey.rawRepresentation
+        
+        // signed prekey signing
+        signedPrekeySigning = cryptoOtherUser.signedPrekeySigning.rawRepresentation
         
         // prekey signature retrieved from server
         prekeySignature = cryptoOtherUser.prekeySignature

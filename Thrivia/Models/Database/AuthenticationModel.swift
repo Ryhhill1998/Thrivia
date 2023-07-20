@@ -55,6 +55,9 @@ class AuthenticationModel {
         // signed prekey
         let publicSignedPrekeyString = codableCryptoUser.signedPrekeyPublic.base64EncodedString()
         
+        // signed prekey signing
+        let publicSignedPrekeySigningString = codableCryptoUser.signedPrekeySigningPublic.base64EncodedString()
+        
         // prekey signature
         let signedPrekeySignatureString = cryptoUser.prekeySignature.base64EncodedString()
         
@@ -70,6 +73,7 @@ class AuthenticationModel {
             "isActive": true,
             "identityKey": publicIdentityKeyString,
             "signedPrekey": publicSignedPrekeyString,
+            "signedPrekeySigning": publicSignedPrekeySigningString,
             "signedPrekeySignature": signedPrekeySignatureString,
             "oneTimePrekeys": publicOneTimePrekeyStrings
         ]) { err in

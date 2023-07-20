@@ -100,11 +100,7 @@ class CounterModel {
                             }
                         }
                     }
-                } else {
-                    print("Document does not exist")
                 }
-            } else {
-                print("Document does not exist")
             }
         }
     }

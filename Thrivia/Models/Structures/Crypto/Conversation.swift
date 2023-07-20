@@ -8,7 +8,7 @@
 import Foundation
 import CryptoKit
 
-struct Conversation {
+class Conversation {
     // static constants
     private static let rootDerivationInfo = "root key derivation info".data(using: .utf8)!
     private static let singleByte1 = Int8(bitPattern: 0x01).description.data(using: .utf8)!
@@ -166,6 +166,8 @@ struct Conversation {
         var hashData = Data()
         hashedAD.withUnsafeBytes { hashData = Data($0) }
         
+        print("Associated data: \(hashData.base64EncodedString())")
+        
         return hashData
     }
     
@@ -183,12 +185,12 @@ struct Conversation {
         return SymmetricKey(data: messageKey)
     }
     
-    mutating func generateDhRatchetPair() {
+    func generateDhRatchetPair() {
         dhRatchetPrivateKey = Curve25519.KeyAgreement.PrivateKey()
         dhRatchetPublicKey = dhRatchetPrivateKey.publicKey
     }
     
-    mutating func generateDhOutputKey(otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey {
+    func generateDhOutputKey(otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey {
         let dhOutput = try! dhRatchetPrivateKey.sharedSecretFromKeyAgreement(with: otherUserDhRatchetKey)
         let dhOutputBytes = convertSharedSecretToByteSequence(sharedSecret: dhOutput)
         let dhOutputKey = SymmetricKey(data: dhOutputBytes)
@@ -219,7 +221,7 @@ struct Conversation {
         return encryptedMessage
     }
     
-    mutating func sendMessage(messageContent: String) -> EncryptedMessage {
+    func sendMessage(messageContent: String) -> EncryptedMessage {
         // RESET ROOT CHAIN IF LAST MESSAGE RECEIVED
         if lastMessageReceived == nil || lastMessageReceived! {
             // if enters block, DH ratchet step is triggered
@@ -234,12 +236,15 @@ struct Conversation {
             // derive root chain and send chain keys from KDF output
             if rootChainKey == nil {
                 rootChainKey = generateSenderMasterKey(ephemeralKeyPrivate: dhRatchetPrivateKey)
+                print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
             }
             
             // derive and store new root and send chain keys
             let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey) // problem step
             rootChainKey = kdfRootOutput[0]
+            print("Updated root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
             sendChainKey = kdfRootOutput[1]
+            print("Send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())")
             
             // set previous send chain length equal to current send chain length
             previousSendChainLength = currentSendChainLength
@@ -251,7 +256,9 @@ struct Conversation {
         // derive new send chain key and message key for encryption
         let kdfMessageOutput = kdfMessage(currentChainKey: sendChainKey!)
         sendChainKey = kdfMessageOutput[0]
+        print("Updated send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())")
         let messageKey = kdfMessageOutput[1]
+        print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())")
         
         // generate associated data
         let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
@@ -297,7 +304,7 @@ struct Conversation {
         return decryptedData
     }
     
-    mutating func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
+    func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
         var foundKeyIndex: Int?
         
         for i in 0..<storedMessageKeys.count {
@@ -314,7 +321,7 @@ struct Conversation {
         return storedMessageKeys.remove(at: index)
     }
     
-    mutating func storeSkippedMessageKeys(skippedMessages: Int, messageNumber: Int, ephemeralKeyRaw: Data) {
+    func storeSkippedMessageKeys(skippedMessages: Int, messageNumber: Int, ephemeralKeyRaw: Data) {
         var count = skippedMessages
         var N = messageNumber
         
@@ -330,7 +337,7 @@ struct Conversation {
         }
     }
     
-    mutating func receiveMessage(message: EncryptedMessage) {
+    func receiveMessage(message: EncryptedMessage) {
         let senderIdentityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.identityKey)!)
         let ephemeralKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.ephemeralKey)!)
         otherUserDhRatchetKey = ephemeralKey
@@ -363,12 +370,15 @@ struct Conversation {
                 // derive root chain and send chain keys from KDF output
                 if rootChainKey == nil {
                     rootChainKey = generateRecipientMasterKey(oneTimePrekeyIdentifier: prekeyIdentifier, senderIdentityKey: senderIdentityKey, ephemeralKey: ephemeralKey)
+                    print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
                 }
                 
                 // derive and store new root and receive chain keys
                 let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey)
                 rootChainKey = kdfRootOutput[0]
+                print("Updated root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
                 receiveChainKey = kdfRootOutput[1]
+                print("Receive chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey!).base64EncodedString())")
                 
                 // reset receive chain length after Diffie-Hellman
                 currentReceiveChainLength = 0
@@ -393,7 +403,9 @@ struct Conversation {
             // derive new receive chain key and message key for decryption
             let kdfMessageOutput = kdfMessage(currentChainKey: receiveChainKey!)
             receiveChainKey = kdfMessageOutput[0]
+            print("Updated receive chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey!).base64EncodedString())")
             messageKey = kdfMessageOutput[1]
+            print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())")
             
             // set last ephemeral key received to current ephemeral key
             lastEphemeralKeyReceived = ephemeralKey.rawRepresentation
@@ -408,7 +420,7 @@ struct Conversation {
         }
         
         // generate associated data
-        let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
+        let associatedData = generateAssociatedData(senderId: otherUser.id, senderIdentityKey: otherUser.identityKey.rawRepresentation, recipientId: user.id, recipientIdentityKey: user.identityKeyPublic.rawRepresentation)
         
         // decrypt message
         let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData)

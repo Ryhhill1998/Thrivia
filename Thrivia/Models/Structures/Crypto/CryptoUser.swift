@@ -17,12 +17,16 @@ struct CryptoUser {
     let identityKeyPublic: Curve25519.KeyAgreement.PublicKey
     
     // signed prekeys
-    let signedPrekeyPrivate: Curve25519.Signing.PrivateKey
-    let signedPrekeyPublic: Curve25519.Signing.PublicKey
+    let signedPrekeyPrivate: Curve25519.KeyAgreement.PrivateKey
+    let signedPrekeyPublic: Curve25519.KeyAgreement.PublicKey
+    
+    // signed prekey signings
+    let signedPrekeySigningPrivate: Curve25519.Signing.PrivateKey
+    let signedPrekeySigningPublic: Curve25519.Signing.PublicKey
     
     // prekey signature
     var prekeySignature: Data {
-        return try! signedPrekeyPrivate.signature(for: identityKeyPublic.rawRepresentation)
+        return try! signedPrekeySigningPrivate.signature(for: identityKeyPublic.rawRepresentation)
     }
     
     // private one-time prekeys
@@ -34,8 +38,11 @@ struct CryptoUser {
         identityKeyPrivate = Curve25519.KeyAgreement.PrivateKey()
         identityKeyPublic = identityKeyPrivate.publicKey
         
-        signedPrekeyPrivate = Curve25519.Signing.PrivateKey()
+        signedPrekeyPrivate = Curve25519.KeyAgreement.PrivateKey()
         signedPrekeyPublic = signedPrekeyPrivate.publicKey
+        
+        signedPrekeySigningPrivate = Curve25519.Signing.PrivateKey()
+        signedPrekeySigningPublic = signedPrekeySigningPrivate.publicKey
         
         oneTimePrekeysPrivate = (0..<10).map { _ in Curve25519.KeyAgreement.PrivateKey() }
     }
@@ -48,8 +55,12 @@ struct CryptoUser {
         identityKeyPublic = identityKeyPrivate.publicKey
         
         // signed prekeys
-        signedPrekeyPrivate = try! Curve25519.Signing.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeyPrivate)
+        signedPrekeyPrivate = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeyPrivate)
         signedPrekeyPublic = signedPrekeyPrivate.publicKey
+        
+        // signed prekey signings
+        signedPrekeySigningPrivate = try! Curve25519.Signing.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeySigningPrivate)
+        signedPrekeySigningPublic = signedPrekeySigningPrivate.publicKey
         
         // private one-time prekeys
         oneTimePrekeysPrivate = codableCryptoUser.oneTimePrekeysPrivate.map { try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: $0) }

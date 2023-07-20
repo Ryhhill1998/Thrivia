@@ -103,8 +103,6 @@ class AllChatsModel {
                                     }
                                     
                                 }
-                            } else {
-                                print("Document does not exist")
                             }
                         }
                     }
@@ -165,46 +163,64 @@ class AllChatsModel {
                     let docRef = self.db.collection("users").document(otherUserId)
                     
                     docRef.getDocument { (document, error) in
-                        // initialise empty messages array
-                        var encryptedMessages: [EncryptedMessage] = []
+                        var conversation: Conversation? = nil
                         
-                        // initialise messages dispatch group
-                        let messagesDispatchGroup = DispatchGroup()
-                        
-                        if let messageIds = data["messageIds"] as? [String] {
-                            // get message data
-                            for messageId in messageIds {
-                                let docRef = self.db.collection("messages").document(messageId)
-                                
-                                messagesDispatchGroup.enter()
-                                
-                                docRef.getDocument { (document, error) in
-                                    if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
-                                        encryptedMessages.append(encryptedMessage)
-                                    }
-                                }
-                            }
+                        if let retrievedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
+                            conversation = retrievedConversation
+                            self.decryptAndSetMessages(data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                         } else {
-                            print("Document does not exist")
-                        }
-                        
-                        messagesDispatchGroup.notify(queue: .main) {
-                            // decrypt messages
-                            var decryptedMessages: [Message] = []
-                            
-                            if var conversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
-                                for message in encryptedMessages {
-                                    conversation.receiveMessage(message: message)
-                                    decryptedMessages = conversation.messages
-                                }
+                            if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
+                               let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                                let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
+                                let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
+                                conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                                self.decryptAndSetMessages(data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                             }
-                            
-                            // set messages
-                            messagesSetter(decryptedMessages)
                         }
                     }
                 }
             }
+    }
+    
+    func decryptAndSetMessages(data: [String : Any], userId: String, conversation: Conversation?, messagesSetter: @escaping ([Message]) -> Void) {
+        // initialise empty messages array
+        var encryptedMessages: [EncryptedMessage] = []
+        
+        // initialise messages dispatch group
+        let messagesDispatchGroup = DispatchGroup()
+        
+        if let messageIds = data["messageIds"] as? [String] {
+            // get message data
+            for messageId in messageIds {
+                let docRef = self.db.collection("messages").document(messageId)
+                
+                messagesDispatchGroup.enter()
+                
+                docRef.getDocument { (document, error) in
+                    if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                        encryptedMessages.append(encryptedMessage)
+                        messagesDispatchGroup.leave()
+                    }
+                }
+            }
+        }
+        
+        messagesDispatchGroup.notify(queue: .main) {
+            // decrypt messages
+            var decryptedMessages: [Message] = []
+            
+            if var conversation = conversation {
+                for message in encryptedMessages {
+                    conversation.receiveMessage(message: message)
+                    decryptedMessages = conversation.messages
+                }
+            }
+            
+            print(decryptedMessages)
+            
+            // set messages
+            messagesSetter(decryptedMessages)
+        }
     }
     
     func createEncryptedMessageObjectFromDocument(document: DocumentSnapshot?, userId: String) -> EncryptedMessage? {
@@ -221,8 +237,6 @@ class AllChatsModel {
                            let sendChainLength = messageData["sendChainLength"] as? Int,
                            let previousSendChainLength = messageData["previousSendChainLength"] as? Int {
                             encryptedMessage = EncryptedMessage(id: messageDoc.documentID, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: oneTimePreKeyIdentifier, sendChainLength: sendChainLength, previousSendChainLength: previousSendChainLength)
-                            
-                            print(encryptedMessage)
                         }
                         
                         // delete document from server
@@ -252,6 +266,7 @@ class AllChatsModel {
                 // get prekey bundle from server
                 if let cryptoUser = cryptoUser,
                    let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                    print(prekeyBundle)
                     let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                     let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                     conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
@@ -260,8 +275,6 @@ class AllChatsModel {
             
             // create encrypted message using conversation object
             let encryptedMessage = conversation?.sendMessage(messageContent: content)
-            
-            print(encryptedMessage ?? "none")
             
             if let encryptedMessage = encryptedMessage {
                 self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
@@ -391,6 +404,7 @@ class AllChatsModel {
             if let data = document.data() {
                 if let identityKey = data["identityKey"] as? String,
                    let signedPrekey = data["signedPrekey"] as? String,
+                   let signedPrekeySigning = data["signedPrekeySigning"] as? String,
                    let signedPrekeySignature = data["signedPrekeySignature"] as? String,
                    let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
                     let prekeyIdentifier = Int.random(in: 0..<oneTimePrekeys.count)
@@ -399,6 +413,7 @@ class AllChatsModel {
                     prekeyBundle.updateValue(document.documentID, forKey: "id")
                     prekeyBundle.updateValue(identityKey, forKey: "identityKey")
                     prekeyBundle.updateValue(signedPrekey, forKey: "signedPrekey")
+                    prekeyBundle.updateValue(signedPrekeySigning, forKey: "signedPrekeySigning")
                     prekeyBundle.updateValue(signedPrekeySignature, forKey: "signedPrekeySignature")
                     prekeyBundle.updateValue(oneTimePrekey, forKey: "oneTimePrekey")
                     prekeyBundle.updateValue("\(prekeyIdentifier)", forKey: "prekeyIdentifier")

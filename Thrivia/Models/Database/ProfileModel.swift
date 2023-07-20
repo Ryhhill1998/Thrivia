@@ -31,8 +31,6 @@ class ProfileModel {
                 if let iconColour = data?["iconColour"] as? String {
                     iconColourSetter(iconColour)
                 }
-            } else {
-                print("Document does not exist")
             }
         }
     }
