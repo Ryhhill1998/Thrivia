@@ -8,6 +8,9 @@
 import Foundation
 
 struct CodableCryptoUser: Codable {
+    // user ID
+    let id: String
+    
     // identity keys
     let identityKeyPrivate: Data
     let identityKeyPublic: Data
@@ -20,6 +23,9 @@ struct CodableCryptoUser: Codable {
     let oneTimePrekeysPrivate: [Data]
     
     init(cryptoUser: CryptoUser) {
+        // id
+        id = cryptoUser.id
+        
         // identity keys
         identityKeyPrivate = cryptoUser.identityKeyPrivate.rawRepresentation
         identityKeyPublic = cryptoUser.identityKeyPublic.rawRepresentation

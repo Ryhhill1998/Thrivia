@@ -9,6 +9,9 @@ import Foundation
 import CryptoKit
 
 struct CryptoUser {
+    // user ID
+    let id: String
+    
     // identity keys
     let identityKeyPrivate: Curve25519.KeyAgreement.PrivateKey
     let identityKeyPublic: Curve25519.KeyAgreement.PublicKey
@@ -25,7 +28,9 @@ struct CryptoUser {
     // private one-time prekeys
     let oneTimePrekeysPrivate: [Curve25519.KeyAgreement.PrivateKey]
     
-    init() {
+    init(userId: String) {
+        id = userId
+        
         identityKeyPrivate = Curve25519.KeyAgreement.PrivateKey()
         identityKeyPublic = identityKeyPrivate.publicKey
         
@@ -36,6 +41,8 @@ struct CryptoUser {
     }
     
     init(codableCryptoUser: CodableCryptoUser) {
+        id = codableCryptoUser.id
+        
         // identity keys
         identityKeyPrivate = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableCryptoUser.identityKeyPrivate)
         identityKeyPublic = identityKeyPrivate.publicKey

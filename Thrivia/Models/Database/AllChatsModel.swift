@@ -218,12 +218,52 @@ class AllChatsModel {
     }
     
     func sendMessage(senderId: String, receiverId: String, content: String, chatId: String) {
+        // get conversation data stored locally in user defaults
+        var conversation: Conversation?
+        
+        if let storedConversation = retrieveConversationFromUserDefaults(chatId: chatId) {
+            conversation = storedConversation
+        }
+        
+        let receiverDocRef = db.collection("users").document(receiverId)
+        
+        receiverDocRef.getDocument { (document, error) in
+            if conversation == nil {
+                // get stored crypto user
+                let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
+                
+                // get prekey bundle from server
+                if let cryptoUser = cryptoUser,
+                   let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                    let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
+                    let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
+                    conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                }
+            }
+            
+            // create encrypted message using conversation object
+            let encryptedMessage = conversation?.sendMessage(messageContent: content)
+            
+            print(encryptedMessage ?? "none")
+            
+            if let encryptedMessage = encryptedMessage {
+                self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+            }
+        }
+    }
+    
+    private func createMessageDocInDB(senderId: String, chatId: String, encryptedMessage: EncryptedMessage) {
         // create message doc in db
         var docRef: DocumentReference? = nil
         
-        docRef = db.collection("messages").addDocument(data: [
+        docRef = self.db.collection("messages").addDocument(data: [
             "senderId": senderId,
-            "content": content,
+            "cipherText": encryptedMessage.cipherText,
+            "identityKey": encryptedMessage.identityKey,
+            "ephemeralKey": encryptedMessage.ephemeralKey,
+            "oneTimePreKeyIdentifier": encryptedMessage.oneTimePreKeyIdentifier,
+            "sendChainLength": encryptedMessage.sendChainLength,
+            "previousSendChainLength": encryptedMessage.previousSendChainLength,
             "timestamp": FieldValue.serverTimestamp()
         ]) { err in
             if let err = err {
@@ -274,35 +314,6 @@ class AllChatsModel {
         }
         
         return message
-    }
-    
-    // only retrieve this bundle if conversation does not exist
-    private func retrievePrekeyBundleForUser(otherUserId: String, chatId: String) {
-        // get conversation data stored locally in user defaults
-        var conversation: Conversation?
-        
-        if let storedConversation = retrieveConversationFromUserDefaults(chatId: chatId) {
-            conversation = storedConversation
-        }
-        
-        let docRef = db.collection("users").document(otherUserId)
-        
-        docRef.getDocument { (document, error) in
-            if conversation == nil {
-                // get stored crypto user
-                let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
-                
-                // get prekey bundle from server
-                if let cryptoUser = cryptoUser,
-                   let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
-                    let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
-                    let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
-                    conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
-                }
-            }
-            
-            
-        }
     }
     
     private func retrieveCryptoUserFromUserDefaults() -> CryptoUser? {
@@ -368,12 +379,15 @@ class AllChatsModel {
                    let signedPrekey = data["signedPrekey"] as? String,
                    let signedPrekeySignature = data["signedPrekeySignature"] as? String,
                    let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
-                    let oneTimePrekey = oneTimePrekeys.randomElement() ?? "none"
+                    let prekeyIdentifier = Int.random(in: 0..<oneTimePrekeys.count)
+                    let oneTimePrekey = oneTimePrekeys[prekeyIdentifier]
                     
+                    prekeyBundle.updateValue(document.documentID, forKey: "id")
                     prekeyBundle.updateValue(identityKey, forKey: "identityKey")
                     prekeyBundle.updateValue(signedPrekey, forKey: "signedPrekey")
                     prekeyBundle.updateValue(signedPrekeySignature, forKey: "signedPrekeySignature")
                     prekeyBundle.updateValue(oneTimePrekey, forKey: "oneTimePrekey")
+                    prekeyBundle.updateValue("\(prekeyIdentifier)", forKey: "prekeyIdentifier")
                 }
             }
         }

@@ -58,6 +58,7 @@
 		5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC07E2A692A29005E89FC /* CryptoUser.swift */; };
 		5BFBC0832A692BAB005E89FC /* CodableCryptoOtherUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0822A692BAB005E89FC /* CodableCryptoOtherUser.swift */; };
 		5BFBC0852A692CC6005E89FC /* CodableCryptoUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0842A692CC6005E89FC /* CodableCryptoUser.swift */; };
+		5BFBC0882A6946D3005E89FC /* EncryptedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0872A6946D3005E89FC /* EncryptedMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,6 +113,7 @@
 		5BFBC07E2A692A29005E89FC /* CryptoUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUser.swift; sourceTree = "<group>"; };
 		5BFBC0822A692BAB005E89FC /* CodableCryptoOtherUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableCryptoOtherUser.swift; sourceTree = "<group>"; };
 		5BFBC0842A692CC6005E89FC /* CodableCryptoUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableCryptoUser.swift; sourceTree = "<group>"; };
+		5BFBC0872A6946D3005E89FC /* EncryptedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,15 +327,24 @@
 		5BFBC0812A692B86005E89FC /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				5BFBC0762A691B37005E89FC /* CodableConversation.swift */,
 				5BFBC07A2A691D4E005E89FC /* Conversation.swift */,
 				5BFBC0782A691CE4005E89FC /* StoredKey.swift */,
 				5BFBC07C2A6923EE005E89FC /* CryptoOtherUser.swift */,
 				5BFBC07E2A692A29005E89FC /* CryptoUser.swift */,
+				5BFBC0872A6946D3005E89FC /* EncryptedMessage.swift */,
+				5BFBC0862A693792005E89FC /* Codable */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
+		5BFBC0862A693792005E89FC /* Codable */ = {
+			isa = PBXGroup;
+			children = (
+				5BFBC0762A691B37005E89FC /* CodableConversation.swift */,
 				5BFBC0822A692BAB005E89FC /* CodableCryptoOtherUser.swift */,
 				5BFBC0842A692CC6005E89FC /* CodableCryptoUser.swift */,
 			);
-			path = Crypto;
+			path = Codable;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -451,6 +462,7 @@
 				5B5411E42A62EDC300A024E8 /* AllChatsViewModel.swift in Sources */,
 				5BC6FDF22A5EA7E5006459F8 /* ActionButton.swift in Sources */,
 				5B9792DB2A63D31100F078C6 /* CounterModel.swift in Sources */,
+				5BFBC0882A6946D3005E89FC /* EncryptedMessage.swift in Sources */,
 				5B5411C72A615A6700A024E8 /* Message.swift in Sources */,
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
 				5B9792EE2A646C2F00F078C6 /* AuthenticationModel.swift in Sources */,

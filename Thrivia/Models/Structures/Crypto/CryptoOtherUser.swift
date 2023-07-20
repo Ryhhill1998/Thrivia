@@ -9,6 +9,9 @@ import Foundation
 import CryptoKit
 
 struct CryptoOtherUser {
+    // user ID
+    let id: String
+    
     // public identity key retrieved from server
     let identityKey: Curve25519.KeyAgreement.PublicKey
     
@@ -18,7 +21,15 @@ struct CryptoOtherUser {
     // prekey signature retrieved from server
     let prekeySignature: Data
     
+    // one-time prekey
+    let oneTimePrekey: Curve25519.KeyAgreement.PublicKey
+    
+    let prekeyIdentifier: Int
+    
     init(codableCryptoOtherUser: CodableCryptoOtherUser) {
+        // id
+        id = codableCryptoOtherUser.id
+        
         // public identity key retrieved from server
         identityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.identityKey)
         
@@ -27,5 +38,10 @@ struct CryptoOtherUser {
         
         // prekey signature retrieved from server
         prekeySignature = codableCryptoOtherUser.prekeySignature
+        
+        // one-time prekey
+        oneTimePrekey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.oneTimePrekey)
+        
+        prekeyIdentifier = codableCryptoOtherUser.prekeyIdentifier
     }
 }
