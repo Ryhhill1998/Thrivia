@@ -81,8 +81,9 @@ class AllChatsModel {
                                             messagesDispatchGroup.enter()
                                             
                                             docRef.getDocument { (document, error) in
-                                                if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                                                if self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) != nil {
                                                     numberOfUnreadMessages += 1
+                                                    messagesDispatchGroup.leave()
                                                 }
                                             }
                                         }
@@ -164,48 +165,42 @@ class AllChatsModel {
                     let docRef = self.db.collection("users").document(otherUserId)
                     
                     docRef.getDocument { (document, error) in
-                        if let otherUserDoc = document, otherUserDoc.exists {
-                            let otherUserData = otherUserDoc.data()
-                            if let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
-                                // initialise empty messages array
-                                var encryptedMessages: [EncryptedMessage] = []
+                        // initialise empty messages array
+                        var encryptedMessages: [EncryptedMessage] = []
+                        
+                        // initialise messages dispatch group
+                        let messagesDispatchGroup = DispatchGroup()
+                        
+                        if let messageIds = data["messageIds"] as? [String] {
+                            // get message data
+                            for messageId in messageIds {
+                                let docRef = self.db.collection("messages").document(messageId)
                                 
-                                // initialise messages dispatch group
-                                let messagesDispatchGroup = DispatchGroup()
+                                messagesDispatchGroup.enter()
                                 
-                                if let messageIds = data["messageIds"] as? [String] {
-                                    // get message data
-                                    for messageId in messageIds {
-                                        let docRef = self.db.collection("messages").document(messageId)
-                                        
-                                        messagesDispatchGroup.enter()
-                                        
-                                        docRef.getDocument { (document, error) in
-                                            if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
-                                                encryptedMessages.append(encryptedMessage)
-                                            }
-                                        }
+                                docRef.getDocument { (document, error) in
+                                    if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                                        encryptedMessages.append(encryptedMessage)
                                     }
                                 }
-                                
-                                messagesDispatchGroup.notify(queue: .main) {
-                                    // decrypt messages
-                                    var decryptedMessages: [Message] = []
-                                    
-                                    if var conversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
-                                        for message in encryptedMessages {
-                                            conversation.receiveMessage(message: message)
-                                            decryptedMessages = conversation.messages
-                                        }
-                                    }
-                                    
-                                    // set messages
-                                    messagesSetter(decryptedMessages)
-                                }
-                                
                             }
                         } else {
                             print("Document does not exist")
+                        }
+                        
+                        messagesDispatchGroup.notify(queue: .main) {
+                            // decrypt messages
+                            var decryptedMessages: [Message] = []
+                            
+                            if var conversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
+                                for message in encryptedMessages {
+                                    conversation.receiveMessage(message: message)
+                                    decryptedMessages = conversation.messages
+                                }
+                            }
+                            
+                            // set messages
+                            messagesSetter(decryptedMessages)
                         }
                     }
                 }
@@ -222,10 +217,12 @@ class AllChatsModel {
                         if let cipherText = messageData["cipherText"] as? String,
                            let identityKey = messageData["identityKey"] as? String,
                            let ephemeralKey = messageData["ephemeralKey"] as? String,
-                           let oneTimePreKeyIdentifier = messageData["oneTimePreKeyIdentifier"] as? String,
-                           let sendChainLength = messageData["sendChainLength"] as? String,
-                           let previousSendChainLength = messageData["previousSendChainLength"] as? String {
-                            encryptedMessage = EncryptedMessage(id: messageDoc.documentID, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: Int(oneTimePreKeyIdentifier)!, sendChainLength: Int(sendChainLength)!, previousSendChainLength: Int(previousSendChainLength)!)
+                           let oneTimePreKeyIdentifier = messageData["oneTimePreKeyIdentifier"] as? Int,
+                           let sendChainLength = messageData["sendChainLength"] as? Int,
+                           let previousSendChainLength = messageData["previousSendChainLength"] as? Int {
+                            encryptedMessage = EncryptedMessage(id: messageDoc.documentID, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: oneTimePreKeyIdentifier, sendChainLength: sendChainLength, previousSendChainLength: previousSendChainLength)
+                            
+                            print(encryptedMessage)
                         }
                         
                         // delete document from server
