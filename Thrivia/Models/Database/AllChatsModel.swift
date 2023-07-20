@@ -67,8 +67,8 @@ class AllChatsModel {
                             if let otherUserDoc = document, otherUserDoc.exists {
                                 let otherUserData = otherUserDoc.data()
                                 if let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
-                                    // initialise empty messages array
-                                    var messages: [Message] = []
+                                    
+                                    var numberOfUnreadMessages = 0
                                     
                                     // initialise messages dispatch group
                                     let messagesDispatchGroup = DispatchGroup()
@@ -81,25 +81,21 @@ class AllChatsModel {
                                             messagesDispatchGroup.enter()
                                             
                                             docRef.getDocument { (document, error) in
-                                                if let messageDoc = document, messageDoc.exists {
-                                                    let messageData = messageDoc.data()
-                                                    
-                                                    if let message = self.createMessageObjectFromData(userId: userId, messageId: messageId, data: messageData) {
-                                                        messages.append(message)
-                                                        messagesDispatchGroup.leave()
-                                                    }
-                                                } else {
-                                                    print("Document does not exist")
+                                                if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                                                    numberOfUnreadMessages += 1
                                                 }
                                             }
                                         }
                                     }
                                     
                                     messagesDispatchGroup.notify(queue: .main) {
-                                        // sort messages
-                                        messages.sort {
-                                            $0.timestamp < $1.timestamp
+                                        // initialise empty messages array
+                                        var messages: [Message] = []
+                                        
+                                        for _ in 0..<numberOfUnreadMessages {
+                                            messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, timestamp: Date.now))
                                         }
+                                        
                                         let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
                                         userChats.append(chat)
                                         chatsDispatchGroup.leave()
