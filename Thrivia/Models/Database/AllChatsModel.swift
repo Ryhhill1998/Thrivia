@@ -277,17 +277,57 @@ class AllChatsModel {
     }
     
     // only retrieve this bundle if conversation does not exist
-    private func retrievePrekeyBundleForUser(userId: String) {
+    private func retrievePrekeyBundleForUser(otherUserId: String, chatId: String) {
         // get conversation data stored locally in user defaults
+        var conversation: Conversation?
         
+        if let storedConversation = retrieveConversationFromUserDefaults(chatId: chatId) {
+            conversation = storedConversation
+        }
         
-        let docRef = db.collection("users").document(userId)
+        let docRef = db.collection("users").document(otherUserId)
         
         docRef.getDocument { (document, error) in
-            guard let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) else { return }
+            if conversation == nil {
+                // get stored crypto user
+                let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
+                
+                // get prekey bundle from server
+                if let cryptoUser = cryptoUser,
+                   let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                    let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
+                    let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
+                    conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                }
+            }
             
             
         }
+    }
+    
+    private func retrieveCryptoUserFromUserDefaults() -> CryptoUser? {
+        var cryptoUser: CryptoUser?
+        
+        let defaults = UserDefaults.standard
+        var codableCryptoUser: CodableCryptoUser?
+        
+        if let codableCryptoUserData = defaults.data(forKey: "codableCryptoUser") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+                
+                // Decode Note
+                codableCryptoUser = try decoder.decode(CodableCryptoUser.self, from: codableCryptoUserData)
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        }
+        
+        if let retrievedCodableCryptoUser = codableCryptoUser {
+            cryptoUser = CryptoUser(codableCryptoUser: retrievedCodableCryptoUser)
+        }
+        
+        return cryptoUser
     }
     
     private func retrieveConversationFromUserDefaults(chatId: String) -> Conversation? {
@@ -314,8 +354,6 @@ class AllChatsModel {
             let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys)
             
             conversation = Conversation(codableConversation: retrievedConversation, previouslyReceivedEphemeralKeys: setOfPreviouslyReceivedEphemeralKeys, storedMessageKeys: storedMessageKeys)
-        } else {
-            
         }
         
         return conversation

@@ -17,6 +17,11 @@ struct CryptoUser {
     let signedPrekeyPrivate: Curve25519.Signing.PrivateKey
     let signedPrekeyPublic: Curve25519.Signing.PublicKey
     
+    // prekey signature
+    var prekeySignature: Data {
+        return try! signedPrekeyPrivate.signature(for: identityKeyPublic.rawRepresentation)
+    }
+    
     // private one-time prekeys
     let oneTimePrekeysPrivate: [Curve25519.KeyAgreement.PrivateKey]
     

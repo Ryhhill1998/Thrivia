@@ -9,6 +9,10 @@ import Foundation
 import CryptoKit
 
 struct Conversation {
+    // users
+    var user: CryptoUser
+    var otherUser: CryptoOtherUser
+    
     // boolean to show whether last message was received from other user
     var lastMessageReceived: Bool?
     
@@ -40,12 +44,21 @@ struct Conversation {
     // store message keys for missed messages
     var storedMessageKeys: [StoredKey] = []
     
-    init() {
-        dhRatchetPrivateKey = user.signedPrekeyPrivate
-        dhRatchetPublicKey = user.signedPrekeyPublic
+    // new object initialiser
+    init(user: CryptoUser, otherUser: CryptoOtherUser) {
+        self.user = user
+        self.otherUser = otherUser
+        
+        dhRatchetPrivateKey = user.identityKeyPrivate
+        dhRatchetPublicKey = user.identityKeyPublic
     }
     
+    // initialiser to restore object from local storage codable format
     init(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
+        // users
+        user = CryptoUser(codableCryptoUser: codableConversation.user)
+        otherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser)
+        
         // last message received
         lastMessageReceived = codableConversation.lastMessageReceived
 

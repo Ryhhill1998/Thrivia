@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CodableCryptoUser {
+struct CodableCryptoUser: Codable {
     // identity keys
     let identityKeyPrivate: Data
     let identityKeyPublic: Data
@@ -18,4 +18,17 @@ struct CodableCryptoUser {
     
     // private one-time prekeys
     let oneTimePrekeysPrivate: [Data]
+    
+    init(cryptoUser: CryptoUser) {
+        // identity keys
+        identityKeyPrivate = cryptoUser.identityKeyPrivate.rawRepresentation
+        identityKeyPublic = cryptoUser.identityKeyPublic.rawRepresentation
+        
+        // signed prekeys
+        signedPrekeyPrivate = cryptoUser.signedPrekeyPrivate.rawRepresentation
+        signedPrekeyPublic = cryptoUser.signedPrekeyPublic.rawRepresentation
+        
+        // private one-time prekeys
+        oneTimePrekeysPrivate = cryptoUser.oneTimePrekeysPrivate.map { $0.rawRepresentation }
+    }
 }

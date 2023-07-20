@@ -16,4 +16,17 @@ struct CodableCryptoOtherUser: Codable {
     
     // prekey signature retrieved from server
     let prekeySignature: Data
+    
+    // one-time prekey retrieved from server
+    let oneTimePrekey: Data
+    
+    init(prekeyBundle: [String: String]) {
+        identityKey = Data(base64Encoded: prekeyBundle["identityKey"]!)!
+        
+        signedPrekey = Data(base64Encoded: prekeyBundle["signedPrekey"]!)!
+        
+        prekeySignature = Data(base64Encoded: prekeyBundle["signedPrekeySignature"]!)!
+        
+        oneTimePrekey = Data(base64Encoded: prekeyBundle["oneTimePrekey"]!)!
+    }
 }

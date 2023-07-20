@@ -41,32 +41,26 @@ class AuthenticationModel {
     private func createUserDoc(userId: String, email: String, username: String) {
         let randomIconColour = "IconColour\(Int.random(in: 1...6))"
         
-        // generate keys for the server
-        // identity keys
-        let privateIdentityKey = generatePrivateKey()
-        storeKeyLocally(key: privateIdentityKey.rawRepresentation.base64EncodedString(), keyName: "privateIdentityKey")
-        let publicIdentityKey = privateIdentityKey.publicKey
-        let publicIdentityKeyString = convertPublicKeyToBase64String(publicKey: publicIdentityKey) // to be stored on server
+        // create crypto user
+        let cryptoUser = CryptoUser()
         
-        // signed prekeys
-        let privateSignedPrekey = generatePrivateSignedPrekey()
-        storeKeyLocally(key: privateSignedPrekey.rawRepresentation.base64EncodedString(), keyName: "privateSignedPrekey")
-        let publicSignedPrekey = privateSignedPrekey.publicKey
-        let publicSignedPrekeyString = publicSignedPrekey.rawRepresentation.base64EncodedString() // to be stored on server
+        // create codable crypto user
+        let codableCryptoUser = CodableCryptoUser(cryptoUser: cryptoUser)
         
-        // prekey signature - to be stored on server as String
-        let signedPrekeySignature = generateSignedPrekeySignature(privateSignedPrekey: privateSignedPrekey, publicIdentityKey: publicIdentityKey)
-        let signedPrekeySignatureString = signedPrekeySignature?.base64EncodedString() // to be stored on server
+        // generate key strings for the server
+        // identity key
+        let publicIdentityKeyString = codableCryptoUser.identityKeyPublic.base64EncodedString()
+        
+        // signed prekey
+        let publicSignedPrekeyString = codableCryptoUser.signedPrekeyPublic.base64EncodedString()
+        
+        // prekey signature
+        let signedPrekeySignatureString = cryptoUser.prekeySignature.base64EncodedString()
         
         // 10 x one-time prekeys
-        let privateOneTimePrekeys = generatePrivateOneTimePrekeysArray(numberOfKeys: 10)
-        
-        for i in 0..<privateOneTimePrekeys.count {
-            storeKeyLocally(key: privateOneTimePrekeys[i].rawRepresentation.base64EncodedString(), keyName: "privateOneTimePrekey\(i)")
-        }
-        
+        let privateOneTimePrekeys = cryptoUser.oneTimePrekeysPrivate
         let publicOneTimePrekeys = privateOneTimePrekeys.map { $0.publicKey }
-        let publicOneTimePrekeyStrings = publicOneTimePrekeys.map { convertPublicKeyToBase64String(publicKey: $0) } // to be stored on server
+        let publicOneTimePrekeyStrings = publicOneTimePrekeys.map { $0.rawRepresentation.base64EncodedString() } // to be stored on server
         
         db.collection("users").document(userId).setData([
             "email": email,
@@ -75,7 +69,7 @@ class AuthenticationModel {
             "isActive": true,
             "identityKey": publicIdentityKeyString,
             "signedPrekey": publicSignedPrekeyString,
-            "signedPrekeySignature": signedPrekeySignatureString ?? "none",
+            "signedPrekeySignature": signedPrekeySignatureString,
             "oneTimePrekeys": publicOneTimePrekeyStrings
         ]) { err in
             if let err = err {
@@ -84,43 +78,6 @@ class AuthenticationModel {
                 print("Document successfully written!")
             }
         }
-    }
-    
-    private func storeKeyLocally(key: String, keyName: String) {
-        let defaults = UserDefaults.standard
-        defaults.set(key, forKey: keyName)
-    }
-    
-    private func convertPublicKeyToBase64String(publicKey: Curve25519.KeyAgreement.PublicKey) -> String {
-        return publicKey.rawRepresentation.base64EncodedString()
-    }
-    
-    private func generatePrivateKey() -> Curve25519.KeyAgreement.PrivateKey {
-        return Curve25519.KeyAgreement.PrivateKey()
-    }
-    
-    private func generatePrivateSignedPrekey() -> Curve25519.Signing.PrivateKey {
-        return Curve25519.Signing.PrivateKey()
-    }
-    
-    private func generateSignedPrekeySignature(privateSignedPrekey: Curve25519.Signing.PrivateKey, publicIdentityKey: Curve25519.KeyAgreement.PublicKey) -> Data? {
-        do {
-            return try privateSignedPrekey.signature(for: publicIdentityKey.rawRepresentation)
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
-    private func generatePrivateOneTimePrekeysArray(numberOfKeys: Int) -> [Curve25519.KeyAgreement.PrivateKey] {
-        var privateOneTimePrekeys: [Curve25519.KeyAgreement.PrivateKey] = []
-        
-        for _ in 0..<numberOfKeys {
-            let oneTimePrekey = generatePrivateKey()
-            privateOneTimePrekeys.append(oneTimePrekey)
-        }
-        
-        return privateOneTimePrekeys
     }
     
     func signInAuthUser(email: String, password: String) {
@@ -146,5 +103,10 @@ class AuthenticationModel {
     
     func deleteUserAccount(userId: String) {
         // connect to db and delete account
+    }
+    
+    func storeCryptoUserLocally(codableCryptoUser: CodableCryptoUser) {
+        let defaults = UserDefaults.standard
+        defaults.set(codableCryptoUser, forKey: "codableCryptoUser")
     }
 }
