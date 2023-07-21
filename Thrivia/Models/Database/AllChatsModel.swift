@@ -229,8 +229,6 @@ class AllChatsModel {
         
         messagesDispatchGroup.notify(queue: .main) {
             // decrypt messages
-            var decryptedMessages: [Message] = []
-            
             if let conversation = conversation {
                 for message in encryptedMessages {
                     // remove message doc from db
@@ -247,15 +245,14 @@ class AllChatsModel {
                     // remove message ID from chat doc
                     self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
                     
-                    let newMessage = conversation.receiveMessage(message: message)
-                    decryptedMessages.append(newMessage)
+                    conversation.receiveMessage(message: message)
                 }
                 
-                self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId)
+                if self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
+                    // set messages
+                    messagesSetter(conversation.messages)
+                }
             }
-            
-            // set messages
-            messagesSetter(decryptedMessages)
         }
     }
     
@@ -295,7 +292,9 @@ class AllChatsModel {
         ])
     }
     
-    func saveConversationToUserDefaults(conversation: Conversation, chatId: String) {
+    func saveConversationToUserDefaults(conversation: Conversation, chatId: String) -> Bool {
+        var conversationSaved = false
+        
         let defaults = UserDefaults.standard
         
         let codableConversation = CodableConversation(conversation: conversation)
@@ -311,9 +310,12 @@ class AllChatsModel {
             defaults.set(data, forKey: chatId)
             
             print("Saved conversation locally")
+            conversationSaved = true
         } catch {
             print("Unable to Encode Note (\(error))")
         }
+        
+        return conversationSaved
     }
     
     func createEncryptedMessageObjectFromDocument(document: DocumentSnapshot?, userId: String) -> EncryptedMessage? {
@@ -339,7 +341,7 @@ class AllChatsModel {
         return encryptedMessage
     }
     
-    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, messagesSetter: @escaping ([Message]) -> Void) {
+    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String) {
         // get conversation data stored locally in user defaults
         var conversation: Conversation?
         
@@ -367,13 +369,11 @@ class AllChatsModel {
             // create encrypted message using conversation object
             let encryptedMessage = conversation!.sendMessage(messageContent: content)
             
-            // save conversation locally
-            self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId)
-            
-            // create message doc
-            self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
-            
-            messagesSetter(conversation!.messages)
+            // save conversation locally and to db
+            if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
+                // create message doc
+                self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+            }
         }
     }
     
@@ -392,17 +392,13 @@ class AllChatsModel {
                 print("Error adding document: \(err)")
             } else {
                 // add message id to chat doc
-                self.addMessageIdToChatDoc(chatId: chatId, messageId: encryptedMessage.id)
+                let chatDocRef = self.db.collection("chats").document(chatId)
+                
+                chatDocRef.updateData([
+                    "messageIds": FieldValue.arrayUnion([encryptedMessage.id])
+                ])
             }
         }
-    }
-    
-    private func addMessageIdToChatDoc(chatId: String, messageId: String) {
-        let chatDocRef = self.db.collection("chats").document(chatId)
-        
-        chatDocRef.updateData([
-            "messageIds": FieldValue.arrayUnion([messageId])
-        ])
     }
     
     private func addChatIdToUserDoc(userId: String, chatId: String) {

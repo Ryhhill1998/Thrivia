@@ -29,7 +29,7 @@ struct ChatScreen: View {
         VStack {
             VStack {
                 ScrollView {
-                    ForEach(Array(chatViewModel.loadedChat!.messages.enumerated()), id: \.offset) { index, message in
+                    ForEach(Array(chatViewModel.messages.enumerated()), id: \.offset) { index, message in
                         MessageBubble(message: message)
                             .padding(.bottom, 5.0)
                             .padding(.top, index == 0 ? 15.0 : 0)
