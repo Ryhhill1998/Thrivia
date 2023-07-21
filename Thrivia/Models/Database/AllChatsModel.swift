@@ -183,6 +183,11 @@ class AllChatsModel {
                         } else {
                             if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                                let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                                // delete one time prekey from DB
+                                docRef.updateData([
+                                    "oneTimePrekeys": FieldValue.arrayRemove([prekeyBundle["oneTimePrekey"]!])
+                                ])
+                                
                                 let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                                 let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                                 conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
@@ -219,8 +224,6 @@ class AllChatsModel {
         }
         
         messagesDispatchGroup.notify(queue: .main) {
-            print("in notify block")
-            
             // decrypt messages
             var decryptedMessages: [Message] = []
             
@@ -231,11 +234,6 @@ class AllChatsModel {
                     
                     // remove message ID from chat doc
                     self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
-                    
-                    // remove one time prekey used if first message
-                    if conversation.lastMessageReceived == nil {
-                        self.removeOneTimePrekeyFromDB(userId: userId, prekeyIdentifier: message.oneTimePreKeyIdentifier)
-                    }
                     
                     conversation.receiveMessage(message: message)
                 }
@@ -265,24 +263,6 @@ class AllChatsModel {
         docRef.updateData([
             "messageIds": FieldValue.arrayRemove([messageId])
         ])
-    }
-    
-    func removeOneTimePrekeyFromDB(userId: String, prekeyIdentifier: Int) {
-        let docRef = db.collection("users").document(userId)
-        
-        docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                if let data = document.data() {
-                    if let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
-                        let oneTimePrekey = oneTimePrekeys[prekeyIdentifier]
-                        
-                        docRef.updateData([
-                            "oneTimePrekeys": FieldValue.arrayRemove([oneTimePrekey])
-                        ])
-                    }
-                }
-            }
-        }
     }
     
     func saveConversationToUserDefaults(conversation: Conversation, chatId: String) {
@@ -321,8 +301,6 @@ class AllChatsModel {
                            let previousSendChainLength = messageData["previousSendChainLength"] as? Int {
                             encryptedMessage = EncryptedMessage(id: messageDoc.documentID, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: oneTimePreKeyIdentifier, sendChainLength: sendChainLength, previousSendChainLength: previousSendChainLength)
                         }
-                        
-                        // delete document from server
                     }
                 }
             }

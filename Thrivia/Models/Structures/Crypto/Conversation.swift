@@ -230,16 +230,20 @@ class Conversation {
             // calculate dh output
             let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUser.signedPrekey.rawRepresentation)
             let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey)
+            print("DH output key: \(dhOutputKey)")
             
             // derive root chain and send chain keys from KDF output
             if rootChainKey == nil {
                 rootChainKey = generateSenderMasterKey(ephemeralKeyPrivate: dhRatchetPrivateKey)
+                print("Root chain key: \(rootChainKey!)")
             }
             
             // derive and store new root and send chain keys
             let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey) // problem step
             rootChainKey = kdfRootOutput[0]
+            print("Updated root chain key: \(rootChainKey!)")
             sendChainKey = kdfRootOutput[1]
+            print("Send chain key: \(sendChainKey!)")
             
             // set previous send chain length equal to current send chain length
             previousSendChainLength = currentSendChainLength
@@ -251,7 +255,9 @@ class Conversation {
         // derive new send chain key and message key for encryption
         let kdfMessageOutput = kdfMessage(currentChainKey: sendChainKey!)
         sendChainKey = kdfMessageOutput[0]
+        print("Updated send chain key: \(sendChainKey!)")
         let messageKey = kdfMessageOutput[1]
+        print("Message key: \(messageKey)")
         
         // generate associated data
         let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
@@ -359,16 +365,20 @@ class Conversation {
                 
                 // calculate dh output
                 let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: ephemeralKey)
+                print("DH output key: \(dhOutputKey)")
                 
                 // derive root chain and send chain keys from KDF output
                 if rootChainKey == nil {
                     rootChainKey = generateRecipientMasterKey(oneTimePrekeyIdentifier: prekeyIdentifier, senderIdentityKey: senderIdentityKey, ephemeralKey: ephemeralKey)
+                    print("Root chain key: \(rootChainKey!)")
                 }
                 
                 // derive and store new root and receive chain keys
                 let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey)
                 rootChainKey = kdfRootOutput[0]
+                print("Updated root chain key: \(rootChainKey!)")
                 receiveChainKey = kdfRootOutput[1]
+                print("Receive chain key: \(receiveChainKey!)")
                 
                 // reset receive chain length after Diffie-Hellman
                 currentReceiveChainLength = 0
@@ -393,7 +403,9 @@ class Conversation {
             // derive new receive chain key and message key for decryption
             let kdfMessageOutput = kdfMessage(currentChainKey: receiveChainKey!)
             receiveChainKey = kdfMessageOutput[0]
+            print("Updated receive chain key: \(receiveChainKey!)")
             messageKey = kdfMessageOutput[1]
+            print("Message key: \(messageKey)")
             
             // set last ephemeral key received to current ephemeral key
             lastEphemeralKeyReceived = ephemeralKey.rawRepresentation
