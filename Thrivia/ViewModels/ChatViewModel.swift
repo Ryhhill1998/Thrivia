@@ -11,35 +11,26 @@ import Firebase
 class ChatViewModel: ObservableObject {
     var allChatsModel = AllChatsModel()
     
-    let userId: String
+    var userId: String?
     var listenerCreated = false
     @Published var loadedChat: Chat?
-    @Published var messages: [Message]
-    
-    init(userId: String, loadedChat: Chat?) {
-        self.userId = userId
-        self.loadedChat = loadedChat
-        messages = loadedChat?.messages ?? []
-        
-        if !listenerCreated {
-            listenToChat()
-        }
-    }
+    @Published var messages: [Message] = []
     
     func setMessages(messages: [Message]) {
         self.messages = messages
-        
         self.listenerCreated = true
     }
     
     func listenToChat() {
-        if let chatId = loadedChat?.id {
+        if let chatId = loadedChat?.id,
+           let userId = userId {
             allChatsModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
         }
     }
     
     func sendMessage(content: String) {
-        if let chatId = loadedChat?.id,
+        if let userId = userId,
+           let chatId = loadedChat?.id,
            let otherUserId = loadedChat?.otherUser.id {
             allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId)
         }

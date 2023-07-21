@@ -251,6 +251,7 @@ class AllChatsModel {
                 if self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
                     // set messages
                     messagesSetter(conversation.messages)
+                    print(conversation.messages.map{$0.content})
                 }
             }
         }

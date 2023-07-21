@@ -9,12 +9,16 @@ import SwiftUI
 
 struct ChatScreen: View {
     
-    @ObservedObject private var chatViewModel: ChatViewModel
+    @StateObject private var chatViewModel = ChatViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
+    let userId: String
+    let loadedChat: Chat?
+    
     init(userId: String, loadedChat: Chat?) {
-        self.chatViewModel = ChatViewModel(userId: userId, loadedChat: loadedChat)
+        self.userId = userId
+        self.loadedChat = loadedChat
     }
     
     func sendPressed(text: String) {
@@ -78,5 +82,11 @@ struct ChatScreen: View {
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .toolbarBackground(Color("White"), for: .navigationBar)
+        .onAppear() {
+            chatViewModel.userId = userId
+            chatViewModel.loadedChat = loadedChat
+            
+            chatViewModel.listenToChat()
+        }
     }
 }
