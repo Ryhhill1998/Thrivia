@@ -23,6 +23,7 @@ class AllChatsViewModel: ObservableObject {
             allChatsModel.getActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:))
         }
         
+        // this needs to be fixed
         if allChats.isEmpty {
             allChatsModel.listenForChatUpdates(userId: userId, userChatsSetter: setAllChats(allChats:))
         }
@@ -41,9 +42,11 @@ class AllChatsViewModel: ObservableObject {
         self.chatIsLoaded = chatIsLoaded
     }
     
+    // this function needs to be fixed
     func loadChat(otherUser: OtherUser) {
         if let foundChat = (allChats.filter { $0.otherUser.id == otherUser.id }).first {
             setLoadedChat(loadedChat: foundChat, chatIsLoaded: true)
+            allChatsModel.loadChat(chatId: foundChat.id, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
         } else {
             allChatsModel.createNewChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
         }

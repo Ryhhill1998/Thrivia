@@ -114,6 +114,14 @@ class AllChatsModel {
             }
     }
     
+    func loadChat(chatId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
+        if let conversation = retrieveConversationFromUserDefaults(chatId: chatId) {
+            let messages = conversation.messages
+            let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
+            chatSetter(chat, true)
+        }
+    }
+    
     func createNewChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
         let otherUserId = otherUser.id
         
@@ -167,14 +175,14 @@ class AllChatsModel {
                         
                         if let retrievedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
                             conversation = retrievedConversation
-                            self.decryptAndSetMessages(data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
+                            self.decryptAndSetMessages(chatId: chatId, data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                         } else {
                             if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                                let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
                                 let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                                 let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                                 conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
-                                self.decryptAndSetMessages(data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
+                                self.decryptAndSetMessages(chatId: chatId, data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                             }
                         }
                     }
@@ -182,7 +190,7 @@ class AllChatsModel {
             }
     }
     
-    func decryptAndSetMessages(data: [String : Any], userId: String, conversation: Conversation?, messagesSetter: @escaping ([Message]) -> Void) {
+    func decryptAndSetMessages(chatId: String, data: [String : Any], userId: String, conversation: Conversation?, messagesSetter: @escaping ([Message]) -> Void) {
         // initialise empty messages array
         var encryptedMessages: [EncryptedMessage] = []
         
@@ -209,17 +217,40 @@ class AllChatsModel {
             // decrypt messages
             var decryptedMessages: [Message] = []
             
-            if var conversation = conversation {
+            if let conversation = conversation {
                 for message in encryptedMessages {
                     conversation.receiveMessage(message: message)
                     decryptedMessages = conversation.messages
                 }
+                
+                self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId)
             }
             
             print(decryptedMessages)
             
             // set messages
             messagesSetter(decryptedMessages)
+        }
+    }
+    
+    func saveConversationToUserDefaults(conversation: Conversation, chatId: String) {
+        let defaults = UserDefaults.standard
+        
+        let codableConversation = CodableConversation(conversation: conversation)
+        
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+
+            // Encode Note
+            let data = try encoder.encode(codableConversation)
+
+            // Write/Set Data
+            defaults.set(data, forKey: chatId)
+            
+            print("Saved conversation locally")
+        } catch {
+            print("Unable to Encode Note (\(error))")
         }
     }
     
@@ -253,6 +284,7 @@ class AllChatsModel {
         var conversation: Conversation?
         
         if let storedConversation = retrieveConversationFromUserDefaults(chatId: chatId) {
+            print("Retrieved conversation: \(storedConversation)")
             conversation = storedConversation
         }
         
@@ -266,7 +298,6 @@ class AllChatsModel {
                 // get prekey bundle from server
                 if let cryptoUser = cryptoUser,
                    let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
-                    print(prekeyBundle)
                     let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                     let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                     conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
@@ -274,13 +305,15 @@ class AllChatsModel {
             }
             
             // create encrypted message using conversation object
-            let encryptedMessage = conversation?.sendMessage(messageContent: content)
+            let encryptedMessage = conversation!.sendMessage(messageContent: content)
             
-            if let encryptedMessage = encryptedMessage {
-                self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
-                
-                messagesSetter(conversation!.messages)
-            }
+            // save conversation locally
+            self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId)
+            
+            // create message doc
+            self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+            
+            messagesSetter(conversation!.messages)
         }
     }
     
@@ -386,10 +419,10 @@ class AllChatsModel {
             }
         }
         
-        if let retrievedConversation = codableConversation,
-           let previouslyReceivedEphemeralKeys = defaults.array(forKey: "previouslyReceivedEphemeralKeys-\(chatId)") as? [Data],
-           let storedMessageKeys = defaults.array(forKey: "storedMessageKeys-\(chatId)") as? [StoredKey] {
-            let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys)
+        if let retrievedConversation = codableConversation {
+            let previouslyReceivedEphemeralKeys = defaults.array(forKey: "previouslyReceivedEphemeralKeys-\(chatId)") as? [Data]
+            let storedMessageKeys = defaults.array(forKey: "storedMessageKeys-\(chatId)") as? [StoredKey] ?? []
+            let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys ?? [])
             
             conversation = Conversation(codableConversation: retrievedConversation, previouslyReceivedEphemeralKeys: setOfPreviouslyReceivedEphemeralKeys, storedMessageKeys: storedMessageKeys)
         }
