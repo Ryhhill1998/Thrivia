@@ -30,7 +30,7 @@ struct CryptoUser {
     }
     
     // private one-time prekeys
-    let oneTimePrekeysPrivate: [Curve25519.KeyAgreement.PrivateKey]
+    var oneTimePrekeysPrivate: [Curve25519.KeyAgreement.PrivateKey]
     
     init(userId: String) {
         id = userId
@@ -64,5 +64,15 @@ struct CryptoUser {
         
         // private one-time prekeys
         oneTimePrekeysPrivate = codableCryptoUser.oneTimePrekeysPrivate.map { try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: $0) }
+    }
+    
+    mutating func replaceOneTimePrekeyAndGetPublicKeyString(prekeyIdentifier: Int) -> String {
+        oneTimePrekeysPrivate.remove(at: prekeyIdentifier)
+        
+        let newOneTimePrekeyPrivate = Curve25519.KeyAgreement.PrivateKey()
+        oneTimePrekeysPrivate.append(newOneTimePrekeyPrivate)
+        
+        let publicKey = newOneTimePrekeyPrivate.publicKey
+        return publicKey.rawRepresentation.base64EncodedString()
     }
 }

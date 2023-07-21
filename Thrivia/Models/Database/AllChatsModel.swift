@@ -232,6 +232,14 @@ class AllChatsModel {
                     // remove message doc from db
                     self.removeMessageDocFromDB(messageId: message.id)
                     
+                    // if first message, delete local private OTK, replace and send public key to server
+                    if conversation.lastMessageReceived == nil {
+                        let prekeyIdentifier = message.oneTimePreKeyIdentifier
+                        if let newOneTimePrekey = self.replaceOneTimePrekeyInUserDefaults(prekeyIdentifier: prekeyIdentifier) {
+                            self.saveOneTimePrekeyInDB(userId: userId, oneTimePrekey: newOneTimePrekey)
+                        }
+                    }
+                    
                     // remove message ID from chat doc
                     self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
                     
@@ -245,6 +253,24 @@ class AllChatsModel {
             // set messages
             messagesSetter(decryptedMessages)
         }
+    }
+    
+    func saveOneTimePrekeyInDB(userId: String, oneTimePrekey: String) {
+        let docRef = db.collection("users").document(userId)
+        
+        docRef.updateData([
+            "oneTimePrekeys": FieldValue.arrayUnion([oneTimePrekey])
+        ])
+    }
+    
+    func replaceOneTimePrekeyInUserDefaults(prekeyIdentifier: Int) -> String? {
+        var newOneTimePrekey: String?
+        
+        if var cryptoUser = retrieveCryptoUserFromUserDefaults() {
+            newOneTimePrekey = cryptoUser.replaceOneTimePrekeyAndGetPublicKeyString(prekeyIdentifier: prekeyIdentifier)
+        }
+        
+        return newOneTimePrekey
     }
     
     func removeMessageDocFromDB(messageId: String) {
