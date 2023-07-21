@@ -211,13 +211,16 @@ class AllChatsModel {
                 docRef.getDocument { (document, error) in
                     if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
                         encryptedMessages.append(encryptedMessage)
-                        messagesDispatchGroup.leave()
                     }
+                    
+                    messagesDispatchGroup.leave()
                 }
             }
         }
         
         messagesDispatchGroup.notify(queue: .main) {
+            print("in notify block")
+            
             // decrypt messages
             var decryptedMessages: [Message] = []
             
@@ -235,13 +238,11 @@ class AllChatsModel {
                     }
                     
                     conversation.receiveMessage(message: message)
-                    decryptedMessages = conversation.messages
                 }
                 
+                decryptedMessages = conversation.messages
                 self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId)
             }
-            
-            print(decryptedMessages)
             
             // set messages
             messagesSetter(decryptedMessages)
