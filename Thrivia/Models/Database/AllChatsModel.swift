@@ -83,15 +83,20 @@ class AllChatsModel {
                                             docRef.getDocument { (document, error) in
                                                 if self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) != nil {
                                                     numberOfUnreadMessages += 1
-                                                    messagesDispatchGroup.leave()
                                                 }
+                                                
+                                                messagesDispatchGroup.leave()
                                             }
                                         }
                                     }
                                     
                                     messagesDispatchGroup.notify(queue: .main) {
+                                        // retrieve stored conversation
+                                        let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
+                                        print(conversation?.messages ?? "none")
+                                        
                                         // initialise empty messages array
-                                        var messages: [Message] = []
+                                        var messages: [Message] = conversation?.messages ?? []
                                         
                                         for _ in 0..<numberOfUnreadMessages {
                                             messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, timestamp: Date.now))
