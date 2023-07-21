@@ -30,21 +30,16 @@ class CounterViewModel: ObservableObject {
     init(userId: String) {
         self.userId = userId
         
-        if counterNotCreated {
-            getCounter()
+        counter = counterModel.getStoredCounter()
+        
+        updateCounterCreationStatus()
+    }
+    
+    private func updateCounterCreationStatus() {
+        if counter != nil {
+            counterNotCreated = false
+            createTimerDisplay()
         }
-    }
-    
-    func getCounter() {
-        counterModel.getStoredCounter(userId: userId, counterSetter: setCounter(counter:), counterExistsSetter: setCounterExists(counterExists:), createDisplay: createTimerDisplay)
-    }
-    
-    func setCounter(counter: Counter) {
-        self.counter = counter
-    }
-    
-    func setCounterExists(counterExists: Bool) {
-        counterNotCreated = !counterExists
     }
     
     func generatePreview(name: String, startDate: Date) {
@@ -60,6 +55,7 @@ class CounterViewModel: ObservableObject {
     func createCounter(name: String, startDate: Date) {
         // create counter object and store in User Defaults
         counter = counterModel.createCounter(name: name, startDate: startDate)
+        updateCounterCreationStatus()
     }
     
     func createTimerDisplay() {
@@ -71,15 +67,11 @@ class CounterViewModel: ObservableObject {
     func editCounter(newName: String, newStart: Date) {
         let updateOriginalStart = newStart < getCounterOriginalStart()
         
-        counter?.edit(newName: newName, newStart: newStart, updateOriginalStart: updateOriginalStart)
-        
-        counterModel.editCounter(counterId: counter!.id, newName: newName, newStartDate: newStart, updateOriginalStart: updateOriginalStart)
+        counter = counterModel.editCounter(newName: newName, newStartDate: newStart, updateOriginalStart: updateOriginalStart)
     }
     
     func resetCounter() {
-        counter?.reset()
-        
-        counterModel.resetCounter(counterId: counter!.id)
+        counter = counterModel.resetCounter()
     }
     
     func getCounterStart() -> Date {

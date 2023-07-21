@@ -37,80 +37,59 @@ class CounterModel {
         }
     }
     
-    func editCounter(counterId: String, newName: String, newStartDate: Date, updateOriginalStart: Bool) {
-        let docRef = db.collection("counters").document(counterId)
+    func editCounter(newName: String, newStartDate: Date, updateOriginalStart: Bool) -> Counter? {
+        var editedCounter: Counter?
         
-        var updatedData = [
-            "name": newName,
-            "originalStartDate": newStartDate,
-            "startDate": newStartDate,
-            "edits": FieldValue.increment(Int64(1)),
-            "resets": 0
-        ] as [String : Any]
-        
-        if !updateOriginalStart {
-            updatedData.removeValue(forKey: "originalStartDate")
-        }
-
-        docRef.updateData(updatedData) { err in
-            if let err = err {
-                print("Error updating document: \(err)")
-            } else {
-                print("Document successfully updated")
+        if var counter = retrieveCounterFromUserDefaults() {
+            counter.name = newName
+            counter.start = newStartDate
+            
+            if updateOriginalStart {
+                counter.originalStart = newStartDate
             }
+            
+            counter.edits += 1
+            
+            storeCounterInUserDefaults(counter: counter)
+            
+            editedCounter = counter
         }
+        
+        return editedCounter
     }
     
-    func resetCounter(counterId: String) {
-        let docRef = db.collection("counters").document(counterId)
-
-        docRef.updateData([
-            "startDate": Date.now,
-            "resets": FieldValue.increment(Int64(1))
-        ]) { err in
-            if let err = err {
-                print("Error updating document: \(err)")
-            } else {
-                print("Document successfully updated")
-            }
-        }
-    }
-    
-    func getStoredCounter(userId: String, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {
-        let userDocRef = db.collection("users").document(userId)
+    func resetCounter() -> Counter? {
+        var resetCounter: Counter?
         
-        userDocRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                
-                if let counterId = data?["counterId"] as? String {
-                    let counterDocRef = self.db.collection("counters").document(counterId)
-                    
-                    counterDocRef.getDocument { (document, error) in
-                        if let document = document, document.exists {
-                            let data = document.data()
-                            
-                            if let counter = self.createCounterObjectFromData(counterId: counterId, data: data) {
-                                counterSetter(counter)
-                                counterExistsSetter(true)
-                                createDisplay()
-                            }
-                        }
-                    }
-                }
-            }
+        if var counter = retrieveCounterFromUserDefaults() {
+            counter.start = Date.now
+            counter.resets += 1
+            
+            storeCounterInUserDefaults(counter: counter)
+            
+            resetCounter = counter
         }
+        
+        return resetCounter
     }
     
-    func createCounterObjectFromData(counterId: String, data: [String : Any]?) -> Counter? {
+    func getStoredCounter() -> Counter? {
+        return retrieveCounterFromUserDefaults()
+    }
+    
+    private func retrieveCounterFromUserDefaults() -> Counter? {
         var counter: Counter?
         
-        if let counterName = data?["name"] as? String,
-           let originalCounterStartDate = (data?["originalStartDate"] as? Timestamp)?.dateValue(),
-           let counterStartDate = (data?["startDate"] as? Timestamp)?.dateValue(),
-           let counterEdits = data?["edits"] as? Int,
-           let counterResets = data?["resets"] as? Int {
-            counter = Counter(id: counterId, name: counterName, originalStart: originalCounterStartDate, start: counterStartDate, edits: counterEdits, resets: counterResets)
+        if let data = UserDefaults.standard.data(forKey: "counter") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+
+                // Decode Note
+                counter = try decoder.decode(Counter.self, from: data)
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
         }
         
         return counter
