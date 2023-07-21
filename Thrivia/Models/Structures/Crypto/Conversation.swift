@@ -336,7 +336,7 @@ class Conversation {
         }
     }
     
-    func receiveMessage(message: EncryptedMessage) {
+    func receiveMessage(message: EncryptedMessage) -> Message {
         let senderIdentityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.identityKey)!)
         let ephemeralKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.ephemeralKey)!)
         otherUserDhRatchetKey = ephemeralKey
@@ -427,6 +427,9 @@ class Conversation {
         
         // add new message object to messages array
         let messageContent = String(data: decryptedData, encoding: .utf8)!
-        messages.append(Message(id: message.id, content: messageContent, sent: false, timestamp: Date.now))
+        let newMessage = Message(id: message.id, content: messageContent, sent: false, timestamp: Date.now)
+        messages.append(newMessage)
+        
+        return newMessage
     }
 }

@@ -168,7 +168,8 @@ class AllChatsModel {
                 
                 let chatId = document.documentID
                 
-                if let userIds = data["userIds"] as? [String] {
+                if let messageIds = data["messageIds"] as? [String],
+                   let userIds = data["userIds"] as? [String] {
                     // get other user data
                     let otherUserId = userIds[0] == userId ? userIds[1] : userIds[0]
                     
@@ -179,7 +180,7 @@ class AllChatsModel {
                         
                         if let retrievedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
                             conversation = retrievedConversation
-                            self.decryptAndSetMessages(chatId: chatId, data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
+                            self.decryptAndSetMessages(chatId: chatId, messageIds: messageIds, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                         } else {
                             if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                                let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
@@ -191,7 +192,7 @@ class AllChatsModel {
                                 let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                                 let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                                 conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
-                                self.decryptAndSetMessages(chatId: chatId, data: data, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
+                                self.decryptAndSetMessages(chatId: chatId, messageIds: messageIds, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                             }
                         }
                     }
@@ -199,27 +200,25 @@ class AllChatsModel {
             }
     }
     
-    func decryptAndSetMessages(chatId: String, data: [String : Any], userId: String, conversation: Conversation?, messagesSetter: @escaping ([Message]) -> Void) {
+    func decryptAndSetMessages(chatId: String, messageIds: [String], userId: String, conversation: Conversation?, messagesSetter: @escaping ([Message]) -> Void) {
         // initialise empty messages array
         var encryptedMessages: [EncryptedMessage] = []
         
         // initialise messages dispatch group
         let messagesDispatchGroup = DispatchGroup()
         
-        if let messageIds = data["messageIds"] as? [String] {
-            // get message data
-            for messageId in messageIds {
-                let docRef = self.db.collection("messages").document(messageId)
-                
-                messagesDispatchGroup.enter()
-                
-                docRef.getDocument { (document, error) in
-                    if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
-                        encryptedMessages.append(encryptedMessage)
-                    }
-                    
-                    messagesDispatchGroup.leave()
+        // get message data
+        for messageId in messageIds {
+            let docRef = self.db.collection("messages").document(messageId)
+            
+            messagesDispatchGroup.enter()
+            
+            docRef.getDocument { (document, error) in
+                if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                    encryptedMessages.append(encryptedMessage)
                 }
+                
+                messagesDispatchGroup.leave()
             }
         }
         
@@ -243,7 +242,8 @@ class AllChatsModel {
                     // remove message ID from chat doc
                     self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
                     
-                    conversation.receiveMessage(message: message)
+//                    let newMessage = conversation.receiveMessage(message: message)
+//                    decryptedMessages.append(newMessage)
                 }
                 
                 decryptedMessages = conversation.messages
@@ -299,10 +299,10 @@ class AllChatsModel {
         do {
             // Create JSON Encoder
             let encoder = JSONEncoder()
-
+            
             // Encode Note
             let data = try encoder.encode(codableConversation)
-
+            
             // Write/Set Data
             defaults.set(data, forKey: chatId)
             
