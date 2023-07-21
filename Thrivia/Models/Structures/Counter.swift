@@ -7,13 +7,11 @@
 
 import Foundation
 
-struct Counter {
+struct Counter: Codable {
     
     enum UnitOfTime {
         case years, months, weeks, days, hours, minutes, seconds
     }
-    
-    let calendar = Calendar.current
     
     let id: String
     var name: String
@@ -37,6 +35,7 @@ struct Counter {
     
     func getTimePassed(unitOfTime: UnitOfTime) -> Int {
         let now = Date.now
+        let calendar = Calendar.current
         
         switch unitOfTime {
         case UnitOfTime.years:

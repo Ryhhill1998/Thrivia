@@ -12,31 +12,28 @@ class CounterModel {
     
     private let db = Firestore.firestore()
     
-    func createCounter(userId: String, name: String, startDate: Date, counterSetter: @escaping (Counter) -> Void, counterExistsSetter: @escaping (Bool) -> Void, createDisplay: @escaping () -> Void) {
-        // create counter doc in db
-        var ref: DocumentReference? = nil
+    func createCounter(name: String, startDate: Date) -> Counter {
+        let counter = Counter(name: name, start: startDate)
         
-        ref = db.collection("counters").addDocument(data: [
-            "name": name,
-            "originalStartDate": startDate,
-            "startDate": startDate,
-            "edits": 0,
-            "resets": 0
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-            } else {
-                let counterId = ref!.documentID
-                print("Document added with ID: \(counterId)")
-                
-                // add counter id to user doc
-                self.db.collection("users").document(userId).setData([ "counterId": counterId ], merge: true)
-                
-                let counter = Counter(id: counterId, name: name, originalStart: startDate, start: startDate, edits: 0, resets: 0)
-                counterSetter(counter)
-                counterExistsSetter(true)
-                createDisplay()
-            }
+        storeCounterInUserDefaults(counter: counter)
+        
+        return counter
+    }
+    
+    private func storeCounterInUserDefaults(counter: Counter) {
+        let defaults = UserDefaults.standard
+        
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+
+            // Encode Note
+            let data = try encoder.encode(counter)
+
+            // Write/Set Data
+            defaults.set(data, forKey: "counter")
+        } catch {
+            print("Unable to Encode Note (\(error))")
         }
     }
     
