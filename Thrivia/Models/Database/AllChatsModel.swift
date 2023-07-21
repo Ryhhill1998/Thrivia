@@ -170,6 +170,11 @@ class AllChatsModel {
                 
                 if let messageIds = data["messageIds"] as? [String],
                    let userIds = data["userIds"] as? [String] {
+                    if messageIds.isEmpty {
+                        print("No new messages")
+                        return
+                    }
+                    
                     // get other user data
                     let otherUserId = userIds[0] == userId ? userIds[1] : userIds[0]
                     
@@ -242,11 +247,10 @@ class AllChatsModel {
                     // remove message ID from chat doc
                     self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
                     
-//                    let newMessage = conversation.receiveMessage(message: message)
-//                    decryptedMessages.append(newMessage)
+                    let newMessage = conversation.receiveMessage(message: message)
+                    decryptedMessages.append(newMessage)
                 }
                 
-                decryptedMessages = conversation.messages
                 self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId)
             }
             
