@@ -93,7 +93,6 @@ class AllChatsModel {
                                     messagesDispatchGroup.notify(queue: .main) {
                                         // retrieve stored conversation
                                         let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
-                                        print(conversation?.messages ?? "none")
                                         
                                         // initialise empty messages array
                                         var messages: [Message] = conversation?.messages ?? []
@@ -224,6 +223,14 @@ class AllChatsModel {
             
             if let conversation = conversation {
                 for message in encryptedMessages {
+                    // remove message doc from db
+                    self.removeMessageDocFromDB(messageId: message.id)
+                    
+                    // remove one time prekey used if first message
+                    if conversation.lastMessageReceived == nil {
+                        self.removeOneTimePrekeyFromDB(userId: userId, prekeyIdentifier: message.oneTimePreKeyIdentifier)
+                    }
+                    
                     conversation.receiveMessage(message: message)
                     decryptedMessages = conversation.messages
                 }
@@ -235,6 +242,34 @@ class AllChatsModel {
             
             // set messages
             messagesSetter(decryptedMessages)
+        }
+    }
+    
+    func removeMessageDocFromDB(messageId: String) {
+        db.collection("messages").document(messageId).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+    }
+    
+    func removeOneTimePrekeyFromDB(userId: String, prekeyIdentifier: Int) {
+        let docRef = db.collection("users").document(userId)
+        
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let data = document.data() {
+                    if let oneTimePrekeys = data["oneTimePrekeys"] as? [String] {
+                        let oneTimePrekey = oneTimePrekeys[prekeyIdentifier]
+                        
+                        docRef.updateData([
+                            "oneTimePrekeys": FieldValue.arrayRemove([oneTimePrekey])
+                        ])
+                    }
+                }
+            }
         }
     }
     
