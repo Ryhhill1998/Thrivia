@@ -226,6 +226,9 @@ class AllChatsModel {
                     // remove message doc from db
                     self.removeMessageDocFromDB(messageId: message.id)
                     
+                    // remove message ID from chat doc
+                    self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
+                    
                     // remove one time prekey used if first message
                     if conversation.lastMessageReceived == nil {
                         self.removeOneTimePrekeyFromDB(userId: userId, prekeyIdentifier: message.oneTimePreKeyIdentifier)
@@ -253,6 +256,14 @@ class AllChatsModel {
                 print("Document successfully removed!")
             }
         }
+    }
+    
+    func removeMessageIdFromChatDoc(chatId: String, messageId: String) {
+        let docRef = db.collection("chats").document(chatId)
+        
+        docRef.updateData([
+            "messageIds": FieldValue.arrayRemove([messageId])
+        ])
     }
     
     func removeOneTimePrekeyFromDB(userId: String, prekeyIdentifier: Int) {
