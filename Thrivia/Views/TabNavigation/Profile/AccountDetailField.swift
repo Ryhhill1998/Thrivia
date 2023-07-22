@@ -24,11 +24,12 @@ struct AccountDetailField: View {
                 .foregroundColor(Color("Black"))
                 .font(.custom("Montserrat", size: 15))
             
-            Button {
-                print("edit mode")
+            NavigationLink {
+                EditEmail()
             } label: {
                 Image(systemName: "chevron.right")
             }
+
         }
     }
 }

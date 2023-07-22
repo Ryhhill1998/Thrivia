@@ -76,5 +76,6 @@ struct ProfileScreen: View {
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .accentColor(Color("Black"))
     }
 }
