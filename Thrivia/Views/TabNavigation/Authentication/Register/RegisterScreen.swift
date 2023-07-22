@@ -147,8 +147,11 @@ struct RegisterScreen: View {
                         .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText) }
                 }
                 
-                ActionButton(text: "Register", fontColour: .white, backgroundColour: Color("Green"), action: registerClicked)
-                
+                if authenticationViewModel.fetchingAuthStatus {
+                    ProgressButton(text: "Registering", foregroundColour: Color("White"), backgroundColour: Color("Green"))
+                } else {
+                    ActionButton(text: "Register", fontColour: .white, backgroundColour: Color("Green"), action: registerClicked)
+                }
                 
                 HStack(spacing: 5.0) {
                     Text("Already have an account?")
@@ -164,6 +167,11 @@ struct RegisterScreen: View {
                             .foregroundColor(Color("Black"))
                     }
                 }
+                .alert("Register failure", isPresented: $authenticationViewModel.errorExists, actions: {
+                    Button("Okay", role: .cancel) {}
+                }, message: {
+                    Text(authenticationViewModel.error ?? "none")
+                })
             }
         }
     }
@@ -172,5 +180,6 @@ struct RegisterScreen: View {
 struct RegisterScreen_Previews: PreviewProvider {
     static var previews: some View {
         RegisterScreen()
+            .environmentObject(AuthenticationViewModel())
     }
 }

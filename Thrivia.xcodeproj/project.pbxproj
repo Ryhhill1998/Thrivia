@@ -26,6 +26,7 @@
 		5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */; };
 		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */; };
+		5B8F03A92A6BD57B00B5192D /* ProgressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
 		5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DE2A5027FC001F92B8 /* ContentView.swift */; };
 		5B8F31E12A5027FE001F92B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E02A5027FE001F92B8 /* Assets.xcassets */; };
@@ -81,6 +82,7 @@
 		5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveUserIcon.swift; sourceTree = "<group>"; };
+		5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressButton.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThriviaApp.swift; sourceTree = "<group>"; };
 		5B8F31DE2A5027FC001F92B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				5B5411C82A61708600A024E8 /* AppIcon.swift */,
 				5B5411D02A61B3D800A024E8 /* UserIconWithOverlay.swift */,
 				5B5411D22A61BBAB00A024E8 /* LineSeparator.swift */,
+				5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				5BC6FDF42A5EA84E006459F8 /* InputField.swift in Sources */,
 				5B9792EE2A646C2F00F078C6 /* AuthenticationModel.swift in Sources */,
 				5B5411CC2A6188BE00A024E8 /* CreateCounterScreen.swift in Sources */,
+				5B8F03A92A6BD57B00B5192D /* ProgressButton.swift in Sources */,
 				5BFBC0832A692BAB005E89FC /* CodableCryptoOtherUser.swift in Sources */,
 				5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */,
 				5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */,

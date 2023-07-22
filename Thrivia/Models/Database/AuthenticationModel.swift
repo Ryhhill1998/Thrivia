@@ -16,29 +16,29 @@ class AuthenticationModel {
     private let db = Firestore.firestore()
     
     func listenForAuthStateChanges(setAuthState: @escaping (String?) -> Void) {
+        // need to set isActive to true or false in DB depending if user exists
         auth.addStateDidChangeListener { auth, user in
             let userId = user?.uid
             setAuthState(userId)
         }
     }
     
-    func createAuthUser(email: String, username: String, password: String) {
+    func createAuthUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
         auth.createUser(withEmail: email, password: password) { authResult, error in
             if let authError = error {
-                print(authError.localizedDescription)
+                errorSetter(authError.localizedDescription)
             } else {
                 let userId = authResult?.user.uid
-                print(userId ?? "none")
                 
                 // create new user doc in database
                 if let unwrappedUserId = userId {
-                    self.createUserDoc(userId: unwrappedUserId, email: email, username: username)
+                    self.createUserDoc(userId: unwrappedUserId, email: email, username: username, errorSetter: errorSetter)
                 }
             }
         }
     }
     
-    private func createUserDoc(userId: String, email: String, username: String) {
+    private func createUserDoc(userId: String, email: String, username: String, errorSetter: @escaping (String) -> Void) {
         let randomIconColour = "IconColour\(Int.random(in: 1...6))"
         
         // create crypto user
@@ -85,10 +85,10 @@ class AuthenticationModel {
         }
     }
     
-    func signInAuthUser(email: String, password: String) {
+    func signInAuthUser(email: String, password: String,  errorSetter: @escaping (String) -> Void) {
         auth.signIn(withEmail: email, password: password) { authResult, error in
             if let authError = error {
-                print(authError.localizedDescription)
+                errorSetter(authError.localizedDescription)
             } else {
                 let userId = authResult?.user.uid
                 print(userId ?? "none")
@@ -96,13 +96,14 @@ class AuthenticationModel {
         }
     }
     
-    func logoutUser(userId: String) {
+    func logoutUser(userId: String, errorSetter: @escaping (String) -> Void) {
         let firebaseAuth = Auth.auth()
         
         do {
             try firebaseAuth.signOut()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
+            errorSetter(signOutError.localizedDescription)
         }
     }
     

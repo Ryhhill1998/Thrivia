@@ -12,6 +12,9 @@ class AuthenticationViewModel: ObservableObject {
     var authenticationModel: AuthenticationModel = AuthenticationModel()
     
     @Published var authUserId: String?
+    @Published var fetchingAuthStatus = false
+    @Published var error: String?
+    @Published var errorExists = false
     
     init() {
         authenticationModel.listenForAuthStateChanges(setAuthState: setAuthState(userId:))
@@ -19,20 +22,33 @@ class AuthenticationViewModel: ObservableObject {
     
     func setAuthState(userId: String?) {
         authUserId = userId
+        setFetchingStatus(fetchingStatus: false)
+    }
+    
+    func setFetchingStatus(fetchingStatus: Bool) {
+        fetchingAuthStatus = fetchingStatus
+    }
+    
+    func setError(error: String) {
+        self.error = error
+        errorExists = true
+        setFetchingStatus(fetchingStatus: false)
     }
     
     func loginUser(email: String, password: String) {
-        authenticationModel.signInAuthUser(email: email, password: password)
+        setFetchingStatus(fetchingStatus: true)
+        authenticationModel.signInAuthUser(email: email, password: password, errorSetter: setError(error:))
     }
 
     func registerUser(email: String, username: String, password: String) {
-        authenticationModel.createAuthUser(email: email, username: username, password: password)
+        setFetchingStatus(fetchingStatus: true)
+        authenticationModel.createAuthUser(email: email, username: username, password: password, errorSetter: setError(error:))
     }
     
     func logoutUser() {
         guard let userId = authUserId else { return }
         
-        authenticationModel.logoutUser(userId: userId)
+        authenticationModel.logoutUser(userId: userId, errorSetter: setError(error:))
     }
     
     func deleteUserAccount() {
