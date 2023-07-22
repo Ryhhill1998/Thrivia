@@ -15,6 +15,8 @@ struct LoginScreen: View {
     @State var emailFieldText: String = ""
     @State var passwordFieldText: String = ""
     
+    @State var showPassword = false
+    
     func login() {
         if emailFieldText.isEmpty || passwordFieldText.isEmpty { return }
         
@@ -38,18 +40,52 @@ struct LoginScreen: View {
                     .foregroundColor(Color("Black"))
                     .padding(.horizontal)
                 
-                TextField("Password", text: $passwordFieldText)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(.white)
+                if !showPassword {
+                    HStack {
+                        SecureField("Password", text: $passwordFieldText)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .font(.custom("Montserrat", size: 18))
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("Black"))
+                        
+                        Button {
+                            showPassword = true
+                        } label: {
+                            Image(systemName: "eye.fill")
+                        }
+                        .padding(.horizontal, 20)
+                        .foregroundColor(Color("Green"))
+
+                    }
+                    .background(Color("White"))
                     .cornerRadius(10)
-                    .font(.custom("Montserrat", size: 18))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("Black"))
                     .padding(.horizontal)
+                } else {
+                    HStack {
+                        TextField("Password", text: $passwordFieldText)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .font(.custom("Montserrat", size: 18))
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("Black"))
+                        
+                        Button {
+                            showPassword = false
+                        } label: {
+                            Image(systemName: "eye.slash.fill")
+                        }
+                        .padding(.horizontal, 20)
+                        .foregroundColor(Color("Green"))
+
+                    }
+                    .background(Color("White"))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+                }
                 
                 ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: login)
-
+                
                 
                 HStack(spacing: 5.0) {
                     Text("Don't have an account?")
@@ -74,5 +110,6 @@ struct LoginScreen: View {
 struct LoginScreen_Previews: PreviewProvider {
     static var previews: some View {
         LoginScreen()
+            .environmentObject(AuthenticationViewModel())
     }
 }
