@@ -35,9 +35,13 @@ struct RegisterScreen: View {
     }
     
     func registerClicked() {
-        if emailFieldText.isEmpty || usernameFieldField.isEmpty || passwordFieldText.isEmpty || confirmPasswordFieldText.isEmpty { return }
+        if emailFieldText.isEmpty || usernameFieldField.isEmpty || passwordFieldText.isEmpty || confirmPasswordFieldText.isEmpty {
+            authenticationViewModel.setError(error: "All fields must be completed.")
+        }
         
-        if passwordFieldText != confirmPasswordFieldText { return }
+        if passwordFieldText != confirmPasswordFieldText {
+            authenticationViewModel.setError(error: "Passwords do not match.")
+        }
         
         authenticationViewModel.registerUser(email: emailFieldText, username: usernameFieldField, password: passwordFieldText)
     }
