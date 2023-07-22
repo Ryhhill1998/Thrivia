@@ -30,6 +30,7 @@ struct EditField: View {
             profileViewModel.updateUserEmail(newEmail: newFieldValue)
         } else {
             profileViewModel.updateUserUsername(newUsername: newFieldValue)
+            newFieldValue = ""
         }
     }
     
@@ -71,7 +72,26 @@ struct EditField: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: saveField)
+                if profileViewModel.fetchStatus == "pending" {
+                    ProgressButton(text: "Saving", foregroundColour: Color("White"), backgroundColour: Color("Green"))
+                } else if profileViewModel.fetchStatus == "idle" || profileViewModel.fetchStatus == "failure" {
+                    ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: saveField)
+                } else {
+                    HStack(spacing: 5.0) {
+                        Text("Saved")
+                            .font(.custom("Montserrat", size: 20))
+                            .foregroundColor(Color("White"))
+                            .bold()
+                        
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(Color("White"))
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("Green"))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+                }
                 
                 Spacer()
             }

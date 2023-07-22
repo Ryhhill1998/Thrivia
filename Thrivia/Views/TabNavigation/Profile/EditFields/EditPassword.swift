@@ -23,6 +23,8 @@ struct EditPassword: View {
             profileViewModel.setError(error: "Passwords must match.")
         } else {
             profileViewModel.updateUserPassword(newPassword: newPassword)
+            newPassword = ""
+            confirmPassword = ""
         }
     }
     
@@ -95,7 +97,26 @@ struct EditPassword: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: savePassword)
+                if profileViewModel.fetchStatus == "pending" {
+                    ProgressButton(text: "Saving", foregroundColour: Color("White"), backgroundColour: Color("Green"))
+                } else if profileViewModel.fetchStatus == "idle" || profileViewModel.fetchStatus == "failure" {
+                    ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: savePassword)
+                } else {
+                    HStack(spacing: 5.0) {
+                        Text("Saved")
+                            .font(.custom("Montserrat", size: 20))
+                            .foregroundColor(Color("White"))
+                            .bold()
+                        
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(Color("White"))
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("Green"))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
+                }
                 
                 Spacer()
             }

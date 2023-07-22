@@ -12,7 +12,7 @@ class ProfileModel {
     
     private let db = Firestore.firestore()
     
-    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void) {
+    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void, errorSetter: @escaping (String) -> Void) {
         // connect to db and retrieve user data
         let docRef = db.collection("users").document(userId)
 
@@ -35,37 +35,33 @@ class ProfileModel {
                 }
             }
         }
-        
-        fetchStatusSetter(false)
     }
     
-    func updateUserUsername(userId: String, newUsername: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void, usernameSetter: @escaping (String) -> Void) {
-        updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, fetchStatusSetter: fetchStatusSetter, errorSetter: errorSetter, fieldSetter: usernameSetter)
+    func updateUserUsername(userId: String, newUsername: String, errorSetter: @escaping (String) -> Void, usernameSetter: @escaping (String) -> Void) {
+        updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, errorSetter: errorSetter, fieldSetter: usernameSetter)
     }
     
-    func updateUserEmail(userId: String, newEmail: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void) {
+    func updateUserEmail(userId: String, newEmail: String, errorSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void) {
         Auth.auth().currentUser?.updateEmail(to: newEmail) { error in
             if let error = error {
                 errorSetter(error.localizedDescription)
             } else {
-                self.updateField(userId: userId, fieldName: "email", newFieldValue: newEmail, fetchStatusSetter: fetchStatusSetter, errorSetter: errorSetter, fieldSetter: emailSetter)
+                self.updateField(userId: userId, fieldName: "email", newFieldValue: newEmail, errorSetter: errorSetter, fieldSetter: emailSetter)
             }
         }
     }
     
-    func updateUserPassword(userId: String, newPassword: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void) {
+    func updateUserPassword(userId: String, newPassword: String, errorSetter: @escaping (String) -> Void) {
         Auth.auth().currentUser?.updatePassword(to: newPassword) { error in
             if let error = error {
                 errorSetter(error.localizedDescription)
             } else {
                 print("password changed successfully")
             }
-            
-            fetchStatusSetter(false)
         }
     }
     
-    private func updateField(userId: String, fieldName: String, newFieldValue: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void, fieldSetter: @escaping (String) -> Void) {
+    private func updateField(userId: String, fieldName: String, newFieldValue: String, errorSetter: @escaping (String) -> Void, fieldSetter: @escaping (String) -> Void) {
         let docRef = db.collection("users").document(userId)
 
         // Set the "capital" field of the city 'DC'
@@ -79,8 +75,6 @@ class ProfileModel {
                 print(newFieldValue)
                 fieldSetter(newFieldValue)
             }
-            
-            fetchStatusSetter(false)
         }
     }
 }

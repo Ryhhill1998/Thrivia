@@ -16,61 +16,65 @@ class ProfileViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = "**********"
     @Published var iconColour = Color("DefaultIconColour")
-    @Published var fetchingData = false
+    @Published var fetchStatus = "idle"
+    @Published var updateSaved = false
     @Published var error = ""
     @Published var errorExists = false
     
     func getProfileData() {
         guard let userId = userId else { return }
         
-        setFetchingData(fetchingData: true)
+        setFetchStatus(fetchStatus: "pending")
         
-        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:), fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
+        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:), errorSetter: setError(error:))
     }
     
-    func setFetchingData(fetchingData: Bool) {
-        self.fetchingData = fetchingData
+    func setFetchStatus(fetchStatus: String) {
+        self.fetchStatus = fetchStatus
     }
     
     func setError(error: String) {
         self.error = error
         errorExists = true
-        setFetchingData(fetchingData: false)
+        setFetchStatus(fetchStatus: "failure")
     }
     
     func setUsername(username: String) {
         self.username = username
+        setFetchStatus(fetchStatus: "success")
     }
     
     func setEmail(email: String) {
         self.email = email
+        setFetchStatus(fetchStatus: "success")
     }
     
     func setIconColour(iconColour: String) {
         self.iconColour = Color(iconColour)
+        setFetchStatus(fetchStatus: "success")
     }
     
     func updateUserUsername(newUsername: String) {
         guard let userId = userId else { return }
         
-        setFetchingData(fetchingData: true)
+        setFetchStatus(fetchStatus: "pending")
         
-        profileModel.updateUserUsername(userId: userId, newUsername: newUsername, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:), usernameSetter: setUsername(username:))
+        profileModel.updateUserUsername(userId: userId, newUsername: newUsername, errorSetter: setError(error:), usernameSetter: setUsername(username:))
     }
 
     func updateUserEmail(newEmail: String) {
         guard let userId = userId else { return }
         
-        setFetchingData(fetchingData: true)
+        setFetchStatus(fetchStatus: "pending")
         
-        profileModel.updateUserEmail(userId: userId, newEmail: newEmail, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:), emailSetter: setEmail(email:))
+        profileModel.updateUserEmail(userId: userId, newEmail: newEmail, errorSetter: setError(error:), emailSetter: setEmail(email:))
     }
 
     func updateUserPassword(newPassword: String) {
         guard let userId = userId else { return }
         
-        setFetchingData(fetchingData: true)
+        setFetchStatus(fetchStatus: "pending")
         
-        profileModel.updateUserPassword(userId: userId, newPassword: newPassword, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
+        profileModel.updateUserPassword(userId: userId, newPassword: newPassword, errorSetter: setError(error:))
     }
 }
