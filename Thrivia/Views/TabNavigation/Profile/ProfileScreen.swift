@@ -10,10 +10,12 @@ import SwiftUI
 struct ProfileScreen: View {
     
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
-    @ObservedObject var profileViewModel: ProfileViewModel
+    @StateObject var profileViewModel = ProfileViewModel()
+    
+    let userId: String
     
     init(userId: String) {
-        profileViewModel = ProfileViewModel(userId: userId)
+        self.userId = userId
     }
     
     @State var showDeleteAccountAlert = false
@@ -35,15 +37,28 @@ struct ProfileScreen: View {
                     UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username, overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
                     
                     VStack(spacing: 15.0) {
-                        AccountDetailField(fieldName: "Username", fieldValue: profileViewModel.username)
+                        NavigationLink {
+                            EditField(fieldType: "username", currentFieldValue: profileViewModel.username)
+                        } label: {
+                            AccountDetailField(fieldName: "Username", fieldValue: profileViewModel.username)
+                        }
+
                         
                         LineSeparator()
                         
-                        AccountDetailField(fieldName: "Email", fieldValue: profileViewModel.email)
+                        NavigationLink {
+                            EditField(fieldType: "email", currentFieldValue: profileViewModel.email)
+                        } label: {
+                            AccountDetailField(fieldName: "Email", fieldValue: profileViewModel.email)
+                        }
                         
                         LineSeparator()
                         
-                        AccountDetailField(fieldName: "Password", fieldValue: profileViewModel.password)
+                        NavigationLink {
+                            EditField(fieldType: "password", currentFieldValue: profileViewModel.email)
+                        } label: {
+                            AccountDetailField(fieldName: "Password", fieldValue: profileViewModel.password)
+                        }
                     }
                     .padding()
                     .background(Color("White"))
@@ -77,5 +92,10 @@ struct ProfileScreen: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .accentColor(Color("Black"))
+        .onAppear() {
+            profileViewModel.userId = userId
+            
+            profileViewModel.getProfileData()
+        }
     }
 }

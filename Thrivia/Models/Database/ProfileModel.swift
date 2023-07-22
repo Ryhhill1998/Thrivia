@@ -36,14 +36,35 @@ class ProfileModel {
     }
     
     func updateUserUsername(userId: String, newUsername: String) {
-        // connect to db and change user username
+        updateField(userId: userId, fieldName: "username", newFieldValue: newUsername)
     }
     
     func updateUserEmail(userId: String, newEmail: String) {
-        // connect to db and change user email
+        updateField(userId: userId, fieldName: "email", newFieldValue: newEmail)
     }
     
     func updateUserPassword(userId: String, newPassword: String) {
-        // connect to db and change user password
+        Auth.auth().currentUser?.updatePassword(to: newPassword) { error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                print("password changed successfully")
+            }
+        }
+    }
+    
+    private func updateField(userId: String, fieldName: String, newFieldValue: String) {
+        let docRef = db.collection("users").document(userId)
+
+        // Set the "capital" field of the city 'DC'
+        docRef.updateData([
+            fieldName: newFieldValue
+        ]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
     }
 }

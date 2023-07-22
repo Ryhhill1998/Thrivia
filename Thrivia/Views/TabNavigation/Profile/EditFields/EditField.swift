@@ -7,9 +7,29 @@
 
 import SwiftUI
 
-struct EditEmail: View {
+struct EditField: View {
+    
+    @EnvironmentObject private var profileViewModel: ProfileViewModel
+    
+    let fieldType: String
+    let currentFieldValue: String
+    var placeholder: String {
+        if fieldType == "email" {
+            return "Enail address"
+        } else {
+            return "Username"
+        }
+    }
     
     @State var newFieldValue = ""
+    
+    func saveField() {
+        if fieldType == "email" {
+            profileViewModel.updateUserEmail(newEmail: newFieldValue)
+        } else {
+            profileViewModel.updateUserUsername(newUsername: newFieldValue)
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -18,12 +38,12 @@ struct EditEmail: View {
             VStack(spacing: 15.0) {
                 VStack(spacing: 15.0) {
                     HStack {
-                        Text("Current email")
+                        Text("Current \(fieldType)")
                             .foregroundColor(Color("Black"))
                             .font(.custom("Montserrat", size: 15))
                             .fontWeight(.semibold)
                         
-                        Text("ZigzagZebra24@mail.com")
+                        Text(currentFieldValue)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .foregroundColor(Color("Black"))
                             .font(.custom("Montserrat", size: 15))
@@ -32,12 +52,12 @@ struct EditEmail: View {
                     LineSeparator()
                     
                     HStack {
-                        Text("New email")
+                        Text("New \(fieldType)")
                             .foregroundColor(Color("Black"))
                             .font(.custom("Montserrat", size: 15))
                             .fontWeight(.semibold)
                         
-                        TextField("Email address", text: $newFieldValue)
+                        TextField(placeholder, text: $newFieldValue)
                             .multilineTextAlignment(.trailing)
                             .font(.custom("Montserrat", size: 15))
                             .fontWeight(.medium)
@@ -55,12 +75,14 @@ struct EditEmail: View {
                 
                 Spacer()
             }
+            .padding(.top, 20.0)
         }
     }
 }
 
 struct EditEmail_Previews: PreviewProvider {
     static var previews: some View {
-        EditEmail()
+        EditField(fieldType: "username", currentFieldValue: "ZigzagZebra24@mail.com")
+            .environmentObject(ProfileViewModel())
     }
 }

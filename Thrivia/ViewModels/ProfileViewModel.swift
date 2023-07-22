@@ -10,19 +10,17 @@ import SwiftUI
 class ProfileViewModel: ObservableObject {
     var profileModel = ProfileModel()
     
-    var userId: String
+    var userId: String?
     
     @Published var username = ""
     @Published var email = ""
     @Published var password = "**********"
     @Published var iconColour = Color("DefaultIconColour")
     
-    init(userId: String) {
-        self.userId = userId
+    func getProfileData() {
+        guard let userId = userId else { return }
         
-        if username.isEmpty && email.isEmpty && iconColour == Color("DefaultIconColour") {
-            profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:))
-        }
+        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:))
     }
     
     func setUsername(username: String) {
@@ -38,16 +36,22 @@ class ProfileViewModel: ObservableObject {
     }
     
     func updateUserUsername(newUsername: String) {
+        guard let userId = userId else { return }
+        
         profileModel.updateUserUsername(userId: userId, newUsername: newUsername)
         username = newUsername
     }
 
     func updateUserEmail(newEmail: String) {
+        guard let userId = userId else { return }
+        
         profileModel.updateUserEmail(userId: userId, newEmail: email)
         email = newEmail
     }
 
     func updateUserPassword(newPassword: String) {
+        guard let userId = userId else { return }
+        
         profileModel.updateUserPassword(userId: userId, newPassword: newPassword)
     }
 }
