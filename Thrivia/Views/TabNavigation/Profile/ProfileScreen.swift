@@ -34,7 +34,25 @@ struct ProfileScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 VStack(spacing: 25.0) {
-                    UserIconWithOverlay(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username, overlayImage: Image(systemName: "square.and.pencil"), overlayColour: Color("LightGreen"))
+                    NavigationLink {
+                        EditIconColour(selectedColour: profileViewModel.iconColourString)
+                            .environmentObject(profileViewModel)
+                    } label: {
+                        ZStack {
+                            UserIcon(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username)
+                            
+                            Image(systemName: "square.and.pencil")
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.white)
+                                .background(Color("LightGreen"))
+                                .cornerRadius(15)
+                                .overlay {
+                                    Circle()
+                                        .stroke(.white, lineWidth: 4)
+                                }
+                                .offset(x: 35.35, y: 35.35)
+                        }
+                    }
                     
                     VStack(spacing: 15.0) {
                         NavigationLink {

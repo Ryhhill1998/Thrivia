@@ -12,7 +12,7 @@ class ProfileModel {
     
     private let db = Firestore.firestore()
     
-    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void, errorSetter: @escaping (String) -> Void) {
+    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void, errorSetter: @escaping (String) -> Void, fetchStatusSetter: @escaping (String) -> Void) {
         // connect to db and retrieve user data
         let docRef = db.collection("users").document(userId)
 
@@ -33,12 +33,18 @@ class ProfileModel {
                 if let iconColour = data?["iconColour"] as? String {
                     iconColourSetter(iconColour)
                 }
+                
+                fetchStatusSetter("idle")
             }
         }
     }
     
     func updateUserUsername(userId: String, newUsername: String, errorSetter: @escaping (String) -> Void, usernameSetter: @escaping (String) -> Void) {
         updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, errorSetter: errorSetter, fieldSetter: usernameSetter)
+    }
+    
+    func updateUserIconColour(userId: String, newIconColour: String, errorSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void) {
+        updateField(userId: userId, fieldName: "iconColour", newFieldValue: newIconColour, errorSetter: errorSetter, fieldSetter: iconColourSetter)
     }
     
     func updateUserEmail(userId: String, newEmail: String, errorSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void) {

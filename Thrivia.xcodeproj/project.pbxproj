@@ -13,7 +13,6 @@
 		5B5411C72A615A6700A024E8 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C62A615A6700A024E8 /* Message.swift */; };
 		5B5411C92A61708600A024E8 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C82A61708600A024E8 /* AppIcon.swift */; };
 		5B5411CC2A6188BE00A024E8 /* CreateCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411CB2A6188BE00A024E8 /* CreateCounterScreen.swift */; };
-		5B5411D12A61B3D800A024E8 /* UserIconWithOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411D02A61B3D800A024E8 /* UserIconWithOverlay.swift */; };
 		5B5411D32A61BBAB00A024E8 /* LineSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411D22A61BBAB00A024E8 /* LineSeparator.swift */; };
 		5B5411D52A61E62800A024E8 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411D42A61E62800A024E8 /* Counter.swift */; };
 		5B5411D72A61EA2B00A024E8 /* CounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411D62A61EA2B00A024E8 /* CounterViewModel.swift */; };
@@ -72,7 +71,6 @@
 		5B5411C62A615A6700A024E8 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		5B5411C82A61708600A024E8 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		5B5411CB2A6188BE00A024E8 /* CreateCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCounterScreen.swift; sourceTree = "<group>"; };
-		5B5411D02A61B3D800A024E8 /* UserIconWithOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIconWithOverlay.swift; sourceTree = "<group>"; };
 		5B5411D22A61BBAB00A024E8 /* LineSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSeparator.swift; sourceTree = "<group>"; };
 		5B5411D42A61E62800A024E8 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		5B5411D62A61EA2B00A024E8 /* CounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterViewModel.swift; sourceTree = "<group>"; };
@@ -337,7 +335,6 @@
 				5BC6FDF32A5EA84E006459F8 /* InputField.swift */,
 				5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */,
 				5B5411C82A61708600A024E8 /* AppIcon.swift */,
-				5B5411D02A61B3D800A024E8 /* UserIconWithOverlay.swift */,
 				5B5411D22A61BBAB00A024E8 /* LineSeparator.swift */,
 				5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */,
 			);
@@ -467,7 +464,6 @@
 				5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */,
 				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
-				5B5411D12A61B3D800A024E8 /* UserIconWithOverlay.swift in Sources */,
 				5B5411C32A61566C00A024E8 /* MessageField.swift in Sources */,
 				5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */,
 				5B5411C92A61708600A024E8 /* AppIcon.swift in Sources */,

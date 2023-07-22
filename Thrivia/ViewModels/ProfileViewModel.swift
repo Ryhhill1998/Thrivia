@@ -16,6 +16,7 @@ class ProfileViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = "**********"
     @Published var iconColour = Color("DefaultIconColour")
+    @Published var iconColourString = "DefaultIconColour"
     @Published var fetchStatus = "idle"
     @Published var updateSaved = false
     @Published var error = ""
@@ -26,7 +27,7 @@ class ProfileViewModel: ObservableObject {
         
         setFetchStatus(fetchStatus: "pending")
         
-        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:), errorSetter: setError(error:))
+        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:), errorSetter: setError(error:), fetchStatusSetter: setFetchStatus(fetchStatus:))
     }
     
     func setFetchStatus(fetchStatus: String) {
@@ -51,6 +52,7 @@ class ProfileViewModel: ObservableObject {
     
     func setIconColour(iconColour: String) {
         self.iconColour = Color(iconColour)
+        iconColourString = iconColour
         setFetchStatus(fetchStatus: "success")
     }
     
@@ -76,5 +78,13 @@ class ProfileViewModel: ObservableObject {
         setFetchStatus(fetchStatus: "pending")
         
         profileModel.updateUserPassword(userId: userId, newPassword: newPassword, errorSetter: setError(error:))
+    }
+    
+    func updateUserIconColour(newIconColour: String) {
+        guard let userId = userId else { return }
+        
+        setFetchStatus(fetchStatus: "pending")
+        
+        profileModel.updateUserIconColour(userId: userId, newIconColour: newIconColour, errorSetter: setError(error:), iconColourSetter: setIconColour(iconColour:))
     }
 }
