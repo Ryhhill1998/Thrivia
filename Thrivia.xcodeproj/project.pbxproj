@@ -29,6 +29,7 @@
 		5B8F03A92A6BD57B00B5192D /* ProgressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */; };
 		5B8F03AB2A6BDFBC00B5192D /* EditField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F03AA2A6BDFBC00B5192D /* EditField.swift */; };
 		5B8F03AE2A6BF1F600B5192D /* EditPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F03AD2A6BF1F600B5192D /* EditPassword.swift */; };
+		5B8F03B02A6C155100B5192D /* EditIconColour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F03AF2A6C155100B5192D /* EditIconColour.swift */; };
 		5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */; };
 		5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F31DE2A5027FC001F92B8 /* ContentView.swift */; };
 		5B8F31E12A5027FE001F92B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8F31E02A5027FE001F92B8 /* Assets.xcassets */; };
@@ -87,6 +88,7 @@
 		5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressButton.swift; sourceTree = "<group>"; };
 		5B8F03AA2A6BDFBC00B5192D /* EditField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditField.swift; sourceTree = "<group>"; };
 		5B8F03AD2A6BF1F600B5192D /* EditPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPassword.swift; sourceTree = "<group>"; };
+		5B8F03AF2A6C155100B5192D /* EditIconColour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditIconColour.swift; sourceTree = "<group>"; };
 		5B8F31D92A5027FC001F92B8 /* Thrivia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thrivia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8F31DC2A5027FC001F92B8 /* ThriviaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThriviaApp.swift; sourceTree = "<group>"; };
 		5B8F31DE2A5027FC001F92B8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			children = (
 				5B8F03AA2A6BDFBC00B5192D /* EditField.swift */,
 				5B8F03AD2A6BF1F600B5192D /* EditPassword.swift */,
+				5B8F03AF2A6C155100B5192D /* EditIconColour.swift */,
 			);
 			path = EditFields;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				5B5411E82A631CC800A024E8 /* User.swift in Sources */,
 				5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */,
 				5B5411DF2A62E2D700A024E8 /* ProfileViewModel.swift in Sources */,
+				5B8F03B02A6C155100B5192D /* EditIconColour.swift in Sources */,
 				5B8F03AB2A6BDFBC00B5192D /* EditField.swift in Sources */,
 				5BC6FDFF2A5EB3A6006459F8 /* ProgressScreen.swift in Sources */,
 				5B5411E22A62EBC400A024E8 /* AccountDetailField.swift in Sources */,
