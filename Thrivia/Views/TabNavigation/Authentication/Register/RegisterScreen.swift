@@ -172,7 +172,7 @@ struct RegisterScreen: View {
                 .alert("Register failure", isPresented: $authenticationViewModel.errorExists, actions: {
                     Button("Okay", role: .cancel) {}
                 }, message: {
-                    Text(authenticationViewModel.error ?? "none")
+                    Text(authenticationViewModel.error)
                 })
             }
         }

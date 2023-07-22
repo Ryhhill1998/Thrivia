@@ -16,11 +16,26 @@ class ProfileViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = "**********"
     @Published var iconColour = Color("DefaultIconColour")
+    @Published var fetchingData = false
+    @Published var error = ""
+    @Published var errorExists = false
     
     func getProfileData() {
         guard let userId = userId else { return }
         
-        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:))
+        setFetchingData(fetchingData: true)
+        
+        profileModel.getProfileData(userId: userId, usernameSetter: setUsername(username:), emailSetter: setEmail(email:), iconColourSetter: setIconColour(iconColour:), fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
+    }
+    
+    func setFetchingData(fetchingData: Bool) {
+        self.fetchingData = fetchingData
+    }
+    
+    func setError(error: String) {
+        self.error = error
+        errorExists = true
+        setFetchingData(fetchingData: false)
     }
     
     func setUsername(username: String) {
@@ -38,20 +53,26 @@ class ProfileViewModel: ObservableObject {
     func updateUserUsername(newUsername: String) {
         guard let userId = userId else { return }
         
-        profileModel.updateUserUsername(userId: userId, newUsername: newUsername)
+        setFetchingData(fetchingData: true)
+        
+        profileModel.updateUserUsername(userId: userId, newUsername: newUsername, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
         username = newUsername
     }
 
     func updateUserEmail(newEmail: String) {
         guard let userId = userId else { return }
         
-        profileModel.updateUserEmail(userId: userId, newEmail: email)
+        setFetchingData(fetchingData: true)
+        
+        profileModel.updateUserEmail(userId: userId, newEmail: email, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
         email = newEmail
     }
 
     func updateUserPassword(newPassword: String) {
         guard let userId = userId else { return }
         
-        profileModel.updateUserPassword(userId: userId, newPassword: newPassword)
+        setFetchingData(fetchingData: true)
+        
+        profileModel.updateUserPassword(userId: userId, newPassword: newPassword, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
     }
 }

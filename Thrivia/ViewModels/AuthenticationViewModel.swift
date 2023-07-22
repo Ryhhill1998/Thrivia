@@ -13,7 +13,7 @@ class AuthenticationViewModel: ObservableObject {
     
     @Published var authUserId: String?
     @Published var fetchingAuthStatus = false
-    @Published var error: String?
+    @Published var error: String = ""
     @Published var errorExists = false
     
     init() {

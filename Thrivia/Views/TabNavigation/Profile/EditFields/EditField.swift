@@ -24,7 +24,9 @@ struct EditField: View {
     @State var newFieldValue = ""
     
     func saveField() {
-        if fieldType == "email" {
+        if newFieldValue.isEmpty {
+            profileViewModel.setError(error: "New \(fieldType) cannot be empty.")
+        } else if fieldType == "email" {
             profileViewModel.updateUserEmail(newEmail: newFieldValue)
         } else {
             profileViewModel.updateUserUsername(newUsername: newFieldValue)
@@ -69,14 +71,17 @@ struct EditField: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    print("hello")
-                }
+                ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: saveField)
                 
                 Spacer()
             }
             .padding(.top, 20.0)
         }
+        .alert("Update failure", isPresented: $profileViewModel.errorExists, actions: {
+            Button("Okay", role: .cancel) {}
+        }, message: {
+            Text(profileViewModel.error)
+        })
     }
 }
 

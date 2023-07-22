@@ -89,14 +89,17 @@ struct EditPassword: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    print("hello")
-                }
+                ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: savePassword)
                 
                 Spacer()
             }
             .padding(.top, 20.0)
         }
+        .alert("Update password failure", isPresented: $profileViewModel.errorExists, actions: {
+            Button("Okay", role: .cancel) {}
+        }, message: {
+            Text(profileViewModel.error)
+        })
     }
 }
 

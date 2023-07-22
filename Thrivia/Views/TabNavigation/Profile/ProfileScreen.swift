@@ -39,6 +39,7 @@ struct ProfileScreen: View {
                     VStack(spacing: 15.0) {
                         NavigationLink {
                             EditField(fieldType: "username", currentFieldValue: profileViewModel.username)
+                                .environmentObject(profileViewModel)
                         } label: {
                             AccountDetailField(fieldName: "Username", fieldValue: profileViewModel.username)
                         }
@@ -48,6 +49,7 @@ struct ProfileScreen: View {
                         
                         NavigationLink {
                             EditField(fieldType: "email", currentFieldValue: profileViewModel.email)
+                                .environmentObject(profileViewModel)
                         } label: {
                             AccountDetailField(fieldName: "Email", fieldValue: profileViewModel.email)
                         }
@@ -55,7 +57,8 @@ struct ProfileScreen: View {
                         LineSeparator()
                         
                         NavigationLink {
-                            EditField(fieldType: "password", currentFieldValue: profileViewModel.email)
+                            EditPassword()
+                                .environmentObject(profileViewModel)
                         } label: {
                             AccountDetailField(fieldName: "Password", fieldValue: profileViewModel.password)
                         }
