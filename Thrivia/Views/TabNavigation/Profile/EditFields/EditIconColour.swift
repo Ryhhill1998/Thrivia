@@ -11,6 +11,8 @@ struct EditIconColour: View {
     
     @EnvironmentObject private var profileViewModel: ProfileViewModel
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @State var selectedColour: String
     
     func setSelectedColour(colour: String) {
@@ -19,6 +21,10 @@ struct EditIconColour: View {
     
     func updateIconColour() {
         profileViewModel.updateUserIconColour(newIconColour: selectedColour)
+    }
+    
+    func backPressed() {
+        presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
@@ -75,6 +81,23 @@ struct EditIconColour: View {
             Text(profileViewModel.error)
         })
         .toolbar(.hidden, for: .tabBar)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    backPressed()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(Color("Black"))
+                }
+            }
+            
+            ToolbarItem(placement: .principal) {
+                Text("Edit Icon Colour")
+                    .bold()
+            }
+        }
+        .toolbar(.visible, for: .navigationBar)
     }
 }
 

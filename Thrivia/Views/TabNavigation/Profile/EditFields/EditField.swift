@@ -11,6 +11,8 @@ struct EditField: View {
     
     @EnvironmentObject private var profileViewModel: ProfileViewModel
     
+    @Environment(\.presentationMode) var presentationMode
+    
     let fieldType: String
     let currentFieldValue: String
     var placeholder: String {
@@ -32,6 +34,10 @@ struct EditField: View {
             profileViewModel.updateUserUsername(newUsername: newFieldValue)
             newFieldValue = ""
         }
+    }
+    
+    func backPressed() {
+        presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
@@ -103,6 +109,23 @@ struct EditField: View {
             Text(profileViewModel.error)
         })
         .toolbar(.hidden, for: .tabBar)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    backPressed()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(Color("Black"))
+                }
+            }
+            
+            ToolbarItem(placement: .principal) {
+                Text("Edit \(fieldType.capitalized)")
+                    .bold()
+            }
+        }
+        .toolbar(.visible, for: .navigationBar)
     }
 }
 

@@ -34,13 +34,13 @@ struct ProfileScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 VStack(spacing: 25.0) {
-                    NavigationLink {
-                        EditIconColour(selectedColour: profileViewModel.iconColourString)
-                            .environmentObject(profileViewModel)
-                    } label: {
-                        ZStack {
-                            UserIcon(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username)
-                            
+                    ZStack {
+                        UserIcon(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username)
+                        
+                        NavigationLink {
+                            EditIconColour(selectedColour: profileViewModel.iconColourString)
+                                .environmentObject(profileViewModel)
+                        } label: {
                             Image(systemName: "square.and.pencil")
                                 .frame(width: 30, height: 30)
                                 .foregroundColor(.white)
@@ -50,8 +50,8 @@ struct ProfileScreen: View {
                                     Circle()
                                         .stroke(.white, lineWidth: 4)
                                 }
-                                .offset(x: 35.35, y: 35.35)
                         }
+                        .offset(x: 35.35, y: 35.35)
                     }
                     
                     VStack(spacing: 15.0) {
