@@ -86,8 +86,11 @@ struct LoginScreen: View {
                     .padding(.horizontal)
                 }
                 
-                ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: login)
-                
+                if authenticationViewModel.fetchingAuthStatus {
+                    ProgressButton(text: "Logging in", foregroundColour: Color("White"), backgroundColour: Color("Green"))
+                } else {
+                    ActionButton(text: "Login", fontColour: .white, backgroundColour: Color("Green"), action: login)
+                }
                 
                 HStack(spacing: 5.0) {
                     Text("Don't have an account?")
