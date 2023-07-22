@@ -18,9 +18,11 @@ struct LoginScreen: View {
     @State var showPassword = false
     
     func login() {
-        if emailFieldText.isEmpty || passwordFieldText.isEmpty { return }
-        
-        authenticationViewModel.loginUser(email: emailFieldText, password: passwordFieldText)
+        if emailFieldText.isEmpty || passwordFieldText.isEmpty {
+            authenticationViewModel.setError(error: "All fields must be completed.")
+        } else {
+            authenticationViewModel.loginUser(email: emailFieldText, password: passwordFieldText)
+        }
     }
     
     var body: some View {
@@ -102,6 +104,11 @@ struct LoginScreen: View {
                             .foregroundColor(Color("Black"))
                     }
                 }
+                .alert("Login failure", isPresented: $authenticationViewModel.errorExists, actions: {
+                    Button("Okay", role: .cancel) {}
+                }, message: {
+                    Text(authenticationViewModel.error ?? "none")
+                })
             }
         }
     }
