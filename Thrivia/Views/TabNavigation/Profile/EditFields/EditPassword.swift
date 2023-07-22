@@ -17,7 +17,13 @@ struct EditPassword: View {
     @State var showPassword = false
     
     func savePassword() {
-        profileViewModel.updateUserPassword(newPassword: newPassword)
+        if newPassword.isEmpty || confirmPassword.isEmpty {
+            profileViewModel.setError(error: "Fields must not be empty.")
+        } else if newPassword != confirmPassword {
+            profileViewModel.setError(error: "Passwords must match.")
+        } else {
+            profileViewModel.updateUserPassword(newPassword: newPassword)
+        }
     }
     
     var body: some View {
@@ -100,6 +106,7 @@ struct EditPassword: View {
         }, message: {
             Text(profileViewModel.error)
         })
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 

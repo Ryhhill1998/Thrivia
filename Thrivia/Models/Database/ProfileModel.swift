@@ -39,12 +39,18 @@ class ProfileModel {
         fetchStatusSetter(false)
     }
     
-    func updateUserUsername(userId: String, newUsername: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void) {
-        updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, fetchStatusSetter: fetchStatusSetter, errorSetter: errorSetter)
+    func updateUserUsername(userId: String, newUsername: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void, usernameSetter: @escaping (String) -> Void) {
+        updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, fetchStatusSetter: fetchStatusSetter, errorSetter: errorSetter, fieldSetter: usernameSetter)
     }
     
-    func updateUserEmail(userId: String, newEmail: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void) {
-        updateField(userId: userId, fieldName: "email", newFieldValue: newEmail, fetchStatusSetter: fetchStatusSetter, errorSetter: errorSetter)
+    func updateUserEmail(userId: String, newEmail: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void) {
+        Auth.auth().currentUser?.updateEmail(to: newEmail) { error in
+            if let error = error {
+                errorSetter(error.localizedDescription)
+            } else {
+                self.updateField(userId: userId, fieldName: "email", newFieldValue: newEmail, fetchStatusSetter: fetchStatusSetter, errorSetter: errorSetter, fieldSetter: emailSetter)
+            }
+        }
     }
     
     func updateUserPassword(userId: String, newPassword: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void) {
@@ -59,7 +65,7 @@ class ProfileModel {
         }
     }
     
-    private func updateField(userId: String, fieldName: String, newFieldValue: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void) {
+    private func updateField(userId: String, fieldName: String, newFieldValue: String, fetchStatusSetter: @escaping (Bool) -> Void, errorSetter: @escaping (String) -> Void, fieldSetter: @escaping (String) -> Void) {
         let docRef = db.collection("users").document(userId)
 
         // Set the "capital" field of the city 'DC'
@@ -70,6 +76,8 @@ class ProfileModel {
                 errorSetter(err.localizedDescription)
             } else {
                 print("Document successfully updated")
+                print(newFieldValue)
+                fieldSetter(newFieldValue)
             }
             
             fetchStatusSetter(false)

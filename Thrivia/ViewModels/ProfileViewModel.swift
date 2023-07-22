@@ -55,8 +55,7 @@ class ProfileViewModel: ObservableObject {
         
         setFetchingData(fetchingData: true)
         
-        profileModel.updateUserUsername(userId: userId, newUsername: newUsername, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
-        username = newUsername
+        profileModel.updateUserUsername(userId: userId, newUsername: newUsername, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:), usernameSetter: setUsername(username:))
     }
 
     func updateUserEmail(newEmail: String) {
@@ -64,8 +63,7 @@ class ProfileViewModel: ObservableObject {
         
         setFetchingData(fetchingData: true)
         
-        profileModel.updateUserEmail(userId: userId, newEmail: email, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:))
-        email = newEmail
+        profileModel.updateUserEmail(userId: userId, newEmail: newEmail, fetchStatusSetter: setFetchingData(fetchingData:), errorSetter: setError(error:), emailSetter: setEmail(email:))
     }
 
     func updateUserPassword(newPassword: String) {

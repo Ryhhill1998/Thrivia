@@ -82,6 +82,7 @@ struct EditField: View {
         }, message: {
             Text(profileViewModel.error)
         })
+        .toolbar(.hidden, for: .tabBar)
     }
 }
 
