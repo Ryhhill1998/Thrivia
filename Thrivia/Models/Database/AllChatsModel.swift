@@ -520,6 +520,14 @@ class AllChatsModel {
     }
     
     func deleteChat(chatId: String) {
-        UserDefaults.standard.removeObject(forKey: chatId)
+        if let conversation = retrieveConversationFromUserDefaults(chatId: chatId) {
+            conversation.resetMessages()
+            
+            if saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
+                print("Messages successfully cleared")
+            } else {
+                print("Failed to clear messages")
+            }
+        }
     }
 }

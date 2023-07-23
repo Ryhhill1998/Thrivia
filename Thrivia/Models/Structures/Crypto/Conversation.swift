@@ -444,4 +444,8 @@ class Conversation {
         let newMessage = Message(id: message.id, content: messageContent, sent: false, timestamp: Date.now)
         messages.append(newMessage)
     }
+    
+    func resetMessages() {
+        messages = []
+    }
 }
