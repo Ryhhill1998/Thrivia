@@ -35,6 +35,13 @@ class AllChatsViewModel: ObservableObject {
     
     func setAllChats(allChats: [Chat]) {
         self.allChats = allChats
+        
+        self.allChats.sort { chat1, chat2 in
+            let date1 = chat1.messages.last?.timestamp ?? Date.now
+            let date2 = chat2.messages.last?.timestamp ?? Date.now
+            
+            return date1 > date2
+        }
     }
     
     func setLoadedChat(loadedChat: Chat, chatIsLoaded: Bool) {
@@ -43,7 +50,11 @@ class AllChatsViewModel: ObservableObject {
     }
     
     func deleteChat(id: String) {
+        allChats = allChats.filter { chat in
+            chat.id != id
+        }
         
+        allChatsModel.deleteChat(chatId: id)
     }
     
     func loadChat(otherUser: OtherUser) {

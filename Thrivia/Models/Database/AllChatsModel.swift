@@ -509,4 +509,8 @@ class AllChatsModel {
         
         return prekeyBundle.isEmpty ? nil : prekeyBundle
     }
+    
+    func deleteChat(chatId: String) {
+        UserDefaults.standard.removeObject(forKey: chatId)
+    }
 }
