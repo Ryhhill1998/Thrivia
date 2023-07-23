@@ -12,6 +12,7 @@ struct AllChatsScreen: View {
     @ObservedObject var chatsViewModel: AllChatsViewModel
     
     @State var isEditing = false
+    @State var showConfirmDeleteAlert = false
     
     init(userId: String) {
         chatsViewModel = AllChatsViewModel(userId: userId)
@@ -49,10 +50,17 @@ struct AllChatsScreen: View {
                                     Button {
                                         loadChat(otherUser: chat.otherUser)
                                     } label: {
-                                        ZStack {
-                                            MessagePreview(name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, editMode: isEditing)
-                                        }
+                                        MessagePreview(id: chat.id, name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, editMode: isEditing) { showConfirmDeleteAlert = true }
                                     }
+                                    .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
+                                        Button("Delete", role: .destructive) {
+                                            chatsViewModel.deleteChat(id: chat.id)
+                                        }
+                                        
+                                        Button("Cancel", role: .cancel) {}
+                                    }, message: {
+                                        Text("Are you sure you want to delete this chat?")
+                                    })
                                 }
                             }
                         }

@@ -9,10 +9,12 @@ import SwiftUI
 
 struct MessagePreview: View {
     
+    let id: String
     let name: String
     let backgroundColour: Color
     let lastMessage: String
-    var editMode: Bool
+    let editMode: Bool
+    let onDelete: () -> Void
     
     var body: some View {
         HStack {
@@ -35,11 +37,16 @@ struct MessagePreview: View {
             .padding()
             
             if editMode {
-                Image(systemName: "trash")
-                    .resizable()
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(Color("Black"))
-                    .padding(.horizontal)
+                Button {
+                    onDelete()
+                } label: {
+                    Image(systemName: "trash")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color("Black"))
+                        .padding(.horizontal)
+                }
+
             }
         }
         .background(.white)
@@ -53,7 +60,7 @@ struct MessagePreview_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            MessagePreview(name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", editMode: false)
+            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", editMode: false) { print("opening delete confirmation") }
         }
     }
 }

@@ -42,7 +42,10 @@ class AllChatsViewModel: ObservableObject {
         self.chatIsLoaded = chatIsLoaded
     }
     
-    // this function needs to be fixed
+    func deleteChat(id: String) {
+        
+    }
+    
     func loadChat(otherUser: OtherUser) {
         if let foundChat = (allChats.filter { $0.otherUser.id == otherUser.id }).first {
             setLoadedChat(loadedChat: foundChat, chatIsLoaded: true)
