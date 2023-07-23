@@ -23,6 +23,22 @@ class AuthenticationModel {
         }
     }
     
+    func registerUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
+        db.collection("users").whereField("username", isEqualTo: username)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    let foundDocuments = querySnapshot!.documents
+                    if foundDocuments.isEmpty {
+                        self.createAuthUser(email: email, username: username, password: password, errorSetter: errorSetter)
+                    } else {
+                        errorSetter("An account already exists with that username.")
+                    }
+                }
+        }
+    }
+    
     func createAuthUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
         auth.createUser(withEmail: email, password: password) { authResult, error in
             if let authError = error {
@@ -85,7 +101,7 @@ class AuthenticationModel {
         }
     }
     
-    func signInAuthUser(email: String, password: String,  errorSetter: @escaping (String) -> Void) {
+    func LoginAuthUser(email: String, password: String,  errorSetter: @escaping (String) -> Void) {
         auth.signIn(withEmail: email, password: password) { authResult, error in
             if let authError = error {
                 errorSetter(authError.localizedDescription)

@@ -37,12 +37,12 @@ class AuthenticationViewModel: ObservableObject {
     
     func loginUser(email: String, password: String) {
         setFetchingStatus(fetchingStatus: true)
-        authenticationModel.signInAuthUser(email: email, password: password, errorSetter: setError(error:))
+        authenticationModel.LoginAuthUser(email: email, password: password, errorSetter: setError(error:))
     }
 
     func registerUser(email: String, username: String, password: String) {
         setFetchingStatus(fetchingStatus: true)
-        authenticationModel.createAuthUser(email: email, username: username, password: password, errorSetter: setError(error:))
+        authenticationModel.registerUser(email: email, username: username, password: password, errorSetter: setError(error:))
     }
     
     func logoutUser() {
