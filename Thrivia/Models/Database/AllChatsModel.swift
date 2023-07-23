@@ -105,7 +105,6 @@ class AllChatsModel {
                                         userChats.append(chat)
                                         chatsDispatchGroup.leave()
                                     }
-                                    
                                 }
                             }
                         }
@@ -185,11 +184,6 @@ class AllChatsModel {
                         } else {
                             if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                                let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
-                                // delete one time prekey from DB
-                                docRef.updateData([
-                                    "oneTimePrekeys": FieldValue.arrayRemove([prekeyBundle["oneTimePrekey"]!])
-                                ])
-                                
                                 let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                                 let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                                 conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
@@ -234,6 +228,12 @@ class AllChatsModel {
                     // remove message doc from db
                     self.removeMessageDocFromDB(messageId: message.id)
                     
+                    // remove message ID from chat doc
+                    self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
+                    
+                    // decrypt message
+                    conversation.receiveMessage(message: message)
+                    
                     // if first message, delete local private OTK, replace and send public key to server
                     if conversation.lastMessageReceived == nil {
                         let prekeyIdentifier = message.oneTimePreKeyIdentifier
@@ -241,17 +241,11 @@ class AllChatsModel {
                             self.saveOneTimePrekeyInDB(userId: userId, oneTimePrekey: newOneTimePrekey)
                         }
                     }
-                    
-                    // remove message ID from chat doc
-                    self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
-                    
-                    conversation.receiveMessage(message: message)
                 }
                 
                 if self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
                     // set messages
                     messagesSetter(conversation.messages)
-                    print(conversation.messages.map{$0.content})
                 }
             }
         }
@@ -358,10 +352,11 @@ class AllChatsModel {
             if conversation == nil {
                 // get stored crypto user
                 let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
-                
                 // get prekey bundle from server
                 if let cryptoUser = cryptoUser,
                    let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                    self.deleteOneTimePrekey(userId: receiverId, oneTimePrekey: prekeyBundle["oneTimePrekey"]!)
+                    
                     let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                     let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                     conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
@@ -377,6 +372,15 @@ class AllChatsModel {
                 self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
             }
         }
+    }
+    
+    private func deleteOneTimePrekey(userId: String, oneTimePrekey: String) {
+        let docRef = db.collection("users").document(userId)
+        
+        // delete one time prekey from DB
+        docRef.updateData([
+            "oneTimePrekeys": FieldValue.arrayRemove([oneTimePrekey])
+        ])
     }
     
     private func createMessageDocInDB(senderId: String, chatId: String, encryptedMessage: EncryptedMessage) {

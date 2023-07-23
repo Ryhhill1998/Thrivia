@@ -59,8 +59,8 @@ class Conversation {
         
         messages = []
         
-        dhRatchetPrivateKey = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: user.signedPrekeyPrivate.rawRepresentation)
-        dhRatchetPublicKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: user.signedPrekeyPublic.rawRepresentation)
+        dhRatchetPrivateKey = user.signedPrekeyPrivate
+        dhRatchetPublicKey = user.signedPrekeyPublic
     }
     
     // initialiser to restore object from local storage codable format
@@ -140,10 +140,19 @@ class Conversation {
     
     func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey {
         // generate Diffie-Hellman shared secrets
-        let dh1 = try! user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUser.signedPrekey.rawRepresentation))
+        let dh1 = try! user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
         let dh2 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
-        let dh3 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUser.signedPrekey.rawRepresentation))
+        let dh3 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
         let dh4 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
+        
+        print()
+        print(otherUser.oneTimePrekey.rawRepresentation.base64EncodedString())
+        print()
+        
+        print("dh1: \(dh1)")
+        print("dh2: \(dh2)")
+        print("dh3: \(dh3)")
+        print("dh4: \(dh4)")
         
         // generate and return master key
         let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
@@ -228,7 +237,7 @@ class Conversation {
             generateDhRatchetPair()
             
             // calculate dh output
-            let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUser.signedPrekey.rawRepresentation)
+            let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.signedPrekey
             let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey)
             print("DH output key: \(convertSymmetricKeyToByteSequence(symmetricKey: dhOutputKey).base64EncodedString())")
             
@@ -286,10 +295,15 @@ class Conversation {
     
     func generateRecipientMasterKey(oneTimePrekeyIdentifier: Int, senderIdentityKey: Curve25519.KeyAgreement.PublicKey, ephemeralKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey {
         // generate Diffie-Hellman shared secrets
-        let dh1 = try! (try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: user.signedPrekeyPrivate.rawRepresentation)).sharedSecretFromKeyAgreement(with: senderIdentityKey)
+        let dh1 = try! user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: senderIdentityKey)
         let dh2 = try! user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
-        let dh3 = try! (try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: user.signedPrekeyPrivate.rawRepresentation)).sharedSecretFromKeyAgreement(with: ephemeralKey)
+        let dh3 = try! user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
         let dh4 = try! user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
+        
+        print()
+        print("identifier: \(oneTimePrekeyIdentifier)")
+        print("public one time prekey: \(user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].publicKey.rawRepresentation.base64EncodedString())")
+        print()
         
         // generate and return master key
         let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)

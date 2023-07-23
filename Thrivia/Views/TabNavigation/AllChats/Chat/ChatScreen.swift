@@ -32,11 +32,16 @@ struct ChatScreen: View {
     var body: some View {
         VStack {
             VStack {
-                ScrollView {
-                    ForEach(Array(chatViewModel.messages.enumerated()), id: \.offset) { index, message in
-                        MessageBubble(message: message)
-                            .padding(.bottom, 5.0)
-                            .padding(.top, index == 0 ? 15.0 : 0)
+                ScrollViewReader { value in
+                    ScrollView {
+                        ForEach(Array(chatViewModel.messages.enumerated()), id: \.offset) { index, message in
+                            MessageBubble(message: message)
+                                .padding(.bottom, 5.0)
+                                .padding(.top, index == 0 ? 15.0 : 0)
+                        }
+                    }
+                    .onChange(of: chatViewModel.lastMessageIndex) { _ in
+                        value.scrollTo(chatViewModel.lastMessageIndex)
                     }
                 }
                 .padding(.top, 5.0)
@@ -55,13 +60,13 @@ struct ChatScreen: View {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color("Black"))
                 }
-
+                
             }
-    
+            
             ToolbarItem(placement: .navigationBarLeading) {
                 HStack(spacing: 10.0) {
                     UserIcon(size: "small", borderColour: .white, backgroundColour: chatViewModel.loadedChat?.otherUser.iconColour ?? .purple, name: chatViewModel.loadedChat?.otherUser.username ?? "Username")
-
+                    
                     VStack(alignment: .leading, spacing: 1.0) {
                         Text(chatViewModel.loadedChat?.otherUser.username ?? "Username")
                             .font(.custom("Montserrat", size: 13))

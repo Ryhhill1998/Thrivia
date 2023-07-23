@@ -13,12 +13,15 @@ class ChatViewModel: ObservableObject {
     
     var userId: String?
     var listenerCreated = false
+    
     @Published var loadedChat: Chat?
     @Published var messages: [Message] = []
+    @Published var lastMessageIndex = 0
     
     func setMessages(messages: [Message]) {
         self.messages = messages
         self.listenerCreated = true
+        lastMessageIndex = self.messages.count - 1
     }
     
     func listenToChat() {
