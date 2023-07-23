@@ -11,6 +11,8 @@ struct AllChatsScreen: View {
     
     @ObservedObject var chatsViewModel: AllChatsViewModel
     
+    @State var isEditing = false
+    
     init(userId: String) {
         chatsViewModel = AllChatsViewModel(userId: userId)
     }
@@ -47,13 +49,21 @@ struct AllChatsScreen: View {
                                     Button {
                                         loadChat(otherUser: chat.otherUser)
                                     } label: {
-                                        MessagePreview(name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content)
+                                        ZStack {
+                                            MessagePreview(name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, editMode: isEditing)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
+            .toolbar {
+                Button(isEditing ? "Done" : "Edit") {
+                    isEditing.toggle()
+                }
+
             }
             .navigationTitle("Chats")
             .navigationBarTitleDisplayMode(.inline)
@@ -62,12 +72,13 @@ struct AllChatsScreen: View {
                 ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
             }
         }
+        .accentColor(Color("Black"))
     }
 }
 
 struct ChatsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        AllChatsScreen(userId: "1")
+        AllChatsScreen(userId: "VJKOKdNGaVfRK0nQaaoj6lncPHT2")
     }
 }
 
