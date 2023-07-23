@@ -43,7 +43,7 @@ struct MessagePreview: View {
                     Image(systemName: "trash")
                         .resizable()
                         .frame(width: 20, height: 20)
-                        .foregroundColor(Color("Black"))
+                        .foregroundColor(.red)
                         .padding(.horizontal)
                 }
 
@@ -60,7 +60,7 @@ struct MessagePreview_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", editMode: false) { print("opening delete confirmation") }
+            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", editMode: true) { print("opening delete confirmation") }
         }
     }
 }

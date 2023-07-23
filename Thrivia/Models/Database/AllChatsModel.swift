@@ -224,6 +224,10 @@ class AllChatsModel {
         }
         
         messagesDispatchGroup.notify(queue: .main) {
+            encryptedMessages.sort {
+                $0.timestamp < $1.timestamp
+            }
+            
             // decrypt messages
             if let conversation = conversation {
                 for message in encryptedMessages {
@@ -322,13 +326,14 @@ class AllChatsModel {
             if let messageData = messageDoc.data() {
                 if let senderId = messageData["senderId"] as? String {
                     if senderId != userId {
-                        if let cipherText = messageData["cipherText"] as? String,
+                        if let timestamp = (messageData["timestamp"] as? Timestamp)?.dateValue(),
+                            let cipherText = messageData["cipherText"] as? String,
                            let identityKey = messageData["identityKey"] as? String,
                            let ephemeralKey = messageData["ephemeralKey"] as? String,
                            let oneTimePreKeyIdentifier = messageData["oneTimePreKeyIdentifier"] as? Int,
                            let sendChainLength = messageData["sendChainLength"] as? Int,
                            let previousSendChainLength = messageData["previousSendChainLength"] as? Int {
-                            encryptedMessage = EncryptedMessage(id: messageDoc.documentID, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: oneTimePreKeyIdentifier, sendChainLength: sendChainLength, previousSendChainLength: previousSendChainLength)
+                            encryptedMessage = EncryptedMessage(id: messageDoc.documentID, timestamp: timestamp, cipherText: cipherText, identityKey: identityKey, ephemeralKey: ephemeralKey, oneTimePreKeyIdentifier: oneTimePreKeyIdentifier, sendChainLength: sendChainLength, previousSendChainLength: previousSendChainLength)
                         }
                     }
                 }
