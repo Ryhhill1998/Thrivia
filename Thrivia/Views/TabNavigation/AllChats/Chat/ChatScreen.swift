@@ -33,6 +33,8 @@ struct ChatScreen: View {
     }
     
     func backPressed() {
+        chatViewModel.removeListener()
+        chatViewModel.loadedChat = nil
         presentationMode.wrappedValue.dismiss()
     }
     

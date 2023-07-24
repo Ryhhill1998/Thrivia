@@ -21,7 +21,7 @@ class AllChatsModel {
                 let blockedUserIds = userData["blockedUserIds"] as? [String]
                 let setOfBlockedUserIds: Set<String> = Set(blockedUserIds ?? [])
                 
-                self.db.collection("users")
+                let listener = self.db.collection("users")
                     .whereField("isActive", isEqualTo: true)
                     .addSnapshotListener { querySnapshot, error in
                         guard let documents = querySnapshot?.documents else {
@@ -69,6 +69,8 @@ class AllChatsModel {
                         
                         activeUsersSetter(activeUsers)
                     }
+                
+//                listener.remove()
             }
         }
     }
@@ -83,7 +85,7 @@ class AllChatsModel {
                 let setOfBlockedUserIds: Set<String> = Set(blockedUserIds ?? [])
              
                 // listen to chats
-                self.db.collection("chats").whereField("userIds", arrayContains: userId)
+                let listener = self.db.collection("chats").whereField("userIds", arrayContains: userId)
                     .addSnapshotListener { querySnapshot, error in
                         guard let documents = querySnapshot?.documents else {
                             print("Error fetching documents: \(error!)")
@@ -180,6 +182,8 @@ class AllChatsModel {
                             userChatsSetter(userChats)
                         }
                     }
+                
+//                listener.remove()
             }
         }
     }
@@ -239,8 +243,8 @@ class AllChatsModel {
         }
     }
     
-    func listenToChat(chatId: String, userId: String, messagesSetter: @escaping ([Message]) -> Void) {
-        db.collection("chats").document(chatId)
+    func listenToChat(chatId: String, userId: String, messagesSetter: @escaping ([Message]) -> Void) -> ListenerRegistration {
+        let listener = db.collection("chats").document(chatId)
             .addSnapshotListener { documentSnapshot, error in
                 guard let document = documentSnapshot else {
                     print("Error fetching document: \(error!)")
@@ -280,6 +284,8 @@ class AllChatsModel {
                     }
                 }
             }
+        
+        return listener
     }
     
     func decryptAndSetMessages(chatId: String, messageIds: [String], userId: String, conversation: Conversation?, messagesSetter: @escaping ([Message]) -> Void) {
@@ -425,47 +431,62 @@ class AllChatsModel {
     }
     
     func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void) {
-        // get conversation data stored locally in user defaults
-        var conversation: Conversation?
+        // get user blocked IDs
+        let userDocRef = db.collection("users").document(senderId)
         
-        if let storedConversation = retrieveConversationFromUserDefaults(chatId: chatId) {
-            print("Retrieved conversation: \(storedConversation)")
-            conversation = storedConversation
-        }
-        
-        let receiverDocRef = db.collection("users").document(receiverId)
-        
-        receiverDocRef.getDocument { (document, error) in
-            if let blockedUserIds = document?.data()?["blockedUserIds"] as? [String] {
-                let setOfBlockedUserIds = Set(blockedUserIds)
+        userDocRef.getDocument { (document, error) in
+            if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
+                let blockedUserIds = userData["blockedUserIds"] as? [String]
+                let setOfBlockedUserIds: Set<String> = Set(blockedUserIds ?? [])
                 
-                if setOfBlockedUserIds.contains(senderId) {
-                    errorSetter("This user has blocked you from messaging them.")
+                if setOfBlockedUserIds.contains(receiverId) {
+                    errorSetter("You cannot message this user because you have blocked them.")
                     return
                 }
-            }
-            
-            if conversation == nil {
-                // get stored crypto user
-                let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
-                // get prekey bundle from server
-                if let cryptoUser = cryptoUser,
-                   let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
-                    self.deleteOneTimePrekey(userId: receiverId, oneTimePrekey: prekeyBundle["oneTimePrekey"]!)
-                    
-                    let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
-                    let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
-                    conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                
+                // get conversation data stored locally in user defaults
+                var conversation: Conversation?
+                
+                if let storedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
+                    print("Retrieved conversation: \(storedConversation)")
+                    conversation = storedConversation
                 }
-            }
-            
-            // create encrypted message using conversation object
-            let encryptedMessage = conversation!.sendMessage(messageContent: content)
-            
-            // save conversation locally and to db
-            if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
-                // create message doc
-                self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+                
+                let receiverDocRef = self.db.collection("users").document(receiverId)
+                
+                receiverDocRef.getDocument { (document, error) in
+                    if let otherUserBlockedUserIds = document?.data()?["blockedUserIds"] as? [String] {
+                        let otherUserSetOfBlockedUserIds = Set(otherUserBlockedUserIds)
+                        
+                        if otherUserSetOfBlockedUserIds.contains(senderId) {
+                            errorSetter("This user has blocked you from messaging them.")
+                            return
+                        }
+                    }
+                    
+                    if conversation == nil {
+                        // get stored crypto user
+                        let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
+                        // get prekey bundle from server
+                        if let cryptoUser = cryptoUser,
+                           let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                            self.deleteOneTimePrekey(userId: receiverId, oneTimePrekey: prekeyBundle["oneTimePrekey"]!)
+                            
+                            let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
+                            let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
+                            conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                        }
+                    }
+                    
+                    // create encrypted message using conversation object
+                    let encryptedMessage = conversation!.sendMessage(messageContent: content)
+                    
+                    // save conversation locally and to db
+                    if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
+                        // create message doc
+                        self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+                    }
+                }
             }
         }
     }

@@ -100,6 +100,9 @@ struct AllChatsScreen: View {
                     }
                 }
             }
+            .onAppear() {
+                chatsViewModel.loadedChat = nil
+            }
             .toolbar(isSelectedMode ? .hidden : .visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

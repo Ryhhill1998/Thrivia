@@ -12,7 +12,7 @@ class ChatViewModel: ObservableObject {
     var allChatsModel = AllChatsModel()
     
     var userId: String?
-    var listenerCreated = false
+    var chatListener: ListenerRegistration?
     
     @Published var loadedChat: Chat?
     @Published var messages: [Message] = []
@@ -22,14 +22,13 @@ class ChatViewModel: ObservableObject {
     
     func setMessages(messages: [Message]) {
         self.messages = messages
-        self.listenerCreated = true
         lastMessageIndex = self.messages.count - 1
     }
     
     func listenToChat() {
         if let chatId = loadedChat?.id,
            let userId = userId {
-            allChatsModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
+            chatListener = allChatsModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
         }
     }
     
@@ -56,5 +55,9 @@ class ChatViewModel: ObservableObject {
         if let userId = userId {
             allChatsModel.blockUser(signedInUserId: userId, userIdToBlock: userIdToBlock)
         }
+    }
+    
+    func removeListener() {
+        chatListener?.remove()
     }
 }
