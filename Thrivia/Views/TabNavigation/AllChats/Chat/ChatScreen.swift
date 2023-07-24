@@ -39,6 +39,15 @@ struct ChatScreen: View {
         selectedMessageIds.insert(messageId)
     }
     
+    func cancelSelectMode() {
+        isSelectedMode = false
+        selectedMessageIds = []
+    }
+    
+    func deleteSelectedMessages() {
+        
+    }
+    
     var body: some View {
         VStack {
             VStack {
@@ -51,15 +60,6 @@ struct ChatScreen: View {
                                 .onLongPressGesture {
                                     isSelectedMode = true
                                 }
-//                                .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
-//                                    Button("Delete", role: .destructive) {
-//                                        print("deleting message")
-//                                    }
-//                                    
-//                                    Button("Cancel", role: .cancel) {}
-//                                }, message: {
-//                                    Text("Are you sure you want to delete this message?")
-//                                })
                         }
                     }
                     .onChange(of: chatViewModel.lastMessageIndex) { _ in
@@ -72,10 +72,23 @@ struct ChatScreen: View {
                 inputIsFocused = false
             }
             .background(Color("White"))
+            .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
+                Button("Delete", role: .destructive) {
+                    deleteSelectedMessages()
+                }
+                
+                Button("Cancel", role: .cancel) {}
+            }, message: {
+                Text("Are you sure you want to delete these messages?")
+            })
             
-            MessageField(sendPressed: sendPressed)
-                .background(Color("Background"))
-                .focused($inputIsFocused)
+            if isSelectedMode {
+                SelectModeToolbar(messagesSelected: selectedMessageIds.count, cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
+            } else {
+                MessageField(sendPressed: sendPressed)
+                    .background(Color("Background"))
+                    .focused($inputIsFocused)
+            }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {

@@ -23,6 +23,7 @@
 		5B5411E82A631CC800A024E8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E72A631CC800A024E8 /* User.swift */; };
 		5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411F22A63207800A024E8 /* AllChatsModel.swift */; };
 		5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */; };
+		5B7A93612A6E75F20038A4C1 /* SelectModeToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */; };
 		5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186C82A60552A0093853D /* MessagePreview.swift */; };
 		5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */; };
 		5B8F03A92A6BD57B00B5192D /* ProgressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */; };
@@ -81,6 +82,7 @@
 		5B5411E72A631CC800A024E8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B5411F22A63207800A024E8 /* AllChatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChatsModel.swift; sourceTree = "<group>"; };
 		5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectModeToolbar.swift; sourceTree = "<group>"; };
 		5B8186C82A60552A0093853D /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveUserIcon.swift; sourceTree = "<group>"; };
 		5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressButton.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				5B5411C02A61389F00A024E8 /* ChatScreen.swift */,
 				5B5411C42A6159EC00A024E8 /* MessageBubble.swift */,
 				5B5411C22A61566C00A024E8 /* MessageField.swift */,
+				5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				5B5411D52A61E62800A024E8 /* Counter.swift in Sources */,
 				5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */,
 				5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */,
+				5B7A93612A6E75F20038A4C1 /* SelectModeToolbar.swift in Sources */,
 				5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */,
 				5B5411D72A61EA2B00A024E8 /* CounterViewModel.swift in Sources */,
 				5BC6FDFB2A5EB372006459F8 /* AllChatsScreen.swift in Sources */,
