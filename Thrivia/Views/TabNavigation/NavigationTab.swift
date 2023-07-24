@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NavigationTab: View {
     
-    @StateObject var authenticationViewModel = AuthenticationViewModel()
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     
     @State var counterNotCreated = true
     @State var isAuthenticated = false

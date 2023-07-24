@@ -12,28 +12,34 @@ class AllChatsModel {
     
     private let db = Firestore.firestore()
     
-    func getActiveUsers(userId: String, activeUsersSetter: @escaping ([OtherUser]) -> Void) {
-        var activeUsers: [OtherUser] = []
-        
-        // search db for all active user docs with id != userId
+    func listenToActiveUsers(userId: String, activeUsersSetter: @escaping ([OtherUser]) -> Void) {
         db.collection("users").whereField("isActive", isEqualTo: true)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                } else {
-                    for document in querySnapshot!.documents {
-                        let data = document.data()
-                        
-                        if document.documentID == userId { continue }
-                        
-                        if let username = data["username"] as? String, let iconColour = data["iconColour"] as? String {
-                            let otherUser = OtherUser(id: document.documentID, username: username, iconColour: Color(iconColour))
-                            activeUsers.append(otherUser)
-                        }
-                    }
-                    
-                    activeUsersSetter(activeUsers)
+            .addSnapshotListener { querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
+                    print("Error fetching documents: \(error!)")
+                    return
                 }
+
+                if let error = error {
+                    print("Error getting documents: \(error)")
+                    return
+                }
+                
+                var activeUsers: [OtherUser] = []
+
+                for document in documents {
+                    let data = document.data()
+
+                    if document.documentID == userId { continue }
+
+                    if let username = data["username"] as? String,
+                        let iconColour = data["iconColour"] as? String {
+                        let otherUser = OtherUser(id: document.documentID, username: username, iconColour: Color(iconColour))
+                        activeUsers.append(otherUser)
+                    }
+                }
+
+                activeUsersSetter(activeUsers)
             }
     }
     
@@ -321,7 +327,7 @@ class AllChatsModel {
                 if let senderId = messageData["senderId"] as? String {
                     if senderId != userId {
                         if let timestamp = (messageData["timestamp"] as? Timestamp)?.dateValue(),
-                            let cipherText = messageData["cipherText"] as? String,
+                           let cipherText = messageData["cipherText"] as? String,
                            let identityKey = messageData["identityKey"] as? String,
                            let ephemeralKey = messageData["ephemeralKey"] as? String,
                            let oneTimePreKeyIdentifier = messageData["oneTimePreKeyIdentifier"] as? Int,

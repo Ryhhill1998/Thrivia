@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @StateObject var authenticationViewModel = AuthenticationViewModel()
+    
     var body: some View {
         NavigationTab()
             .preferredColorScheme(.light)
+            .environmentObject(authenticationViewModel)
     }
 }
 

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AllChatsScreen: View {
     
+    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
+    
     @ObservedObject var chatsViewModel: AllChatsViewModel
     
     @State var isEditing = false

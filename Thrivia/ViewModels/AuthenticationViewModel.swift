@@ -18,6 +18,22 @@ class AuthenticationViewModel: ObservableObject {
     
     init() {
         authenticationModel.listenForAuthStateChanges(setAuthState: setAuthState(userId:))
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
+            print("entered background")
+            self.updateUserActivityStatus(activityStatus: false)
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { _ in
+            print("entering foreground")
+            self.updateUserActivityStatus(activityStatus: true)
+        }
+    }
+    
+    func updateUserActivityStatus(activityStatus: Bool) {
+        if let userId = self.authUserId {
+            authenticationModel.updateUserActivityStatusInDB(userId: userId, activityStatus: activityStatus)
+        }
     }
     
     func setAuthState(userId: String?) {

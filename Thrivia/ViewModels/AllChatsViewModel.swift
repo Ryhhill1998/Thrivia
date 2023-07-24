@@ -20,7 +20,7 @@ class AllChatsViewModel: ObservableObject {
         self.userId = userId
         
         if activeUsers.isEmpty {
-            allChatsModel.getActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:))
+            allChatsModel.listenToActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:))
         }
         
         // this needs to be fixed
@@ -30,6 +30,7 @@ class AllChatsViewModel: ObservableObject {
     }
     
     func setActiveUsers(activeUsers: [OtherUser]) {
+        print("Active users: \(activeUsers)")
         self.activeUsers = activeUsers
     }
     

@@ -108,9 +108,15 @@ class AuthenticationModel {
     func updateUserActivityStatusInDB(userId: String, activityStatus: Bool) {
         let docRef = db.collection("users").document(userId)
         
+        print(docRef.documentID)
+        
         docRef.updateData([
             "isActive": activityStatus
-        ])
+        ]) { error in
+            print("doc ref being updated")
+        }
+        
+        print("ghdklahdslkdghlk")
     }
     
     func LoginAuthUser(email: String, password: String,  errorSetter: @escaping (String) -> Void) {
