@@ -40,7 +40,7 @@ class AuthenticationModel {
                         errorSetter("An account already exists with that username.")
                     }
                 }
-        }
+            }
     }
     
     func createAuthUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
@@ -143,6 +143,86 @@ class AuthenticationModel {
     
     func deleteUserAccount(userId: String) {
         // connect to db and delete account
+        let user = Auth.auth().currentUser
+
+        user?.delete { error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                self.deleteUserAndAllDataFromDB(userId: userId)
+            }
+        }
+    }
+    
+    func deleteUserAndAllDataFromDB(userId: String) {
+        let docRef = db.collection("users").document(userId)
+        
+        docRef.getDocument { (document, error) in
+            guard let document = document, document.exists else {
+                return
+            }
+            
+            guard let data = document.data() else {
+                return
+            }
+            
+            if let chatIds = data["chatIds"] as? [String] {
+                for chatId in chatIds {
+                    // delete chat ID from all user docs involved in the chat
+                    self.deleteChatIdFromAllUserDocs(chatId: chatId)
+                    
+                    // delete the chat doc with this chat ID
+                    self.deleteChatDoc(chatId: chatId)
+                    
+                    // delete user doc
+                    self.deleteUserDoc(userId: userId)
+                }
+            }
+        }
+    }
+    
+    func deleteUserDoc(userId: String) {
+        db.collection("users").document(userId).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+    }
+    
+    func deleteChatDoc(chatId: String) {
+        db.collection("chats").document(chatId).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+    }
+    
+    func deleteChatIdFromAllUserDocs(chatId: String) {
+        db.collection("users").whereField("chatIds", arrayContains: chatId)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    if let foundDocuments = querySnapshot?.documents {
+                        for document in foundDocuments {
+                            let userId = document.documentID
+                            self.deleteChatIdFromUserDoc(userId: userId, chatId: chatId)
+                        }
+                    }
+                }
+            }
+    }
+    
+    func deleteChatIdFromUserDoc(userId: String, chatId: String) {
+        let docRef = db.collection("users").document(userId)
+        
+        docRef.updateData([
+            "chatIds": FieldValue.arrayRemove([chatId])
+        ])
     }
     
     func storeCryptoUserLocally(codableCryptoUser: CodableCryptoUser) {
@@ -151,10 +231,10 @@ class AuthenticationModel {
         do {
             // Create JSON Encoder
             let encoder = JSONEncoder()
-
+            
             // Encode Note
             let data = try encoder.encode(codableCryptoUser)
-
+            
             // Write/Set Data
             defaults.set(data, forKey: "codableCryptoUser")
         } catch {
