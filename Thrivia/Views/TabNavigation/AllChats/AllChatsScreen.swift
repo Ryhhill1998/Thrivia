@@ -9,15 +9,18 @@ import SwiftUI
 
 struct AllChatsScreen: View {
     
-    @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
-    
     @ObservedObject var chatsViewModel: AllChatsViewModel
     
     @State var showConfirmDeleteAlert = false
     @State var isSelectedMode = false
     @State var selectedChatIds: Set<String> = []
+    @State var navigateToBlockedList = false
+    
+    var userId: String
     
     init(userId: String) {
+        self.userId = userId
+        
         chatsViewModel = AllChatsViewModel(userId: userId)
     }
     
@@ -98,12 +101,25 @@ struct AllChatsScreen: View {
                 }
             }
             .toolbar(isSelectedMode ? .hidden : .visible, for: .tabBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        navigateToBlockedList = true
+                    } label: {
+                        Image(systemName: "minus.circle")
+                            .foregroundColor(Color("Black"))
+                    }
+
+                }
+            }
             .navigationTitle("Chats")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatsViewModel.chatIsLoaded) {
                 ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
-                    .environmentObject(authenticationViewModel)
+            }
+            .navigationDestination(isPresented: $navigateToBlockedList) {
+                BlockedUsers(userId: userId)
             }
         }
         .accentColor(Color("Black"))

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		5B4C0D4E2A6EC898002E0894 /* ChatOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */; };
+		5B4C0D522A6EF64A002E0894 /* BlockedUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D512A6EF64A002E0894 /* BlockedUsers.swift */; };
+		5B4C0D542A6EF7F9002E0894 /* BlockedUsersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */; };
+		5B4C0D562A6EF886002E0894 /* BlockedUsersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D552A6EF886002E0894 /* BlockedUsersModel.swift */; };
 		5B5411C12A61389F00A024E8 /* ChatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C02A61389F00A024E8 /* ChatScreen.swift */; };
 		5B5411C32A61566C00A024E8 /* MessageField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C22A61566C00A024E8 /* MessageField.swift */; };
 		5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411C42A6159EC00A024E8 /* MessageBubble.swift */; };
@@ -68,6 +71,9 @@
 
 /* Begin PBXFileReference section */
 		5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatOptions.swift; sourceTree = "<group>"; };
+		5B4C0D512A6EF64A002E0894 /* BlockedUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsers.swift; sourceTree = "<group>"; };
+		5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersViewModel.swift; sourceTree = "<group>"; };
+		5B4C0D552A6EF886002E0894 /* BlockedUsersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersModel.swift; sourceTree = "<group>"; };
 		5B5411C02A61389F00A024E8 /* ChatScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatScreen.swift; sourceTree = "<group>"; };
 		5B5411C22A61566C00A024E8 /* MessageField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageField.swift; sourceTree = "<group>"; };
 		5B5411C42A6159EC00A024E8 /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
@@ -145,6 +151,14 @@
 				5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */,
 			);
 			path = Options;
+			sourceTree = "<group>";
+		};
+		5B4C0D502A6EF5FD002E0894 /* BlockedUsers */ = {
+			isa = PBXGroup;
+			children = (
+				5B4C0D512A6EF64A002E0894 /* BlockedUsers.swift */,
+			);
+			path = BlockedUsers;
 			sourceTree = "<group>";
 		};
 		5B5411CA2A617AC700A024E8 /* Chat */ = {
@@ -248,6 +262,7 @@
 				5B5411F22A63207800A024E8 /* AllChatsModel.swift */,
 				5B9792DA2A63D31100F078C6 /* CounterModel.swift */,
 				5B9792DC2A63D32E00F078C6 /* ProfileModel.swift */,
+				5B4C0D552A6EF886002E0894 /* BlockedUsersModel.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -279,6 +294,7 @@
 				5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */,
 				5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */,
 				5B97990D2A66D33300BB4537 /* ChatViewModel.swift */,
+				5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -332,6 +348,7 @@
 		5BC6FDE92A5EA2C9006459F8 /* AllChats */ = {
 			isa = PBXGroup;
 			children = (
+				5B4C0D502A6EF5FD002E0894 /* BlockedUsers */,
 				5BC6FE082A6050DB006459F8 /* UserIcon.swift */,
 				5BC6FDFA2A5EB372006459F8 /* AllChatsScreen.swift */,
 				5B8186C82A60552A0093853D /* MessagePreview.swift */,
@@ -474,6 +491,7 @@
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5BFBC0852A692CC6005E89FC /* CodableCryptoUser.swift in Sources */,
 				5BFBC0772A691B37005E89FC /* CodableConversation.swift in Sources */,
+				5B4C0D542A6EF7F9002E0894 /* BlockedUsersViewModel.swift in Sources */,
 				5B4C0D4E2A6EC898002E0894 /* ChatOptions.swift in Sources */,
 				5B9792E32A63FCC600F078C6 /* OtherUser.swift in Sources */,
 				5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */,
@@ -483,6 +501,7 @@
 				5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */,
 				5B5411C92A61708600A024E8 /* AppIcon.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
+				5B4C0D562A6EF886002E0894 /* BlockedUsersModel.swift in Sources */,
 				5B5411D52A61E62800A024E8 /* Counter.swift in Sources */,
 				5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */,
 				5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */,
@@ -504,6 +523,7 @@
 				5B8F03AE2A6BF1F600B5192D /* EditPassword.swift in Sources */,
 				5B8F03A92A6BD57B00B5192D /* ProgressButton.swift in Sources */,
 				5BFBC0832A692BAB005E89FC /* CodableCryptoOtherUser.swift in Sources */,
+				5B4C0D522A6EF64A002E0894 /* BlockedUsers.swift in Sources */,
 				5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */,
 				5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */,
 				5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */,
