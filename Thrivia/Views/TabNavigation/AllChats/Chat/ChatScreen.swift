@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ChatScreen: View {
     
+    @EnvironmentObject private var allChatsViewModel: AllChatsViewModel
+    
     @Environment(\.presentationMode) var presentationMode
     
     @StateObject private var chatViewModel = ChatViewModel()
@@ -33,8 +35,6 @@ struct ChatScreen: View {
     }
     
     func backPressed() {
-        chatViewModel.removeListener()
-        chatViewModel.loadedChat = nil
         presentationMode.wrappedValue.dismiss()
     }
     
@@ -103,6 +103,11 @@ struct ChatScreen: View {
                         Text(chatViewModel.sendError)
                     })
             }
+        }
+        .onDisappear() {
+            allChatsViewModel.loadedChat = nil
+            chatViewModel.removeListener()
+            chatViewModel.loadedChat = nil
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {

@@ -26,6 +26,10 @@ class ChatViewModel: ObservableObject {
     }
     
     func listenToChat() {
+        if chatListener != nil {
+            return
+        }
+        
         if let chatId = loadedChat?.id,
            let userId = userId {
             chatListener = allChatsModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
@@ -59,5 +63,6 @@ class ChatViewModel: ObservableObject {
     
     func removeListener() {
         chatListener?.remove()
+        print("listener removed")
     }
 }

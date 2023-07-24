@@ -67,7 +67,6 @@ class AllChatsViewModel: ObservableObject {
         allChatsModel.deleteChat(chatId: id)
     }
     
-    // fix this function to search for chat in database in case UI is not up to date rather than just creating a new chat
     func loadChat(otherUser: OtherUser) {
         allChatsModel.retrieveChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
     }

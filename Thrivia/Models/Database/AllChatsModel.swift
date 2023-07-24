@@ -193,7 +193,7 @@ class AllChatsModel {
         
         db.collection("chats")
             .whereField("userIds", in: [[userId, otherUserId], [otherUserId, userId]])
-            .addSnapshotListener { querySnapshot, error in
+            .getDocuments() { (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching documents: \(error!)")
                     return
