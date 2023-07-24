@@ -404,7 +404,7 @@ class AllChatsModel {
         return encryptedMessage
     }
     
-    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String) {
+    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void) {
         // get conversation data stored locally in user defaults
         var conversation: Conversation?
         
@@ -416,6 +416,15 @@ class AllChatsModel {
         let receiverDocRef = db.collection("users").document(receiverId)
         
         receiverDocRef.getDocument { (document, error) in
+            if let blockedUserIds = document?.data()?["blockedUserIds"] as? [String] {
+                let setOfBlockedUserIds = Set(blockedUserIds)
+                
+                if setOfBlockedUserIds.contains(senderId) {
+                    errorSetter("This user has blocked you from messaging them.")
+                    return
+                }
+            }
+            
             if conversation == nil {
                 // get stored crypto user
                 let cryptoUser = self.retrieveCryptoUserFromUserDefaults()

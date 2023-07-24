@@ -17,6 +17,8 @@ class ChatViewModel: ObservableObject {
     @Published var loadedChat: Chat?
     @Published var messages: [Message] = []
     @Published var lastMessageIndex = 0
+    @Published var sendError = ""
+    @Published var errorExists = false
     
     func setMessages(messages: [Message]) {
         self.messages = messages
@@ -35,8 +37,13 @@ class ChatViewModel: ObservableObject {
         if let userId = userId,
            let chatId = loadedChat?.id,
            let otherUserId = loadedChat?.otherUser.id {
-            allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId)
+            allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:))
         }
+    }
+    
+    func setError(error: String) {
+        sendError = error
+        errorExists = true
     }
     
     func deleteMessages(messageIds: Set<String>) {

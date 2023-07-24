@@ -95,6 +95,11 @@ struct ChatScreen: View {
                 MessageField(sendPressed: sendPressed)
                     .background(Color("Background"))
                     .focused($inputIsFocused)
+                    .alert("Send failed", isPresented: $chatViewModel.errorExists, actions: {
+                        Button("OK", role: .cancel) {}
+                    }, message: {
+                        Text(chatViewModel.sendError)
+                    })
             }
         }
         .navigationBarBackButtonHidden(true)
