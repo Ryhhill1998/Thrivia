@@ -44,4 +44,10 @@ class ChatViewModel: ObservableObject {
             allChatsModel.deleteMessages(chatId: chatId, messageIds: messageIds, messagesSetter: setMessages(messages:))
         }
     }
+    
+    func blockUser(userIdToBlock: String) {
+        if let userId = userId {
+            allChatsModel.blockUser(signedInUserId: userId, userIdToBlock: userIdToBlock)
+        }
+    }
 }

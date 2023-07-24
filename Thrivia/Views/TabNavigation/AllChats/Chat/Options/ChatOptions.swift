@@ -9,9 +9,17 @@ import SwiftUI
 
 struct ChatOptions: View {
     
+    @EnvironmentObject private var chatViewModel: ChatViewModel
+    
+    @State var showConfirmBlockAlert = false
+    
     let userId: String
     let backgroundColour: Color
     let name: String
+    
+    func blockUser() {
+        chatViewModel.blockUser(userIdToBlock: userId)
+    }
     
     var body: some View {
         ZStack {
@@ -28,7 +36,7 @@ struct ChatOptions: View {
                 
                 VStack(spacing: 15) {
                     Button {
-                        print("block")
+                        showConfirmBlockAlert = true
                     } label: {
                         HStack(alignment: .center) {
                             Image(systemName: "minus.circle.fill")
@@ -43,6 +51,15 @@ struct ChatOptions: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                     }
+                    .alert("Block", isPresented: $showConfirmBlockAlert, actions: {
+                        Button("Block", role: .destructive) {
+                            blockUser()
+                        }
+                        
+                        Button("Cancel", role: .cancel) {}
+                    }, message: {
+                        Text("Are you sure you want to block this user?")
+                    })
                 }
                 
                 Spacer()

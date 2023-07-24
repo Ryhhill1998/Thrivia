@@ -13,34 +13,64 @@ class AllChatsModel {
     private let db = Firestore.firestore()
     
     func listenToActiveUsers(userId: String, activeUsersSetter: @escaping ([OtherUser]) -> Void) {
-        db.collection("users").whereField("isActive", isEqualTo: true)
-            .addSnapshotListener { querySnapshot, error in
-                guard let documents = querySnapshot?.documents else {
-                    print("Error fetching documents: \(error!)")
-                    return
-                }
-
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                    return
-                }
+        // get user blocked IDs
+        let userDocRef = db.collection("users").document(userId)
+        
+        userDocRef.getDocument { (document, error) in
+            if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
+                let blockedUserIds = userData["blockedUserIds"] as? [String]
+                let setOfBlockedUserIds: Set<String> = Set(blockedUserIds ?? [])
                 
-                var activeUsers: [OtherUser] = []
+                self.db.collection("users")
+                    .whereField("isActive", isEqualTo: true)
+                    .addSnapshotListener { querySnapshot, error in
+                        guard let documents = querySnapshot?.documents else {
+                            print("Error fetching documents: \(error!)")
+                            return
+                        }
+                        
+                        if let error = error {
+                            print("Error getting documents: \(error)")
+                            return
+                        }
+                        
+                        var activeUsers: [OtherUser] = []
+                        
+                        for document in documents {
+                            // check if user is the signed in user
+                            if document.documentID == userId {
+                                continue
+                            }
+                            
+                            let data = document.data()
+                            
+                            // check if signed in user has blocked this user
+                            if setOfBlockedUserIds.contains(document.documentID) {
+                                print("signed in user has blocked this user")
+                                continue
+                            }
+                            
+                            // check if this user has blocked the signed in user
+                            if let otherUserBlockedIds = data["blockedUserIds"] as? [String] {
+                                let setOfOtherUserBlockedIds: Set<String> = Set(otherUserBlockedIds)
+                                
+                                if setOfOtherUserBlockedIds.contains(userId) {
+                                    print("this user has blocked the signed in user")
+                                    continue
+                                }
+                            }
 
-                for document in documents {
-                    let data = document.data()
-
-                    if document.documentID == userId { continue }
-
-                    if let username = data["username"] as? String,
-                        let iconColour = data["iconColour"] as? String {
-                        let otherUser = OtherUser(id: document.documentID, username: username, iconColour: Color(iconColour))
-                        activeUsers.append(otherUser)
+                            if let username = data["username"] as? String,
+                               let iconColour = data["iconColour"] as? String {
+                                let otherUser = OtherUser(id: document.documentID, username: username, iconColour: Color(iconColour))
+                                activeUsers.append(otherUser)
+                            }
+                        }
+                        
+                        activeUsersSetter(activeUsers)
                     }
-                }
-
-                activeUsersSetter(activeUsers)
             }
+        }
     }
     
     func listenForChatUpdates(userId: String, userChatsSetter: @escaping ([Chat]) -> Void) {
@@ -548,5 +578,13 @@ class AllChatsModel {
                 print("Failed to delete messages")
             }
         }
+    }
+    
+    func blockUser(signedInUserId: String, userIdToBlock: String) {
+        let docRef = db.collection("users").document(signedInUserId)
+        
+        docRef.updateData([
+            "blockedUserIds": FieldValue.arrayUnion([userIdToBlock])
+        ])
     }
 }

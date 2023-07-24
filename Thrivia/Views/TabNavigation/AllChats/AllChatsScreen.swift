@@ -103,6 +103,7 @@ struct AllChatsScreen: View {
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatsViewModel.chatIsLoaded) {
                 ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
+                    .environmentObject(authenticationViewModel)
             }
         }
         .accentColor(Color("Black"))
