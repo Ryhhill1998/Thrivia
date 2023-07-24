@@ -18,6 +18,7 @@ struct ChatScreen: View {
     @State var showConfirmDeleteAlert = false
     @State var isSelectedMode = false
     @State var selectedMessageIds: Set<String> = []
+    @State var navigateToOptions = false
     
     let userId: String
     let loadedChat: Chat?
@@ -125,8 +126,13 @@ struct ChatScreen: View {
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                Image(systemName: "ellipsis")
-                    .foregroundColor(Color("Black"))
+                Button {
+                    navigateToOptions = true
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .foregroundColor(Color("Black"))
+                }
+
             }
         }
         .toolbar(.visible, for: .navigationBar)
@@ -137,6 +143,13 @@ struct ChatScreen: View {
             chatViewModel.loadedChat = loadedChat
             
             chatViewModel.listenToChat()
+        }
+        .navigationDestination(isPresented: $navigateToOptions) {
+            if let userId = loadedChat?.otherUser.id,
+               let iconColour = loadedChat?.otherUser.iconColour,
+               let username = loadedChat?.otherUser.username {
+                ChatOptions(userId: userId, backgroundColour: iconColour, name: username)
+            }
         }
     }
 }
