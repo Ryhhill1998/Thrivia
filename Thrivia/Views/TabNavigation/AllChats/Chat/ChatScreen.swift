@@ -36,7 +36,11 @@ struct ChatScreen: View {
     }
     
     func selectMessage(messageId: String) {
-        selectedMessageIds.insert(messageId)
+        if selectedMessageIds.contains(messageId) {
+            selectedMessageIds.remove(messageId)
+        } else {
+            selectedMessageIds.insert(messageId)
+        }
     }
     
     func cancelSelectMode() {
@@ -85,7 +89,7 @@ struct ChatScreen: View {
             })
             
             if isSelectedMode {
-                SelectModeToolbar(messagesSelected: selectedMessageIds.count, cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
+                SelectModeToolbar(selectedItems: selectedMessageIds.count, itemName: "message", backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
             } else {
                 MessageField(sendPressed: sendPressed)
                     .background(Color("Background"))

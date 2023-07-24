@@ -13,8 +13,9 @@ struct MessagePreview: View {
     let name: String
     let backgroundColour: Color
     let lastMessage: String
-    let editMode: Bool
-    let onDelete: () -> Void
+    let isSelectMode: Bool
+    let isSelected: Bool
+    let selectChat: (String) -> Void
     
     var body: some View {
         HStack {
@@ -35,23 +36,28 @@ struct MessagePreview: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
+            .background(.white)
+            .cornerRadius(10)
+            .padding(.horizontal)
             
-            if editMode {
+            if isSelectMode {
                 Button {
-                    onDelete()
+                    selectChat(id)
                 } label: {
-                    Image(systemName: "trash")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.red)
-                        .padding(.horizontal)
+                    Circle()
+                        .frame(width: 25, height: 25)
+                        .foregroundColor(Color(isSelected ? "DarkGreen" : "Background"))
+                        .overlay {
+                            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(Color("White"))
+                        }
                 }
-
+                .padding(.leading, -10)
+                .padding(.trailing, 15)
             }
         }
-        .background(.white)
-        .cornerRadius(10)
-        .padding(.horizontal)
     }
 }
 
@@ -60,7 +66,7 @@ struct MessagePreview_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", editMode: true) { print("opening delete confirmation") }
+            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", isSelectMode: true, isSelected: true) { print($0) }
         }
     }
 }

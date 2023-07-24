@@ -59,6 +59,7 @@ class AllChatsViewModel: ObservableObject {
     }
     
     func loadChat(otherUser: OtherUser) {
+        print("loading chat")
         if let foundChat = (allChats.filter { $0.otherUser.id == otherUser.id }).first {
             setLoadedChat(loadedChat: foundChat, chatIsLoaded: true)
             allChatsModel.loadChat(chatId: foundChat.id, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))

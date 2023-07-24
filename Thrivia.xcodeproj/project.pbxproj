@@ -143,7 +143,6 @@
 				5B5411C02A61389F00A024E8 /* ChatScreen.swift */,
 				5B5411C42A6159EC00A024E8 /* MessageBubble.swift */,
 				5B5411C22A61566C00A024E8 /* MessageField.swift */,
-				5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -323,6 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				5B5411CA2A617AC700A024E8 /* Chat */,
+				5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */,
 				5BC6FE082A6050DB006459F8 /* UserIcon.swift */,
 				5BC6FDFA2A5EB372006459F8 /* AllChatsScreen.swift */,
 				5B8186C82A60552A0093853D /* MessagePreview.swift */,
