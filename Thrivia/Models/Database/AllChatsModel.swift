@@ -184,12 +184,32 @@ class AllChatsModel {
         }
     }
     
-    func loadChat(chatId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
-        if let conversation = retrieveConversationFromUserDefaults(chatId: chatId) {
-            let messages = conversation.messages
-            let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
-            chatSetter(chat, true)
-        }
+    func retrieveChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
+        let otherUserId = otherUser.id
+        
+        db.collection("chats")
+            .whereField("userIds", in: [[userId, otherUserId], [otherUserId, userId]])
+            .addSnapshotListener { querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
+                    print("Error fetching documents: \(error!)")
+                    return
+                }
+                
+                if let error = error {
+                    print("Error getting documents: \(error)")
+                    return
+                }
+                
+                if documents.isEmpty {
+                    self.createNewChat(userId: userId, otherUser: otherUser, chatSetter: chatSetter)
+                } else {
+                    for document in documents {
+                        let chatId = document.documentID
+                        let chat = Chat(id: chatId, otherUser: otherUser, messages: [])
+                        chatSetter(chat, true)
+                    }
+                }
+            }
     }
     
     func createNewChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {

@@ -30,7 +30,6 @@ class AllChatsViewModel: ObservableObject {
     }
     
     func setActiveUsers(activeUsers: [OtherUser]) {
-        print("Active users: \(activeUsers)")
         self.activeUsers = activeUsers
     }
     
@@ -68,12 +67,8 @@ class AllChatsViewModel: ObservableObject {
         allChatsModel.deleteChat(chatId: id)
     }
     
+    // fix this function to search for chat in database in case UI is not up to date rather than just creating a new chat
     func loadChat(otherUser: OtherUser) {
-        if let foundChat = (allChats.filter { $0.otherUser.id == otherUser.id }).first {
-            setLoadedChat(loadedChat: foundChat, chatIsLoaded: true)
-            allChatsModel.loadChat(chatId: foundChat.id, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
-        } else {
-            allChatsModel.createNewChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
-        }
+        allChatsModel.retrieveChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
     }
 }
