@@ -9,25 +9,75 @@ import SwiftUI
 
 struct MessageBubble: View {
     
-    let message: Message
     @State private var showTime = false
+    
+    let message: Message
+    let isSelectedMode: Bool
+    let isSelected: Bool
+    let messageSelected: (String) -> Void
+    
+    var backgroundColour: Color {
+        Color(message.sent ? "LightGreen" : "Green")
+    }
+    
+    var foregroundColour: Color {
+        Color(message.sent ? "DarkGreen" : "White")
+    }
+    
+    var alignment: Alignment {
+        message.sent ? .trailing : .leading
+    }
+    
+    var paddingEdge: Edge.Set {
+        message.sent ? .trailing : .leading
+    }
+    
+    var oppositePaddingEdge: Edge.Set {
+        message.sent ? .leading : .trailing
+    }
     
     var body: some View {
         VStack(alignment: message.sent ? .trailing : .leading) {
             HStack {
+                if isSelectedMode && !message.sent {
+                    Button {
+                        messageSelected(message.id)
+                    } label: {
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(Color("Green"))
+                    }
+                    .padding(oppositePaddingEdge, -15)
+                    .padding(paddingEdge, 10)
+                }
+                
                 Text(message.content)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
-                    .foregroundColor(Color(message.sent ? "DarkGreen" : "White"))
+                    .foregroundColor(foregroundColour)
                     .fontWeight(.semibold)
-                    .background(Color(message.sent ? "LightGreen" : "Green"))
+                    .background(backgroundColour)
                     .cornerRadius(15)
                     .frame(maxWidth: 300, alignment: message.sent ? .trailing : .leading)
-            }
-            .frame(maxWidth: .infinity, alignment: message.sent ? .trailing : .leading)
-            .padding(message.sent ? .trailing : .leading)
-            .onTapGesture {
-                showTime.toggle()
+                    .frame(maxWidth: .infinity, alignment: alignment)
+                    .padding(paddingEdge)
+                    .onTapGesture {
+                        showTime.toggle()
+                }
+                
+                if isSelectedMode && message.sent {
+                    Button {
+                        messageSelected(message.id)
+                    } label: {
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(Color("Green"))
+                    }
+                    .padding(oppositePaddingEdge, -15)
+                    .padding(paddingEdge, 10)
+                }
             }
             
             if showTime {
@@ -41,6 +91,6 @@ struct MessageBubble: View {
 
 struct MessageBubble_Previews: PreviewProvider {
     static var previews: some View {
-        MessageBubble(message: Message(id: "1", content: "Hello there! What is your favourite colour?", sent: true, timestamp: Date()))
+        MessageBubble(message: Message(id: "1", content: "Hello there! What is your favourite colour?", sent: false, timestamp: Date()), isSelectedMode: true, isSelected: false) { print($0) }
     }
 }

@@ -15,6 +15,10 @@ struct ChatScreen: View {
     
     @FocusState private var inputIsFocused: Bool
     
+    @State var showConfirmDeleteAlert = false
+    @State var isSelectedMode = false
+    @State var selectedMessageIds: Set<String> = []
+    
     let userId: String
     let loadedChat: Chat?
     
@@ -31,15 +35,31 @@ struct ChatScreen: View {
         presentationMode.wrappedValue.dismiss()
     }
     
+    func selectMessage(messageId: String) {
+        selectedMessageIds.insert(messageId)
+    }
+    
     var body: some View {
         VStack {
             VStack {
                 ScrollViewReader { value in
                     ScrollView {
                         ForEach(Array(chatViewModel.messages.enumerated()), id: \.offset) { index, message in
-                            MessageBubble(message: message)
+                            MessageBubble(message: message, isSelectedMode: isSelectedMode, isSelected: selectedMessageIds.contains(message.id), messageSelected: selectMessage(messageId:))
                                 .padding(.bottom, 5.0)
                                 .padding(.top, index == 0 ? 15.0 : 0)
+                                .onLongPressGesture {
+                                    isSelectedMode = true
+                                }
+//                                .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
+//                                    Button("Delete", role: .destructive) {
+//                                        print("deleting message")
+//                                    }
+//                                    
+//                                    Button("Cancel", role: .cancel) {}
+//                                }, message: {
+//                                    Text("Are you sure you want to delete this message?")
+//                                })
                         }
                     }
                     .onChange(of: chatViewModel.lastMessageIndex) { _ in
