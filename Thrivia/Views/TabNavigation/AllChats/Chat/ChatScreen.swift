@@ -9,9 +9,11 @@ import SwiftUI
 
 struct ChatScreen: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    
     @StateObject private var chatViewModel = ChatViewModel()
     
-    @Environment(\.presentationMode) var presentationMode
+    @FocusState private var inputIsFocused: Bool
     
     let userId: String
     let loadedChat: Chat?
@@ -46,10 +48,14 @@ struct ChatScreen: View {
                 }
                 .padding(.top, 5.0)
             }
+            .onTapGesture {
+                inputIsFocused = false
+            }
             .background(Color("White"))
             
             MessageField(sendPressed: sendPressed)
                 .background(Color("Background"))
+                .focused($inputIsFocused)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
