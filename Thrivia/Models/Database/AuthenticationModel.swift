@@ -20,6 +20,10 @@ class AuthenticationModel {
         auth.addStateDidChangeListener { auth, user in
             let userId = user?.uid
             setAuthState(userId)
+            
+            if let userId = userId {
+                self.updateUserActivityStatusInDB(userId: userId, activityStatus: true)
+            }
         }
     }
     
@@ -101,13 +105,20 @@ class AuthenticationModel {
         }
     }
     
+    func updateUserActivityStatusInDB(userId: String, activityStatus: Bool) {
+        let docRef = db.collection("users").document(userId)
+        
+        docRef.updateData([
+            "isActive": activityStatus
+        ])
+    }
+    
     func LoginAuthUser(email: String, password: String,  errorSetter: @escaping (String) -> Void) {
         auth.signIn(withEmail: email, password: password) { authResult, error in
             if let authError = error {
                 errorSetter(authError.localizedDescription)
             } else {
-                let userId = authResult?.user.uid
-                print(userId ?? "none")
+                print("Successfully logged in")
             }
         }
     }
@@ -117,6 +128,7 @@ class AuthenticationModel {
         
         do {
             try firebaseAuth.signOut()
+            updateUserActivityStatusInDB(userId: userId, activityStatus: false)
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
             errorSetter(signOutError.localizedDescription)
