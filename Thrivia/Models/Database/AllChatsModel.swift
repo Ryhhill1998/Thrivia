@@ -74,83 +74,114 @@ class AllChatsModel {
     }
     
     func listenForChatUpdates(userId: String, userChatsSetter: @escaping ([Chat]) -> Void) {
-        db.collection("chats").whereField("userIds", arrayContains: userId)
-            .addSnapshotListener { querySnapshot, error in
-                guard let documents = querySnapshot?.documents else {
-                    print("Error fetching documents: \(error!)")
-                    return
-                }
-                
-                // initialise user chats array
-                var userChats: [Chat] = []
-                
-                // initialise chats dispatch group
-                let chatsDispatchGroup = DispatchGroup()
-                
-                for chatDoc in documents {
-                    let chatData = chatDoc.data()
-                    let chatId = chatDoc.documentID
-                    
-                    if let userIds = chatData["userIds"] as? [String] {
-                        // get other user data
-                        let otherUserId = userIds[0] == userId ? userIds[1] : userIds[0]
+        // get user blocked IDs
+        let userDocRef = db.collection("users").document(userId)
+        
+        userDocRef.getDocument { (document, error) in
+            if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
+                let blockedUserIds = userData["blockedUserIds"] as? [String]
+                let setOfBlockedUserIds: Set<String> = Set(blockedUserIds ?? [])
+             
+                // listen to chats
+                self.db.collection("chats").whereField("userIds", arrayContains: userId)
+                    .addSnapshotListener { querySnapshot, error in
+                        guard let documents = querySnapshot?.documents else {
+                            print("Error fetching documents: \(error!)")
+                            return
+                        }
                         
-                        let docRef = self.db.collection("users").document(otherUserId)
+                        // initialise user chats array
+                        var userChats: [Chat] = []
                         
-                        chatsDispatchGroup.enter()
+                        // initialise chats dispatch group
+                        let chatsDispatchGroup = DispatchGroup()
                         
-                        docRef.getDocument { (document, error) in
-                            if let otherUserDoc = document, otherUserDoc.exists {
-                                let otherUserData = otherUserDoc.data()
-                                if let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
-                                    
-                                    var numberOfUnreadMessages = 0
-                                    
-                                    // initialise messages dispatch group
-                                    let messagesDispatchGroup = DispatchGroup()
-                                    
-                                    if let messageIds = chatData["messageIds"] as? [String] {
-                                        // get message data
-                                        for messageId in messageIds {
-                                            let docRef = self.db.collection("messages").document(messageId)
+                        for chatDoc in documents {
+                            let chatData = chatDoc.data()
+                            let chatId = chatDoc.documentID
+                            
+                            if let userIds = chatData["userIds"] as? [String] {
+                                // get other user data
+                                let otherUserId = userIds[0] == userId ? userIds[1] : userIds[0]
+                                
+                                // check if signed in user has blocked this user
+                                if setOfBlockedUserIds.contains(otherUserId) {
+                                    print("signed in user has blocked this user")
+                                    continue
+                                }
+                                
+                                let docRef = self.db.collection("users").document(otherUserId)
+                                
+                                chatsDispatchGroup.enter()
+                                
+                                docRef.getDocument { (document, error) in
+                                    if let otherUserDoc = document, otherUserDoc.exists {
+                                        let otherUserData = otherUserDoc.data()
+                                        
+                                        // check if this user has blocked the signed in user
+                                        var userIsBlocked = false
+                                        
+                                        if let otherUserBlockedIds = otherUserData?["blockedUserIds"] as? [String] {
+                                            let setOfOtherUserBlockedIds: Set<String> = Set(otherUserBlockedIds)
                                             
-                                            messagesDispatchGroup.enter()
-                                            
-                                            docRef.getDocument { (document, error) in
-                                                if self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) != nil {
-                                                    numberOfUnreadMessages += 1
-                                                }
-                                                
-                                                messagesDispatchGroup.leave()
+                                            if setOfOtherUserBlockedIds.contains(userId) {
+                                                print("this user has blocked the signed in user")
+                                                userIsBlocked = true
                                             }
                                         }
-                                    }
-                                    
-                                    messagesDispatchGroup.notify(queue: .main) {
-                                        // retrieve stored conversation
-                                        let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
                                         
-                                        // initialise empty messages array
-                                        var messages: [Message] = conversation?.messages ?? []
-                                        
-                                        for _ in 0..<numberOfUnreadMessages {
-                                            messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, timestamp: Date.now))
+                                        if !userIsBlocked,
+                                            let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
+                                            
+                                            var numberOfUnreadMessages = 0
+                                            
+                                            // initialise messages dispatch group
+                                            let messagesDispatchGroup = DispatchGroup()
+                                            
+                                            if let messageIds = chatData["messageIds"] as? [String] {
+                                                // get message data
+                                                for messageId in messageIds {
+                                                    let docRef = self.db.collection("messages").document(messageId)
+                                                    
+                                                    messagesDispatchGroup.enter()
+                                                    
+                                                    docRef.getDocument { (document, error) in
+                                                        if self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) != nil {
+                                                            numberOfUnreadMessages += 1
+                                                        }
+                                                        
+                                                        messagesDispatchGroup.leave()
+                                                    }
+                                                }
+                                            }
+                                            
+                                            messagesDispatchGroup.notify(queue: .main) {
+                                                // retrieve stored conversation
+                                                let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
+                                                
+                                                // initialise empty messages array
+                                                var messages: [Message] = conversation?.messages ?? []
+                                                
+                                                for _ in 0..<numberOfUnreadMessages {
+                                                    messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, timestamp: Date.now))
+                                                }
+                                                
+                                                let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
+                                                userChats.append(chat)
+                                                chatsDispatchGroup.leave()
+                                            }
                                         }
-                                        
-                                        let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
-                                        userChats.append(chat)
-                                        chatsDispatchGroup.leave()
                                     }
                                 }
                             }
                         }
+                        
+                        chatsDispatchGroup.notify(queue: .main) {
+                            userChatsSetter(userChats)
+                        }
                     }
-                }
-                
-                chatsDispatchGroup.notify(queue: .main) {
-                    userChatsSetter(userChats)
-                }
             }
+        }
     }
     
     func loadChat(chatId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
