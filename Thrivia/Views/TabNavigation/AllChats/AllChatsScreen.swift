@@ -39,6 +39,7 @@ struct AllChatsScreen: View {
     }
     
     func deleteSelectedChats() {
+        chatsViewModel.deleteChats(chatIds: selectedChatIds)
         
         cancelSelectMode()
     }
@@ -76,18 +77,18 @@ struct AllChatsScreen: View {
                                             .onLongPressGesture {
                                                 isSelectedMode = true
                                             }
-                                            .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
-                                                Button("Delete", role: .destructive) {
-                                                    chatsViewModel.deleteChat(id: chat.id)
-                                                }
-                                                
-                                                Button("Cancel", role: .cancel) {}
-                                            }, message: {
-                                                Text("Are you sure you want to delete this chat?")
-                                            })
                                     }
                                 }
                             }
+                            .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
+                                Button("Delete", role: .destructive) {
+                                    deleteSelectedChats()
+                                }
+                                
+                                Button("Cancel", role: .cancel) {}
+                            }, message: {
+                                Text("Are you sure you want to delete these chats?")
+                            })
                         }
                     }
                     
@@ -96,6 +97,7 @@ struct AllChatsScreen: View {
                     }
                 }
             }
+            .toolbar(isSelectedMode ? .hidden : .visible, for: .tabBar)
             .navigationTitle("Chats")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)

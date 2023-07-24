@@ -50,16 +50,25 @@ class AllChatsViewModel: ObservableObject {
         self.chatIsLoaded = chatIsLoaded
     }
     
+    func deleteChats(chatIds: Set<String>) {
+        for chatId in chatIds {
+            deleteChat(id: chatId)
+        }
+    }
+    
     func deleteChat(id: String) {
-        allChats = allChats.filter { chat in
-            chat.id != id
+        if var foundChat = (allChats.filter { $0.id == id }).first {
+            foundChat.messages = []
+            
+            var updatedChats = allChats.filter { $0.id != id }
+            updatedChats.append(foundChat)
+            setAllChats(allChats: updatedChats)
         }
         
         allChatsModel.deleteChat(chatId: id)
     }
     
     func loadChat(otherUser: OtherUser) {
-        print("loading chat")
         if let foundChat = (allChats.filter { $0.otherUser.id == otherUser.id }).first {
             setLoadedChat(loadedChat: foundChat, chatIsLoaded: true)
             allChatsModel.loadChat(chatId: foundChat.id, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
