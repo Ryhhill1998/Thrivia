@@ -43,6 +43,7 @@ struct SelectModeToolbar: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
+        .padding(.top)
         .background(Color("Background"))
     }
 }

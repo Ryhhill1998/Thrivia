@@ -448,4 +448,16 @@ class Conversation {
     func resetMessages() {
         messages = []
     }
+    
+    func removeMessage(messageIds: Set<String>) {
+        var editedMessages: [Message] = []
+        
+        for message in messages {
+            if !messageIds.contains(message.id) {
+                editedMessages.append(message)
+            }
+        }
+        
+        messages = editedMessages
+    }
 }

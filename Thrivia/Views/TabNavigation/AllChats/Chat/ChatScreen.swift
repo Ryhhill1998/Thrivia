@@ -45,7 +45,9 @@ struct ChatScreen: View {
     }
     
     func deleteSelectedMessages() {
+        chatViewModel.deleteMessages(messageIds: selectedMessageIds)
         
+        cancelSelectMode()
     }
     
     var body: some View {

@@ -38,4 +38,10 @@ class ChatViewModel: ObservableObject {
             allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId)
         }
     }
+    
+    func deleteMessages(messageIds: Set<String>) {
+        if let chatId = loadedChat?.id {
+            allChatsModel.deleteMessages(chatId: chatId, messageIds: messageIds, messagesSetter: setMessages(messages:))
+        }
+    }
 }

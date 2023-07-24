@@ -530,4 +530,17 @@ class AllChatsModel {
             }
         }
     }
+    
+    func deleteMessages(chatId: String, messageIds: Set<String>, messagesSetter: ([Message]) -> Void) {
+        if let conversation = retrieveConversationFromUserDefaults(chatId: chatId) {
+            conversation.removeMessage(messageIds: messageIds)
+            
+            if saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
+                print("Messages successfully deleted")
+                messagesSetter(conversation.messages)
+            } else {
+                print("Failed to delete messages")
+            }
+        }
+    }
 }
