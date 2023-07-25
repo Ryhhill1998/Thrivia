@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import Firebase
 
 class AllChatsViewModel: ObservableObject {
+    
     var allChatsModel = AllChatsModel()
     var userId: String
+    var activeUsersListener: ListenerRegistration?
+    var allChatsListener: ListenerRegistration?
     
     @Published var activeUsers: [OtherUser] = []
     @Published var allChats: [Chat] = []
@@ -20,12 +24,12 @@ class AllChatsViewModel: ObservableObject {
         self.userId = userId
         
         if activeUsers.isEmpty {
-            allChatsModel.listenToActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:))
+            allChatsModel.listenToActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:)) { self.activeUsersListener = $0 }
         }
         
         // this needs to be fixed
         if allChats.isEmpty {
-            allChatsModel.listenForChatUpdates(userId: userId, userChatsSetter: setAllChats(allChats:))
+            allChatsModel.listenForChatUpdates(userId: userId, userChatsSetter: setAllChats(allChats:)) { self.allChatsListener = $0 }
         }
     }
     
@@ -69,5 +73,10 @@ class AllChatsViewModel: ObservableObject {
     
     func loadChat(otherUser: OtherUser) {
         allChatsModel.retrieveChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
+    }
+    
+    func removeListeners() {
+        activeUsersListener?.remove()
+        allChatsListener?.remove()
     }
 }

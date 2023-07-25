@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ChatScreen: View {
     
-    @EnvironmentObject private var allChatsViewModel: AllChatsViewModel
-    
     @Environment(\.presentationMode) var presentationMode
     
     @StateObject private var chatViewModel = ChatViewModel()
@@ -105,9 +103,7 @@ struct ChatScreen: View {
             }
         }
         .onDisappear() {
-            allChatsViewModel.loadedChat = nil
             chatViewModel.removeListener()
-            chatViewModel.loadedChat = nil
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {

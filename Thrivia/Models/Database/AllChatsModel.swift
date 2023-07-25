@@ -12,7 +12,7 @@ class AllChatsModel {
     
     private let db = Firestore.firestore()
     
-    func listenToActiveUsers(userId: String, activeUsersSetter: @escaping ([OtherUser]) -> Void) {
+    func listenToActiveUsers(userId: String, activeUsersSetter: @escaping ([OtherUser]) -> Void, listenerSetter: @escaping (ListenerRegistration) -> Void) {
         // get user blocked IDs
         let userDocRef = db.collection("users").document(userId)
         
@@ -70,12 +70,12 @@ class AllChatsModel {
                         activeUsersSetter(activeUsers)
                     }
                 
-//                listener.remove()
+                listenerSetter(listener)
             }
         }
     }
     
-    func listenForChatUpdates(userId: String, userChatsSetter: @escaping ([Chat]) -> Void) {
+    func listenForChatUpdates(userId: String, userChatsSetter: @escaping ([Chat]) -> Void, listenerSetter: @escaping (ListenerRegistration) -> Void) {
         // get user blocked IDs
         let userDocRef = db.collection("users").document(userId)
         
@@ -183,7 +183,7 @@ class AllChatsModel {
                         }
                     }
                 
-//                listener.remove()
+                listenerSetter(listener)
             }
         }
     }

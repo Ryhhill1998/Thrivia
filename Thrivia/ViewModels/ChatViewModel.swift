@@ -63,6 +63,5 @@ class ChatViewModel: ObservableObject {
     
     func removeListener() {
         chatListener?.remove()
-        print("listener removed")
     }
 }
