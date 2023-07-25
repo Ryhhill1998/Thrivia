@@ -138,21 +138,22 @@ class Conversation {
         return masterKey
     }
     
-    func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey {
+    func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey? {
+        // verify prekey signature
+        let signedPrekey = otherUser.signedPrekeySigning
+        let prekeySignature = otherUser.prekeySignature
+        let identityKey = otherUser.identityKey
+        let isValidSignature = signedPrekey.isValidSignature(prekeySignature, for: identityKey.rawRepresentation)
+        
+        if !isValidSignature {
+            return nil
+        }
+        
         // generate Diffie-Hellman shared secrets
         let dh1 = try! user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
         let dh2 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
         let dh3 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
         let dh4 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
-        
-        print()
-        print(otherUser.oneTimePrekey.rawRepresentation.base64EncodedString())
-        print()
-        
-        print("dh1: \(dh1)")
-        print("dh2: \(dh2)")
-        print("dh3: \(dh3)")
-        print("dh4: \(dh4)")
         
         // generate and return master key
         let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
@@ -223,12 +224,17 @@ class Conversation {
         return [chainKey, messageKey]
     }
     
-    func encryptMessage(messageData: Data, messageKey: SymmetricKey, associatedData: Data) -> Data {
-        let encryptedMessage = try! ChaChaPoly.seal(messageData, using: messageKey, authenticating: associatedData).combined
-        return encryptedMessage
+    func encryptMessage(messageData: Data, messageKey: SymmetricKey, associatedData: Data) -> Data? {
+        do {
+            let encryptedMessage = try ChaChaPoly.seal(messageData, using: messageKey, authenticating: associatedData).combined
+            
+            return encryptedMessage
+        } catch {
+            return nil
+        }
     }
     
-    func sendMessage(messageContent: String) -> EncryptedMessage {
+    func sendMessage(messageContent: String) -> EncryptedMessage? {
         // RESET ROOT CHAIN IF LAST MESSAGE RECEIVED
         if lastMessageReceived == nil || lastMessageReceived! {
             // if enters block, DH ratchet step is triggered
@@ -239,20 +245,20 @@ class Conversation {
             // calculate dh output
             let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.signedPrekey
             let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey)
-            print("DH output key: \(convertSymmetricKeyToByteSequence(symmetricKey: dhOutputKey).base64EncodedString())")
             
             // derive root chain and send chain keys from KDF output
             if rootChainKey == nil {
-                rootChainKey = generateSenderMasterKey(ephemeralKeyPrivate: dhRatchetPrivateKey)
-                print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
+                if let masterKey = generateSenderMasterKey(ephemeralKeyPrivate: dhRatchetPrivateKey) {
+                    rootChainKey = masterKey
+                } else {
+                    return nil
+                }
             }
             
             // derive and store new root and send chain keys
             let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey) // problem step
             rootChainKey = kdfRootOutput[0]
-            print("Updated root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
             sendChainKey = kdfRootOutput[1]
-            print("Send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())")
             
             // set previous send chain length equal to current send chain length
             previousSendChainLength = currentSendChainLength
@@ -264,9 +270,7 @@ class Conversation {
         // derive new send chain key and message key for encryption
         let kdfMessageOutput = kdfMessage(currentChainKey: sendChainKey!)
         sendChainKey = kdfMessageOutput[0]
-        print("Updated send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())")
         let messageKey = kdfMessageOutput[1]
-        print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())")
         
         // generate associated data
         let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
@@ -275,22 +279,24 @@ class Conversation {
         let messageData = messageContent.data(using: .utf8)!
         
         // encrypt message content
-        let encryptedMessage = encryptMessage(messageData: messageData, messageKey: messageKey, associatedData: associatedData)
-        
-        // create new message
-        let messageId = UUID().uuidString
-        
-        let message = EncryptedMessage(id: messageId, timestamp: Date.now, cipherText: encryptedMessage.base64EncodedString(), identityKey: user.identityKeyPublic.rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
-        
-        // set last message received to false since user sending this message
-        lastMessageReceived = false
-        
-        // increase length of current send chain
-        currentSendChainLength += 1
-        
-        messages.append(Message(id: messageId, content: messageContent, sent: true, read: true, timestamp: Date.now))
-        
-        return message
+        if let encryptedMessage = encryptMessage(messageData: messageData, messageKey: messageKey, associatedData: associatedData) {
+            // create new message
+            let messageId = UUID().uuidString
+            
+            let message = EncryptedMessage(id: messageId, timestamp: Date.now, cipherText: encryptedMessage.base64EncodedString(), identityKey: user.identityKeyPublic.rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
+            
+            // set last message received to false since user sending this message
+            lastMessageReceived = false
+            
+            // increase length of current send chain
+            currentSendChainLength += 1
+            
+            messages.append(Message(id: messageId, content: messageContent, sent: true, read: true, timestamp: Date.now))
+            
+            return message
+        } else {
+            return nil
+        }
     }
     
     func generateRecipientMasterKey(oneTimePrekeyIdentifier: Int, senderIdentityKey: Curve25519.KeyAgreement.PublicKey, ephemeralKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey {
@@ -300,21 +306,20 @@ class Conversation {
         let dh3 = try! user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
         let dh4 = try! user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
         
-        print()
-        print("identifier: \(oneTimePrekeyIdentifier)")
-        print("public one time prekey: \(user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].publicKey.rawRepresentation.base64EncodedString())")
-        print()
-        
         // generate and return master key
         let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
         return masterKey
     }
     
-    func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey, associatedData: Data) -> Data {
-        let cipherText = Data(base64Encoded: message.cipherText)!
-        let sealedBox = try! ChaChaPoly.SealedBox(combined: cipherText)
-        let decryptedData = try! ChaChaPoly.open(sealedBox, using: messageKey, authenticating: associatedData)
-        return decryptedData
+    func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey, associatedData: Data) -> Data? {
+        do {
+            let cipherText = Data(base64Encoded: message.cipherText)!
+            let sealedBox = try ChaChaPoly.SealedBox(combined: cipherText)
+            let decryptedData = try ChaChaPoly.open(sealedBox, using: messageKey, authenticating: associatedData)
+            return decryptedData
+        } catch {
+            return nil
+        }
     }
     
     func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
@@ -379,20 +384,16 @@ class Conversation {
                 
                 // calculate dh output
                 let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: ephemeralKey)
-                print("DH output key: \(convertSymmetricKeyToByteSequence(symmetricKey: dhOutputKey).base64EncodedString())")
                 
                 // derive root chain and send chain keys from KDF output
                 if rootChainKey == nil {
                     rootChainKey = generateRecipientMasterKey(oneTimePrekeyIdentifier: prekeyIdentifier, senderIdentityKey: senderIdentityKey, ephemeralKey: ephemeralKey)
-                    print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
                 }
                 
                 // derive and store new root and receive chain keys
                 let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey)
                 rootChainKey = kdfRootOutput[0]
-                print("Updated root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())")
                 receiveChainKey = kdfRootOutput[1]
-                print("Receive chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey!).base64EncodedString())")
                 
                 // reset receive chain length after Diffie-Hellman
                 currentReceiveChainLength = 0
@@ -417,9 +418,7 @@ class Conversation {
             // derive new receive chain key and message key for decryption
             let kdfMessageOutput = kdfMessage(currentChainKey: receiveChainKey!)
             receiveChainKey = kdfMessageOutput[0]
-            print("Updated receive chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey!).base64EncodedString())")
             messageKey = kdfMessageOutput[1]
-            print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())")
             
             // set last ephemeral key received to current ephemeral key
             lastEphemeralKeyReceived = ephemeralKey.rawRepresentation
@@ -437,12 +436,12 @@ class Conversation {
         let associatedData = generateAssociatedData(senderId: otherUser.id, senderIdentityKey: otherUser.identityKey.rawRepresentation, recipientId: user.id, recipientIdentityKey: user.identityKeyPublic.rawRepresentation)
         
         // decrypt message
-        let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData)
-        
-        // add new message object to messages array
-        let messageContent = String(data: decryptedData, encoding: .utf8)!
-        let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: Date.now)
-        messages.append(newMessage)
+        if let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData) {
+            // add new message object to messages array
+            let messageContent = String(data: decryptedData, encoding: .utf8)!
+            let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: Date.now)
+            messages.append(newMessage)
+        }
     }
     
     func resetMessages() {

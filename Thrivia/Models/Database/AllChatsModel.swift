@@ -514,12 +514,14 @@ class AllChatsModel {
                     }
                     
                     // create encrypted message using conversation object
-                    let encryptedMessage = conversation!.sendMessage(messageContent: content)
-                    
-                    // save conversation locally and to db
-                    if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
-                        // create message doc
-                        self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+                    if let encryptedMessage = conversation!.sendMessage(messageContent: content) {
+                        // save conversation locally and to db
+                        if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
+                            // create message doc
+                            self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+                        }
+                    } else {
+                        errorSetter("Error establishing encryption.")
                     }
                 }
             }
