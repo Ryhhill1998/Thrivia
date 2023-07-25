@@ -56,7 +56,7 @@ struct MessageBubble: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
                     .foregroundColor(foregroundColour)
-                    .fontWeight(.semibold)
+                    .fontWeight(.medium)
                     .background(backgroundColour)
                     .cornerRadius(15)
                     .frame(maxWidth: 300, alignment: message.sent ? .trailing : .leading)
@@ -91,6 +91,6 @@ struct MessageBubble: View {
 
 struct MessageBubble_Previews: PreviewProvider {
     static var previews: some View {
-        MessageBubble(message: Message(id: "1", content: "Hello there! What is your favourite colour?", sent: false, timestamp: Date()), isSelectedMode: true, isSelected: false) { print($0) }
+        MessageBubble(message: Message(id: "1", content: "Hello there! What is your favourite colour?", sent: false, read: true, timestamp: Date()), isSelectedMode: true, isSelected: false) { print($0) }
     }
 }

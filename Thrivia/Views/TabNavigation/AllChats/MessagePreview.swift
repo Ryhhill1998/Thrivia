@@ -13,6 +13,7 @@ struct MessagePreview: View {
     let name: String
     let backgroundColour: Color
     let lastMessage: String
+    let read: Bool
     let isSelectMode: Bool
     let isSelected: Bool
     let selectChat: (String) -> Void
@@ -32,6 +33,7 @@ struct MessagePreview: View {
                         .font(.custom("Montserrat", size: 13))
                         .lineLimit(1)
                         .foregroundColor(Color("Black"))
+                        .fontWeight(read ? .regular : .semibold)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -66,7 +68,7 @@ struct MessagePreview_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", isSelectMode: true, isSelected: true) { print($0) }
+            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", read: false, isSelectMode: true, isSelected: true) { print($0) }
         }
     }
 }

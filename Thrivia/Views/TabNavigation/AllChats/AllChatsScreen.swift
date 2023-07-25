@@ -73,7 +73,7 @@ struct AllChatsScreen: View {
                             VStack(spacing: 15.0) {
                                 ForEach(chatsViewModel.allChats) { chat in
                                     if chat.messages.last != nil {
-                                        MessagePreview(id: chat.id, name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, isSelectMode: isSelectedMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
+                                        MessagePreview(id: chat.id, name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, read: chat.messages.last!.read, isSelectMode: isSelectedMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
                                             .onTapGesture {
                                                 loadChat(otherUser: chat.otherUser)
                                             }

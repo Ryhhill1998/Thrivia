@@ -11,5 +11,6 @@ struct Message: Identifiable, Codable {
     let id: String
     let content: String
     let sent: Bool
+    let read: Bool
     let timestamp: Date
 }

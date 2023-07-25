@@ -288,7 +288,7 @@ class Conversation {
         // increase length of current send chain
         currentSendChainLength += 1
         
-        messages.append(Message(id: messageId, content: messageContent, sent: true, timestamp: Date.now))
+        messages.append(Message(id: messageId, content: messageContent, sent: true, read: true, timestamp: Date.now))
         
         return message
     }
@@ -441,7 +441,7 @@ class Conversation {
         
         // add new message object to messages array
         let messageContent = String(data: decryptedData, encoding: .utf8)!
-        let newMessage = Message(id: message.id, content: messageContent, sent: false, timestamp: Date.now)
+        let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: Date.now)
         messages.append(newMessage)
     }
     

@@ -73,7 +73,6 @@ struct ChatScreen: View {
                         value.scrollTo(chatViewModel.lastMessageIndex)
                     }
                 }
-                .padding(.top, 5.0)
             }
             .onTapGesture {
                 inputIsFocused = false

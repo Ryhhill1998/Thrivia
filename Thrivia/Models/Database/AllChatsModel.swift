@@ -132,7 +132,7 @@ class AllChatsModel {
                                         
                                         if !userIsBlocked, let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
                                             
-                                            var encryptedMessages: [EncryptedMessage] = []
+                                            var numberOfUnreadMessages = 0
                                             
                                             // initialise messages dispatch group
                                             let messagesDispatchGroup = DispatchGroup()
@@ -145,8 +145,8 @@ class AllChatsModel {
                                                     messagesDispatchGroup.enter()
                                                     
                                                     docRef.getDocument { (document, error) in
-                                                        if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
-                                                            encryptedMessages.append(encryptedMessage)
+                                                        if self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) != nil {
+                                                            numberOfUnreadMessages += 1
                                                         }
                                                         
                                                         messagesDispatchGroup.leave()
@@ -155,38 +155,19 @@ class AllChatsModel {
                                             }
                                             
                                             messagesDispatchGroup.notify(queue: .main) {
-                                                encryptedMessages.sort {
-                                                    $0.timestamp < $1.timestamp
+                                                // retrieve stored conversation
+                                                let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
+                                                
+                                                // initialise empty messages array
+                                                var messages: [Message] = conversation?.messages ?? []
+                                                
+                                                for _ in 0..<numberOfUnreadMessages {
+                                                    messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, read: false, timestamp: Date.now))
                                                 }
                                                 
-                                                // decrypt messages
-                                                if let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
-                                                    for message in encryptedMessages {
-                                                        // remove message doc from db
-                                                        self.removeMessageDocFromDB(messageId: message.id)
-                                                        
-                                                        // remove message ID from chat doc
-                                                        self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
-                                                        
-                                                        // decrypt message
-                                                        conversation.receiveMessage(message: message)
-                                                        
-                                                        // if first message, delete local private OTK, replace and send public key to server
-                                                        if conversation.lastMessageReceived == nil {
-                                                            let prekeyIdentifier = message.oneTimePreKeyIdentifier
-                                                            if let newOneTimePrekey = self.replaceOneTimePrekeyInUserDefaults(prekeyIdentifier: prekeyIdentifier) {
-                                                                self.saveOneTimePrekeyInDB(userId: userId, oneTimePrekey: newOneTimePrekey)
-                                                            }
-                                                        }
-                                                    }
-                                                    
-                                                    if self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
-                                                        let chat = Chat(id: chatId, otherUser: otherUser, messages: conversation.messages)
-                                                        userChats.append(chat)
-                                                    }
-                                                    
-                                                    chatsDispatchGroup.leave()
-                                                }
+                                                let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
+                                                userChats.append(chat)
+                                                chatsDispatchGroup.leave()
                                             }
                                         }
                                     }
@@ -557,18 +538,6 @@ class AllChatsModel {
         }
         
         return otherUser
-    }
-    
-    private func createMessageObjectFromData(userId: String, messageId: String, data: [String: Any]?) -> Message? {
-        var message: Message?
-        
-        if let content = data?["content"] as? String,
-           let senderId = data?["senderId"] as? String,
-           let timestamp = (data?["timestamp"] as? Timestamp)?.dateValue() {
-            message = Message(id: messageId, content: content, sent: senderId == userId, timestamp: timestamp)
-        }
-        
-        return message
     }
     
     private func retrieveCryptoUserFromUserDefaults() -> CryptoUser? {
