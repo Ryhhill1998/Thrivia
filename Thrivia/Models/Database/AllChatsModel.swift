@@ -441,16 +441,18 @@ class AllChatsModel {
         return false
     }
     
-    func checkMessageForBlockedWords(message: String) -> Bool {
+    func checkMessageForBlockedWords(message: String) -> String? {
         let words = message.split(separator: " ")
         
         for word in words {
-            if blockedWords.contains(String(word).lowercased()) {
-                return true
+            let word = String(word).lowercased()
+            
+            if blockedWords.contains(word) {
+                return word
             }
         }
         
-        return false
+        return nil
     }
     
     func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void) {
@@ -459,8 +461,8 @@ class AllChatsModel {
             return
         }
         
-        if checkMessageForBlockedWords(message: content) {
-            errorSetter("One of the words in your message is banned. Please use clean, polite language.")
+        if let blockedWord = checkMessageForBlockedWords(message: content) {
+            errorSetter("'\(blockedWord.capitalized)' is a banned word. Please use clean, polite language.")
             return
         }
         

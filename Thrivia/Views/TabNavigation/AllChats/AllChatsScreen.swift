@@ -100,9 +100,6 @@ struct AllChatsScreen: View {
                     }
                 }
             }
-            .onDisappear() {
-                chatsViewModel.removeListeners()
-            }
             .toolbar(isSelectedMode ? .hidden : .visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
