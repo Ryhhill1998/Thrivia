@@ -108,7 +108,6 @@ class AllChatsModel {
                                 
                                 // check if signed in user has blocked this user
                                 if setOfBlockedUserIds.contains(otherUserId) {
-                                    print("signed in user has blocked this user")
                                     continue
                                 }
                                 
@@ -127,15 +126,13 @@ class AllChatsModel {
                                             let setOfOtherUserBlockedIds: Set<String> = Set(otherUserBlockedIds)
                                             
                                             if setOfOtherUserBlockedIds.contains(userId) {
-                                                print("this user has blocked the signed in user")
                                                 userIsBlocked = true
                                             }
                                         }
                                         
-                                        if !userIsBlocked,
-                                            let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
+                                        if !userIsBlocked, let otherUser = self.createOtherUserObjectFromData(otherUserId: otherUserId, data: otherUserData) {
                                             
-                                            var numberOfUnreadMessages = 0
+                                            var encryptedMessages: [EncryptedMessage] = []
                                             
                                             // initialise messages dispatch group
                                             let messagesDispatchGroup = DispatchGroup()
@@ -148,8 +145,8 @@ class AllChatsModel {
                                                     messagesDispatchGroup.enter()
                                                     
                                                     docRef.getDocument { (document, error) in
-                                                        if self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) != nil {
-                                                            numberOfUnreadMessages += 1
+                                                        if let encryptedMessage = self.createEncryptedMessageObjectFromDocument(document: document, userId: userId) {
+                                                            encryptedMessages.append(encryptedMessage)
                                                         }
                                                         
                                                         messagesDispatchGroup.leave()
@@ -158,19 +155,38 @@ class AllChatsModel {
                                             }
                                             
                                             messagesDispatchGroup.notify(queue: .main) {
-                                                // retrieve stored conversation
-                                                let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
-                                                
-                                                // initialise empty messages array
-                                                var messages: [Message] = conversation?.messages ?? []
-                                                
-                                                for _ in 0..<numberOfUnreadMessages {
-                                                    messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, timestamp: Date.now))
+                                                encryptedMessages.sort {
+                                                    $0.timestamp < $1.timestamp
                                                 }
                                                 
-                                                let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
-                                                userChats.append(chat)
-                                                chatsDispatchGroup.leave()
+                                                // decrypt messages
+                                                if let conversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
+                                                    for message in encryptedMessages {
+                                                        // remove message doc from db
+                                                        self.removeMessageDocFromDB(messageId: message.id)
+                                                        
+                                                        // remove message ID from chat doc
+                                                        self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
+                                                        
+                                                        // decrypt message
+                                                        conversation.receiveMessage(message: message)
+                                                        
+                                                        // if first message, delete local private OTK, replace and send public key to server
+                                                        if conversation.lastMessageReceived == nil {
+                                                            let prekeyIdentifier = message.oneTimePreKeyIdentifier
+                                                            if let newOneTimePrekey = self.replaceOneTimePrekeyInUserDefaults(prekeyIdentifier: prekeyIdentifier) {
+                                                                self.saveOneTimePrekeyInDB(userId: userId, oneTimePrekey: newOneTimePrekey)
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    if self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
+                                                        let chat = Chat(id: chatId, otherUser: otherUser, messages: conversation.messages)
+                                                        userChats.append(chat)
+                                                    }
+                                                    
+                                                    chatsDispatchGroup.leave()
+                                                }
                                             }
                                         }
                                     }
