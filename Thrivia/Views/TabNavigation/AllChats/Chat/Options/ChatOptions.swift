@@ -14,11 +14,12 @@ struct ChatOptions: View {
     @State var showConfirmBlockAlert = false
     
     let userId: String
+    let otherUserId: String
     let backgroundColour: Color
     let name: String
     
     func blockUser() {
-        blockedUsersViewModel.blockUser(userIdToBlock: userId)
+        blockedUsersViewModel.blockUser(userIdToBlock: otherUserId)
     }
     
     var body: some View {
@@ -84,6 +85,6 @@ struct ChatOptions: View {
 
 struct ChatOptions_Previews: PreviewProvider {
     static var previews: some View {
-        ChatOptions(userId: "1", backgroundColour: Color("IconColour1"), name: "ZigzagZebra24")
+        ChatOptions(userId: "1", otherUserId: "1", backgroundColour: Color("IconColour1"), name: "ZigzagZebra24")
     }
 }

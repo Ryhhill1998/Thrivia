@@ -153,10 +153,10 @@ struct ChatScreen: View {
             chatViewModel.listenToChat()
         }
         .navigationDestination(isPresented: $navigateToOptions) {
-            if let userId = loadedChat?.otherUser.id,
+            if let otherUserId = loadedChat?.otherUser.id,
                let iconColour = loadedChat?.otherUser.iconColour,
                let username = loadedChat?.otherUser.username {
-                ChatOptions(userId: userId, backgroundColour: iconColour, name: username)
+                ChatOptions(userId: userId, otherUserId: otherUserId, backgroundColour: iconColour, name: username)
             }
         }
     }
