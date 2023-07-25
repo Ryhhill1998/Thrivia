@@ -162,7 +162,7 @@ class AllChatsModel {
                                                 var messages: [Message] = conversation?.messages ?? []
                                                 
                                                 for _ in 0..<numberOfUnreadMessages {
-                                                    messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new messages", sent: false, read: false, timestamp: Date.now))
+                                                    messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new message\(numberOfUnreadMessages > 1 ? "s" : "")", sent: false, read: false, timestamp: Date.now))
                                                 }
                                                 
                                                 let chat = Chat(id: chatId, otherUser: otherUser, messages: messages)
