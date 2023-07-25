@@ -157,7 +157,6 @@ struct ChatScreen: View {
                let iconColour = loadedChat?.otherUser.iconColour,
                let username = loadedChat?.otherUser.username {
                 ChatOptions(userId: userId, backgroundColour: iconColour, name: username)
-                    .environmentObject(chatViewModel)
             }
         }
     }

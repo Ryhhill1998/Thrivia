@@ -12,7 +12,7 @@ class BlockedUsersModel {
     
     private let db = Firestore.firestore()
     
-    func blockUser(signedInUserId: String, userIdToBlock: String, errorSetter: @escaping (String) -> Void, errorRemover: @escaping () -> Void) {
+    func blockUser(signedInUserId: String, userIdToBlock: String, errorSetter: @escaping (String) -> Void, successSetter: @escaping () -> Void) {
         let docRef = db.collection("users").document(signedInUserId)
         
         docRef.getDocument { (document, error) in
@@ -23,12 +23,13 @@ class BlockedUsersModel {
                     
                     if userIsBlocked {
                         errorSetter("You have already blocked this user.")
+                        print("already blocked")
                     } else {
                         docRef.updateData([
                             "blockedUserIds": FieldValue.arrayUnion([userIdToBlock])
                         ])
                         
-                        errorRemover()
+                        successSetter()
                     }
                 }
             }

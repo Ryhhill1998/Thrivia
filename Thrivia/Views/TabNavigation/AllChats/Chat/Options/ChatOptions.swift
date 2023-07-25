@@ -60,6 +60,11 @@ struct ChatOptions: View {
                     }, message: {
                         Text("Are you sure you want to block this user?")
                     })
+                    .alert("Block success", isPresented: $blockedUsersViewModel.blockedSuccessfully, actions: {
+                        Button("OK", role: .cancel) {}
+                    }, message: {
+                        Text("User was blocked.")
+                    })
                     .alert("Block failed", isPresented: $blockedUsersViewModel.errorExists, actions: {
                         Button("OK", role: .cancel) {}
                     }, message: {
@@ -70,6 +75,9 @@ struct ChatOptions: View {
                 Spacer()
             }
             .padding(.top)
+        }
+        .onAppear() {
+            blockedUsersViewModel.userId = userId
         }
     }
 }
