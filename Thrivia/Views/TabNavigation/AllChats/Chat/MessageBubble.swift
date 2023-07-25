@@ -53,7 +53,8 @@ struct MessageBubble: View {
                 }
                 
                 Text(message.content)
-                    .padding(.horizontal, 12)
+                    .font(.custom("Montserrat", size: 15))
+                    .padding(.horizontal)
                     .padding(.vertical, 10)
                     .foregroundColor(foregroundColour)
                     .fontWeight(.medium)

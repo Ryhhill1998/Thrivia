@@ -34,14 +34,16 @@ struct CustomMessageTextField: View {
     let sendPressed: (String) -> Void
     
     var body: some View {
-        HStack(spacing: 10.0) {
+        HStack(alignment: .bottom, spacing: 10.0) {
             ZStack(alignment: .leading) {
-                TextField("Type something", text: $textFieldText)
-                    .frame(height: 35)
+                TextField("Type something", text: $textFieldText, axis: .vertical)
+                    .lineLimit(7)
+                    .padding(.vertical, 10)
+                    .frame(minHeight: 40)
                     .padding(.horizontal)
                     .background(.white)
                     .cornerRadius(15)
-                    .font(.headline)
+                    .font(.custom("Montserrat", size: 15))
                     .foregroundColor(Color("Black"))
             }
             
@@ -53,7 +55,7 @@ struct CustomMessageTextField: View {
             } label: {
                 Image(systemName: "paperplane.circle.fill")
                     .resizable()
-                    .frame(width: 35, height: 35)
+                    .frame(width: 40, height: 40)
                     .foregroundColor(Color("Green"))
                     .background(Color("White"))
                     .cornerRadius(17.5)
