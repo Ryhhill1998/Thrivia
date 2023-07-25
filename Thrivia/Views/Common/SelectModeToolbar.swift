@@ -10,7 +10,6 @@ import SwiftUI
 struct SelectModeToolbar: View {
     
     let selectedItems: Int
-    let itemName: String
     let backgroundColour: Color
     let cancel: () -> Void
     let delete: () -> Void
@@ -25,7 +24,7 @@ struct SelectModeToolbar: View {
                     .fontWeight(.medium)
             }
             
-            Text("\(selectedItems) \(itemName)s selected")
+            Text("\(selectedItems) selected")
                 .font(.custom("Montserrat", size: 14))
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -53,6 +52,6 @@ struct SelectModeToolbar: View {
 struct SelectModeToolbar_Previews: PreviewProvider {
     
     static var previews: some View {
-        SelectModeToolbar(selectedItems: 5, itemName: "message", backgroundColour: Color("Background"), cancel: {print("cancel")}, delete: {print("delete")})
+        SelectModeToolbar(selectedItems: 5, backgroundColour: Color("Background"), cancel: {print("cancel")}, delete: {print("delete")})
     }
 }

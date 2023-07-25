@@ -90,7 +90,7 @@ struct ChatScreen: View {
             })
             
             if isSelectedMode {
-                SelectModeToolbar(selectedItems: selectedMessageIds.count, itemName: "message", backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
+                SelectModeToolbar(selectedItems: selectedMessageIds.count, backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
             } else {
                 MessageField(sendPressed: sendPressed)
                     .background(Color("Background"))

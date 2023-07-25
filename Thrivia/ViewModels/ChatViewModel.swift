@@ -55,12 +55,6 @@ class ChatViewModel: ObservableObject {
         }
     }
     
-    func blockUser(userIdToBlock: String) {
-        if let userId = userId {
-            allChatsModel.blockUser(signedInUserId: userId, userIdToBlock: userIdToBlock)
-        }
-    }
-    
     func removeListener() {
         chatListener?.remove()
     }

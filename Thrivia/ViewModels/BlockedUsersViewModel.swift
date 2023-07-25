@@ -14,9 +14,27 @@ class BlockedUsersViewModel: ObservableObject {
     var userId: String?
     
     @Published var blockedUsers: [OtherUser] = []
+    @Published var error = ""
+    @Published var errorExists = false
     
     func setBlockedUsers(blockedUsers: [OtherUser]) {
         self.blockedUsers = blockedUsers
+    }
+    
+    func setError(error: String) {
+        self.error = error
+        errorExists = true
+    }
+    
+    func removeError() {
+        error = ""
+        errorExists = false
+    }
+    
+    func blockUser(userIdToBlock: String) {
+        if let userId = userId {
+            blockedUsersModel.blockUser(signedInUserId: userId, userIdToBlock: userIdToBlock, errorSetter: setError(error:), errorRemover: removeError)
+        }
     }
     
     func getBlockedUsers() {

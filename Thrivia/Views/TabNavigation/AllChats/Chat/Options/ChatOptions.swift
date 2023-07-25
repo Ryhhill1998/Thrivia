@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChatOptions: View {
     
-    @EnvironmentObject private var chatViewModel: ChatViewModel
+    @StateObject var blockedUsersViewModel = BlockedUsersViewModel()
     
     @State var showConfirmBlockAlert = false
     
@@ -18,7 +18,7 @@ struct ChatOptions: View {
     let name: String
     
     func blockUser() {
-        chatViewModel.blockUser(userIdToBlock: userId)
+        blockedUsersViewModel.blockUser(userIdToBlock: userId)
     }
     
     var body: some View {
@@ -59,6 +59,11 @@ struct ChatOptions: View {
                         Button("Cancel", role: .cancel) {}
                     }, message: {
                         Text("Are you sure you want to block this user?")
+                    })
+                    .alert("Block failed", isPresented: $blockedUsersViewModel.errorExists, actions: {
+                        Button("OK", role: .cancel) {}
+                    }, message: {
+                        Text(blockedUsersViewModel.error)
                     })
                 }
                 

@@ -660,12 +660,4 @@ class AllChatsModel {
             }
         }
     }
-    
-    func blockUser(signedInUserId: String, userIdToBlock: String) {
-        let docRef = db.collection("users").document(signedInUserId)
-        
-        docRef.updateData([
-            "blockedUserIds": FieldValue.arrayUnion([userIdToBlock])
-        ])
-    }
 }

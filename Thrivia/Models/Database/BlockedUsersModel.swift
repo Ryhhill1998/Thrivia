@@ -12,6 +12,29 @@ class BlockedUsersModel {
     
     private let db = Firestore.firestore()
     
+    func blockUser(signedInUserId: String, userIdToBlock: String, errorSetter: @escaping (String) -> Void, errorRemover: @escaping () -> Void) {
+        let docRef = db.collection("users").document(signedInUserId)
+        
+        docRef.getDocument { (document, error) in
+            if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
+                if let blockedUserIds = userData["blockedUserIds"] as? [String] {
+                    let setOfBlockedUserIds = Set(blockedUserIds)
+                    let userIsBlocked = setOfBlockedUserIds.contains(userIdToBlock)
+                    
+                    if userIsBlocked {
+                        errorSetter("You have already blocked this user.")
+                    } else {
+                        docRef.updateData([
+                            "blockedUserIds": FieldValue.arrayUnion([userIdToBlock])
+                        ])
+                        
+                        errorRemover()
+                    }
+                }
+            }
+        }
+    }
+    
     func getBlockedUsers(userId: String, blockedUsersSetter: @escaping ([OtherUser]) -> Void) {
         let userDocRef = db.collection("users").document(userId)
         

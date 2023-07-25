@@ -96,7 +96,7 @@ struct AllChatsScreen: View {
                     }
                     
                     if isSelectedMode {
-                        SelectModeToolbar(selectedItems: selectedChatIds.count, itemName: "chat", backgroundColour: Color("White"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
+                        SelectModeToolbar(selectedItems: selectedChatIds.count, backgroundColour: Color("White"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
                     }
                 }
             }
