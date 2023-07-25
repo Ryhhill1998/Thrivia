@@ -427,7 +427,24 @@ class AllChatsModel {
         return encryptedMessage
     }
     
+    func checkMessageForUrl(message: String) -> Bool {
+        let words = message.split(separator: " ")
+        
+        for word in words {
+            if let urlString = URL(string: String(word).lowercased()) {
+                return UIApplication.shared.canOpenURL(urlString)
+            }
+        }
+        
+        return false
+    }
+    
     func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void) {
+        if checkMessageForUrl(message: content) {
+            errorSetter("Sending URLs is forbidden.")
+            return
+        }
+        
         // get user blocked IDs
         let userDocRef = db.collection("users").document(senderId)
         
