@@ -21,17 +21,7 @@ struct RegisterScreen: View {
     @State var confirmPasswordBorderColour = Color.white
     
     func comparePasswords(password1: String, password2: String) {
-        var colour: Color
-        
-        if password1.isEmpty || password2.isEmpty {
-            colour = .white
-        } else if password1 == password2 {
-            colour = .green
-        } else {
-            colour = .red
-        }
-        
-        confirmPasswordBorderColour = colour
+        confirmPasswordBorderColour = authenticationViewModel.comparePasswords(password1: password1, password2: password2)
     }
     
     func registerClicked() {

@@ -5,7 +5,7 @@
 //  Created by Ryan Henzell-Hill on 15/07/2023.
 //
 
-import Foundation
+import SwiftUI
 import Firebase
 
 class AuthenticationViewModel: ObservableObject {
@@ -71,6 +71,20 @@ class AuthenticationViewModel: ObservableObject {
             setFetchingStatus(fetchingStatus: true)
             authenticationModel.registerUser(email: email, username: username, password: password, errorSetter: setError(error:))
         }
+    }
+    
+    func comparePasswords(password1: String, password2: String) -> Color {
+        var colour: Color
+        
+        if password1.isEmpty || password2.isEmpty {
+            colour = .white
+        } else if password1 == password2 {
+            colour = .green
+        } else {
+            colour = .red
+        }
+        
+        return colour
     }
     
     func logoutUser() {
