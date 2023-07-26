@@ -43,9 +43,7 @@ struct Counter: Codable {
     }
     
     mutating func getTimePassed(unitOfTime: UnitOfTime) -> Int {
-        if timePassedComponents == nil {
-            timePassedComponents = getTimePassedComponents()
-        }
+        timePassedComponents = getTimePassedComponents()
         
         let timePassedComponents = timePassedComponents!
         

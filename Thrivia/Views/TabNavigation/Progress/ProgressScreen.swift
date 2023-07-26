@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
-    @StateObject var counterViewModel = CounterViewModel(preview: false)
+    @ObservedObject var counterViewModel = CounterViewModel(preview: false)
     
     @State var inEditMode: Bool = false
     @State var showResetAlert = false
@@ -46,11 +46,8 @@ struct ProgressScreen: View {
                             
                             HStack {
                                 TimeDisplay(value: counterViewModel.timeValue1, units: counterViewModel.timeUnits1)
-                                
                                 TimeDisplay(value: counterViewModel.timeValue2, units: counterViewModel.timeUnits2)
-                                
                                 TimeDisplay(value: counterViewModel.timeValue3, units: counterViewModel.timeUnits3)
-                                
                                 TimeDisplay(value: counterViewModel.timeValue4, units: counterViewModel.timeUnits4)
                             }
                         }

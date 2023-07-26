@@ -19,6 +19,8 @@ struct CreateCounterScreen: View {
     @State var counterName = ""
     @State private var showEmptyNameAlert = false
     
+    let minDate = Calendar.current.date(byAdding: .year, value: -50, to: Date.now)!
+    
     func createCounterPreview(name: String, startDate: Date) {
         counterViewModelPreview.generatePreview(name: name, startDate: startDate)
     }
@@ -57,13 +59,13 @@ struct CreateCounterScreen: View {
                         .font(.custom("Montserrat", size: 18))
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
-                        .alert("Counter name cannot be empty", isPresented: $showEmptyNameAlert) {
+                        .alert("Counter name cannot be empty.", isPresented: $showEmptyNameAlert) {
                             Button("OK", role: .cancel) { }
                         }
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedDate, in: ...Date.now, displayedComponents: .date) {
+                    DatePicker(selection: $selectedDate, in: minDate...Date.now, displayedComponents: .date) {
                         Text("Start date")
                             .font(.custom("Montserrat", size: 18))
                             .foregroundColor(Color("Black"))
@@ -73,7 +75,7 @@ struct CreateCounterScreen: View {
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedDate, in: ...Date.now, displayedComponents: .hourAndMinute) {
+                    DatePicker(selection: $selectedDate, in: minDate...Date.now, displayedComponents: .hourAndMinute) {
                         Text("Start time")
                             .font(.custom("Montserrat", size: 18))
                             .foregroundColor(Color("Black"))
