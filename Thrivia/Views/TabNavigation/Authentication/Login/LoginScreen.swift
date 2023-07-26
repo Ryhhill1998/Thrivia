@@ -18,11 +18,7 @@ struct LoginScreen: View {
     @State var showPassword = false
     
     func login() {
-        if emailFieldText.isEmpty || passwordFieldText.isEmpty {
-            authenticationViewModel.setError(error: "All fields must be completed.")
-        } else {
-            authenticationViewModel.loginUser(email: emailFieldText, password: passwordFieldText)
-        }
+        authenticationViewModel.loginUser(email: emailFieldText, password: passwordFieldText)
     }
     
     var body: some View {
@@ -58,7 +54,7 @@ struct LoginScreen: View {
                         }
                         .padding(.horizontal, 20)
                         .foregroundColor(Color("Green"))
-
+                        
                     }
                     .background(Color("White"))
                     .cornerRadius(10)
@@ -79,7 +75,7 @@ struct LoginScreen: View {
                         }
                         .padding(.horizontal, 20)
                         .foregroundColor(Color("Green"))
-
+                        
                     }
                     .background(Color("White"))
                     .cornerRadius(10)
