@@ -58,6 +58,7 @@ struct RegisterScreen: View {
                 if !showPassword {
                     HStack {
                         SecureField("Password", text: $passwordFieldText)
+                            .textContentType(.oneTimeCode)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 10)
                             .font(.custom("Montserrat", size: 18))

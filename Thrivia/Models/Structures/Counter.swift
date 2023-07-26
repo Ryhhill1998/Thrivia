@@ -20,6 +20,8 @@ struct Counter: Codable {
     var edits = 0
     var resets = 0
     
+    var timePassedComponents: DateComponents?
+    
     init(name: String, start: Date) {
         self.init(id: UUID().uuidString, name: name, originalStart: start, start: start, edits: 0, resets: 0)
     }
@@ -33,25 +35,35 @@ struct Counter: Codable {
         self.resets = resets
     }
     
-    func getTimePassed(unitOfTime: UnitOfTime) -> Int {
+    func getTimePassedComponents() -> DateComponents {
         let now = Date.now
         let calendar = Calendar.current
         
+        return calendar.dateComponents([.year, .month, .weekOfYear, .day, .hour, .minute, .second], from: start, to: now)
+    }
+    
+    mutating func getTimePassed(unitOfTime: UnitOfTime) -> Int {
+        if timePassedComponents == nil {
+            timePassedComponents = getTimePassedComponents()
+        }
+        
+        let timePassedComponents = timePassedComponents!
+        
         switch unitOfTime {
         case UnitOfTime.years:
-            return calendar.dateComponents([.year], from: start, to: now).year ?? 0
+            return timePassedComponents.year ?? 0
         case UnitOfTime.months:
-            return calendar.dateComponents([.month], from: start, to: now).month ?? 0
+            return timePassedComponents.month ?? 0
         case UnitOfTime.weeks:
-            return calendar.dateComponents([.weekOfYear], from: start, to: now).weekOfYear ?? 0
+            return timePassedComponents.weekOfYear ?? 0
         case UnitOfTime.days:
-            return calendar.dateComponents([.day], from: start, to: now).day ?? 0
+            return timePassedComponents.day ?? 0
         case UnitOfTime.hours:
-            return calendar.dateComponents([.hour], from: start, to: now).hour ?? 0
+            return timePassedComponents.hour ?? 0
         case UnitOfTime.minutes:
-            return calendar.dateComponents([.minute], from: start, to: now).minute ?? 0
+            return timePassedComponents.minute ?? 0
         case UnitOfTime.seconds:
-            return calendar.dateComponents([.second], from: start, to: now).second ?? 0
+            return timePassedComponents.second ?? 0
         }
     }
     

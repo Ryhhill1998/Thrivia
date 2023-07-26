@@ -9,16 +9,10 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
-    @ObservedObject var counterViewModel: CounterViewModel
-    var userId: String
+    @StateObject var counterViewModel = CounterViewModel(preview: false)
     
     @State var inEditMode: Bool = false
     @State var showResetAlert = false
-    
-    init(userId: String) {
-        self.userId = userId
-        counterViewModel = CounterViewModel(userId: userId)
-    }
     
     var body: some View {
         NavigationStack {
@@ -88,17 +82,20 @@ struct ProgressScreen: View {
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterViewModel.counterNotCreated) {
-                CreateCounterScreen(userId: userId, navigationTitle: "Create a counter", counterViewModel: counterViewModel, buttonActionDescription: "Create")
+                CreateCounterScreen()
+                    .environmentObject(counterViewModel)
             }
             .navigationDestination(isPresented: $inEditMode) {
-                CreateCounterScreen(userId: userId, navigationTitle: "Edit counter", counterViewModel: counterViewModel, buttonActionDescription: "Save")
+                EditCounter(counterName: counterViewModel.counter?.name ?? "", startDate: counterViewModel.getCounterStart())
+                    .environmentObject(counterViewModel)
             }
         }
+        .accentColor(Color("Black"))
     }
 }
 
-struct ProgressScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        ProgressScreen(userId: "1")
-    }
-}
+//struct ProgressScreen_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProgressScreen()
+//    }
+//}

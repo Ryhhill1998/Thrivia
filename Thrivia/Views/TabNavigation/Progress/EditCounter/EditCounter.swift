@@ -1,13 +1,13 @@
 //
-//  CreateCounterScreen.swift
+//  EditCounter.swift
 //  Thrivia
 //
-//  Created by Ryan Henzell-Hill on 14/07/2023.
+//  Created by Ryan Henzell-Hill on 26/07/2023.
 //
 
 import SwiftUI
 
-struct CreateCounterScreen: View {
+struct EditCounter: View {
     
     @StateObject var counterViewModelPreview = CounterViewModel(preview: true)
     
@@ -15,19 +15,24 @@ struct CreateCounterScreen: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @State private var selectedDate = Date.now
-    @State var counterName = ""
+    @State private var selectedDate: Date
+    @State var counterName: String
     @State private var showEmptyNameAlert = false
+    
+    init(counterName: String, startDate: Date) {
+        _counterName = State(initialValue:  counterName)
+        _selectedDate = State(initialValue: startDate)
+    }
     
     func createCounterPreview(name: String, startDate: Date) {
         counterViewModelPreview.generatePreview(name: name, startDate: startDate)
     }
     
-    func createCounter() {
+    func saveCounter() {
         if counterName.isEmpty {
             showEmptyNameAlert = true
         } else {
-            counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+            counterViewModel.editCounter(newName: counterName, newStart: selectedDate)
             presentationMode.wrappedValue.dismiss()
         }
     }
@@ -87,8 +92,8 @@ struct CreateCounterScreen: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    createCounter()
+                ActionButton(text: "Save counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
+                    saveCounter()
                 }
                 
                 Spacer()
@@ -98,8 +103,13 @@ struct CreateCounterScreen: View {
             }
             .padding(.top)
         }
-        .navigationTitle("Create Counter")
-        .navigationBarBackButtonHidden(true)
+        .navigationTitle("Edit Counter")
         .toolbar(.hidden, for: .tabBar)
+    }
+}
+
+struct EditCounter_Previews: PreviewProvider {
+    static var previews: some View {
+        EditCounter(counterName: "Counter Name", startDate: Date.now)
     }
 }

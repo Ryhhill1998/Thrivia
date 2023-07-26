@@ -59,6 +59,7 @@
 		5BC6FE052A5FE1B1006459F8 /* ButtonAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */; };
 		5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE062A60508C006459F8 /* TimeDisplay.swift */; };
 		5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FE082A6050DB006459F8 /* UserIcon.swift */; };
+		5BCE87062A716F9B00B416FD /* EditCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE87052A716F9B00B416FD /* EditCounter.swift */; };
 		5BFBC0772A691B37005E89FC /* CodableConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0762A691B37005E89FC /* CodableConversation.swift */; };
 		5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0782A691CE4005E89FC /* StoredKey.swift */; };
 		5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC07A2A691D4E005E89FC /* Conversation.swift */; };
@@ -122,6 +123,7 @@
 		5BC6FE042A5FE1B1006459F8 /* ButtonAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAppearance.swift; sourceTree = "<group>"; };
 		5BC6FE062A60508C006459F8 /* TimeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplay.swift; sourceTree = "<group>"; };
 		5BC6FE082A6050DB006459F8 /* UserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIcon.swift; sourceTree = "<group>"; };
+		5BCE87052A716F9B00B416FD /* EditCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCounter.swift; sourceTree = "<group>"; };
 		5BFBC0762A691B37005E89FC /* CodableConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableConversation.swift; sourceTree = "<group>"; };
 		5BFBC0782A691CE4005E89FC /* StoredKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredKey.swift; sourceTree = "<group>"; };
 		5BFBC07A2A691D4E005E89FC /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 		5BC6FDE72A5EA2B4006459F8 /* Progress */ = {
 			isa = PBXGroup;
 			children = (
+				5BCE87042A716F7C00B416FD /* EditCounter */,
 				5BC6FDFE2A5EB3A6006459F8 /* ProgressScreen.swift */,
 				5BC6FE062A60508C006459F8 /* TimeDisplay.swift */,
 				5B5411CD2A6188CD00A024E8 /* CounterCreation */,
@@ -370,6 +373,14 @@
 				5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		5BCE87042A716F7C00B416FD /* EditCounter */ = {
+			isa = PBXGroup;
+			children = (
+				5BCE87052A716F9B00B416FD /* EditCounter.swift */,
+			);
+			path = EditCounter;
 			sourceTree = "<group>";
 		};
 		5BFBC0812A692B86005E89FC /* Crypto */ = {
@@ -507,6 +518,7 @@
 				5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */,
 				5B7A93612A6E75F20038A4C1 /* SelectModeToolbar.swift in Sources */,
 				5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */,
+				5BCE87062A716F9B00B416FD /* EditCounter.swift in Sources */,
 				5B5411D72A61EA2B00A024E8 /* CounterViewModel.swift in Sources */,
 				5BC6FDFB2A5EB372006459F8 /* AllChatsScreen.swift in Sources */,
 				5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */,

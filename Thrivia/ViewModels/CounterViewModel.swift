@@ -11,8 +11,6 @@ class CounterViewModel: ObservableObject {
     
     var counterModel = CounterModel()
     
-    var userId: String
-    
     var counter: Counter?
     
     @Published var counterNotCreated = true
@@ -27,12 +25,11 @@ class CounterViewModel: ObservableObject {
     @Published var timeValue3 = 0
     @Published var timeValue4 = 0
     
-    init(userId: String) {
-        self.userId = userId
-        
-        counter = counterModel.getStoredCounter()
-        
-        updateCounterCreationStatus()
+    init(preview: Bool) {
+        if !preview {
+            counter = counterModel.getStoredCounter()
+            updateCounterCreationStatus()
+        }
     }
     
     private func updateCounterCreationStatus() {
@@ -151,26 +148,26 @@ class CounterViewModel: ObservableObject {
     }
     
     func getMonthsPassed() -> Int {
-        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.months) ?? 0) % 12
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.months) ?? 0
     }
     
     func getWeeksPassed() -> Int {
-        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.weeks) ?? 0) % 4
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.weeks) ?? 0
     }
     
     func getDaysPassed() -> Int {
-        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.days) ?? 0) % 7
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.days) ?? 0
     }
     
     func getHoursPassed() -> Int {
-        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.hours) ?? 0) % 24
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.hours) ?? 0
     }
     
     func getMinutesPassed() -> Int {
-        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.minutes) ?? 0) % 60
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.minutes) ?? 0
     }
     
     func getSecondsPassed() -> Int {
-        return (counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.seconds) ?? 0) % 60
+        return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.seconds) ?? 0
     }
 }

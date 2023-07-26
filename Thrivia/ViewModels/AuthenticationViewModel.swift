@@ -67,6 +67,8 @@ class AuthenticationViewModel: ObservableObject {
             setError(error: "All fields must be completed.")
         } else if password != confirmPassword {
             setError(error: "Passwords do not match.")
+        } else if password.count < 6 {
+            setError(error: "All passwords must contain 6 or more characters.")
         } else {
             setFetchingStatus(fetchingStatus: true)
             authenticationModel.registerUser(email: email, username: username, password: password, errorSetter: setError(error:))

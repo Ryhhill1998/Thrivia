@@ -34,10 +34,11 @@ class AuthenticationModel {
                     print("Error getting documents: \(err)")
                 } else {
                     let foundDocuments = querySnapshot!.documents
+                    
                     if foundDocuments.isEmpty {
                         self.createAuthUser(email: email, username: username, password: password, errorSetter: errorSetter)
                     } else {
-                        errorSetter("An account already exists with that username.")
+                        errorSetter("The username is already in use by another account.")
                     }
                 }
             }

@@ -17,7 +17,7 @@ struct NavigationTab: View {
     var body: some View {
         TabView {
             if authenticationViewModel.authUserId != nil {
-                ProgressScreen(userId: authenticationViewModel.authUserId!)
+                ProgressScreen()
                     .tabItem {
                         Label("Progress", systemImage: "chart.bar.fill")
                     }
