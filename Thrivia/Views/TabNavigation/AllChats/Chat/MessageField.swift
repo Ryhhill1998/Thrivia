@@ -38,8 +38,9 @@ struct CustomMessageTextField: View {
             ZStack(alignment: .leading) {
                 TextField("Type something", text: $textFieldText, axis: .vertical)
                     .lineLimit(7)
-                    .padding(.vertical, 10)
-                    .frame(minHeight: 40)
+                    .lineSpacing(4)
+                    .padding(.vertical, 8)
+                    .frame(minHeight: 35)
                     .padding(.horizontal)
                     .background(.white)
                     .cornerRadius(15)
@@ -55,7 +56,7 @@ struct CustomMessageTextField: View {
             } label: {
                 Image(systemName: "paperplane.circle.fill")
                     .resizable()
-                    .frame(width: 40, height: 40)
+                    .frame(width: 35, height: 35)
                     .foregroundColor(Color("Green"))
                     .background(Color("White"))
                     .cornerRadius(17.5)
