@@ -36,7 +36,6 @@ class ProfileViewModel: ObservableObject {
     }
     
     func resetFetchStatus() {
-        print("resetting fetch status")
         setFetchStatus(fetchStatus: "idle")
     }
     
@@ -48,19 +47,19 @@ class ProfileViewModel: ObservableObject {
     }
     
     func setIconColourChangeError(message: String) {
-        setError(title: "Icon Colour Change Failure", message: message)
+        setError(title: "Change Failure", message: message)
     }
     
     func setEmailChangeError(message: String) {
-        setError(title: "Email Change Failure", message: message)
+        setError(title: "Change Failure", message: message)
     }
     
     func setUsernameChangeError(message: String) {
-        setError(title: "Username Change Failure", message: message)
+        setError(title: "Change Failure", message: message)
     }
     
     func setPasswordChangeError(message: String) {
-        setError(title: "Password Change Failure", message: message)
+        setError(title: "Change Failure", message: message)
     }
     
     func setUsername(username: String) {

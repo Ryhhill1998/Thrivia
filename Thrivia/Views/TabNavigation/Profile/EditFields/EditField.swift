@@ -102,6 +102,9 @@ struct EditField: View {
             }
             .padding(.top, 20.0)
         }
+        .onChange(of: newFieldValue, perform: { newValue in
+            profileViewModel.resetFetchStatus()
+        })
         .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
             Button("OK", role: .cancel) {}
         }, message: {

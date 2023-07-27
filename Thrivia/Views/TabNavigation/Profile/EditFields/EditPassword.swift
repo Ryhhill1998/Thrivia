@@ -122,6 +122,9 @@ struct EditPassword: View {
             }
             .padding(.top, 20.0)
         }
+        .onChange(of: newPassword, perform: { newValue in
+            profileViewModel.resetFetchStatus()
+        })
         .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
             Button("Okay", role: .cancel) {}
         }, message: {

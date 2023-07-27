@@ -21,6 +21,7 @@ struct EditIconColour: View {
     
     func updateIconColour() {
         profileViewModel.updateUserIconColour(newIconColour: selectedColour)
+        profileViewModel.resetFetchStatus()
     }
     
     func backPressed() {
