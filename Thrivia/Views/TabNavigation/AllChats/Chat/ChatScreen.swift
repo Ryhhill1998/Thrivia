@@ -64,8 +64,14 @@ struct ChatScreen: View {
                                 .onTapGesture {
                                     if isSelectMode {
                                         selectMessage(messageId: message.id)
+                                    } else if messageIdShowTime == message.id {
+                                        messageIdShowTime = nil
                                     } else {
                                         messageIdShowTime = message.id
+                                        
+                                        if index == chatViewModel.lastMessageIndex {
+                                            value.scrollTo(chatViewModel.lastMessageIndex)
+                                        }
                                     }
                                 }
                                 .onLongPressGesture {
