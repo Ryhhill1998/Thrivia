@@ -31,8 +31,6 @@ struct EditField: View {
         } else {
             profileViewModel.updateUserUsername(newUsername: newFieldValue)
         }
-        
-        newFieldValue = ""
     }
     
     func backPressed() {
@@ -108,6 +106,11 @@ struct EditField: View {
         }
         .onChange(of: newFieldValue, perform: { newValue in
             profileViewModel.resetFetchStatus()
+        })
+        .onChange(of: profileViewModel.fetchStatus, perform: { newValue in
+            if newValue == "success" {
+                newFieldValue = ""
+            }
         })
         .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
             Button("OK", role: .cancel) {}
