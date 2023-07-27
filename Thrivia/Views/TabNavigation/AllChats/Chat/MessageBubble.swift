@@ -9,10 +9,9 @@ import SwiftUI
 
 struct MessageBubble: View {
     
-    @State private var showTime = false
-    
     let message: Message
-    let isSelectedMode: Bool
+    let showTime: Bool
+    let isSelectMode: Bool
     let isSelected: Bool
     let messageSelected: (String) -> Void
     
@@ -39,7 +38,7 @@ struct MessageBubble: View {
     var body: some View {
         VStack(alignment: message.sent ? .trailing : .leading) {
             HStack {
-                if isSelectedMode && !message.sent {
+                if isSelectMode && !message.sent {
                     Button {
                         messageSelected(message.id)
                     } label: {
@@ -63,11 +62,8 @@ struct MessageBubble: View {
                     .frame(maxWidth: 300, alignment: message.sent ? .trailing : .leading)
                     .frame(maxWidth: .infinity, alignment: alignment)
                     .padding(paddingEdge)
-                    .onTapGesture {
-                        showTime.toggle()
-                }
                 
-                if isSelectedMode && message.sent {
+                if isSelectMode && message.sent {
                     Button {
                         messageSelected(message.id)
                     } label: {
@@ -92,6 +88,6 @@ struct MessageBubble: View {
 
 struct MessageBubble_Previews: PreviewProvider {
     static var previews: some View {
-        MessageBubble(message: Message(id: "1", content: "Hello there! What is your favourite colour?", sent: false, read: true, timestamp: Date()), isSelectedMode: true, isSelected: false) { print($0) }
+        MessageBubble(message: Message(id: "1", content: "Hello there! What is your favourite colour?", sent: false, read: true, timestamp: Date()), showTime: false, isSelectMode: true, isSelected: false) { print($0) }
     }
 }

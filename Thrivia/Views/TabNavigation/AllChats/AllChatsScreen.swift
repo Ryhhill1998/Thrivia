@@ -12,7 +12,7 @@ struct AllChatsScreen: View {
     @ObservedObject var chatsViewModel: AllChatsViewModel
     
     @State var showConfirmDeleteAlert = false
-    @State var isSelectedMode = false
+    @State var isSelectMode = false
     @State var selectedChatIds: Set<String> = []
     @State var navigateToBlockedList = false
     
@@ -37,7 +37,7 @@ struct AllChatsScreen: View {
     }
     
     func cancelSelectMode() {
-        isSelectedMode = false
+        isSelectMode = false
         selectedChatIds = []
     }
     
@@ -73,12 +73,16 @@ struct AllChatsScreen: View {
                             VStack(spacing: 15.0) {
                                 ForEach(chatsViewModel.allChats) { chat in
                                     if chat.messages.last != nil {
-                                        MessagePreview(id: chat.id, isActive: chatsViewModel.getUserActivityStatus(userId: chat.otherUser.id), name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, read: chat.messages.last!.read, isSelectMode: isSelectedMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
+                                        MessagePreview(id: chat.id, isActive: chatsViewModel.getUserActivityStatus(userId: chat.otherUser.id), name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, read: chat.messages.last!.read, isSelectMode: isSelectMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
                                             .onTapGesture {
-                                                loadChat(otherUser: chat.otherUser)
+                                                if !isSelectMode {
+                                                    loadChat(otherUser: chat.otherUser)
+                                                } else {
+                                                    selectChat(chatId: chat.id)
+                                                }
                                             }
                                             .onLongPressGesture {
-                                                isSelectedMode = true
+                                                isSelectMode = true
                                             }
                                     }
                                 }
@@ -90,17 +94,17 @@ struct AllChatsScreen: View {
                                 
                                 Button("Cancel", role: .cancel) {}
                             }, message: {
-                                Text("Are you sure you want to delete these chats?")
+                                Text("Are you sure you want to delete the selected chats?")
                             })
                         }
                     }
                     
-                    if isSelectedMode {
+                    if isSelectMode {
                         SelectModeToolbar(selectedItems: selectedChatIds.count, backgroundColour: Color("White"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
                     }
                 }
             }
-            .toolbar(isSelectedMode ? .hidden : .visible, for: .tabBar)
+            .toolbar(isSelectMode ? .hidden : .visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {

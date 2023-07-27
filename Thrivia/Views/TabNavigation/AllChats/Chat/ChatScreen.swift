@@ -16,9 +16,10 @@ struct ChatScreen: View {
     @FocusState private var inputIsFocused: Bool
     
     @State var showConfirmDeleteAlert = false
-    @State var isSelectedMode = false
+    @State var isSelectMode = false
     @State var selectedMessageIds: Set<String> = []
     @State var navigateToOptions = false
+    @State var messageIdShowTime: String?
     
     let userId: String
     let loadedChat: Chat?
@@ -41,7 +42,7 @@ struct ChatScreen: View {
     }
     
     func cancelSelectMode() {
-        isSelectedMode = false
+        isSelectMode = false
         selectedMessageIds = []
     }
     
@@ -57,11 +58,14 @@ struct ChatScreen: View {
                 ScrollViewReader { value in
                     ScrollView {
                         ForEach(Array(chatViewModel.messages.enumerated()), id: \.offset) { index, message in
-                            MessageBubble(message: message, isSelectedMode: isSelectedMode, isSelected: selectedMessageIds.contains(message.id), messageSelected: selectMessage(messageId:))
+                            MessageBubble(message: message, showTime: messageIdShowTime == message.id, isSelectMode: isSelectMode, isSelected: selectedMessageIds.contains(message.id), messageSelected: selectMessage(messageId:))
                                 .padding(.bottom, 5.0)
                                 .padding(.top, index == 0 ? 15.0 : 0)
+                                .onTapGesture {
+                                    messageIdShowTime = message.id
+                                }
                                 .onLongPressGesture {
-                                    isSelectedMode = true
+                                    isSelectMode = true
                                 }
                         }
                     }
@@ -84,7 +88,7 @@ struct ChatScreen: View {
                 Text("Are you sure you want to delete these messages?")
             })
             
-            if isSelectedMode {
+            if isSelectMode {
                 SelectModeToolbar(selectedItems: selectedMessageIds.count, backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
             } else {
                 MessageField()
