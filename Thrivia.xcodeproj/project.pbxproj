@@ -46,6 +46,7 @@
 		5B9792EA2A64566B00F078C6 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5B9792E92A64566B00F078C6 /* FirebaseFirestore */; };
 		5B9792EE2A646C2F00F078C6 /* AuthenticationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9792ED2A646C2F00F078C6 /* AuthenticationModel.swift */; };
 		5B97990E2A66D33300BB4537 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B97990D2A66D33300BB4537 /* ChatViewModel.swift */; };
+		5BA35DED2A72BB020010AA7F /* AvailableUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA35DEC2A72BB020010AA7F /* AvailableUser.swift */; };
 		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 		5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */; };
 		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
@@ -109,6 +110,7 @@
 		5B9792E42A6455AA00F078C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5B9792ED2A646C2F00F078C6 /* AuthenticationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationModel.swift; sourceTree = "<group>"; };
 		5B97990D2A66D33300BB4537 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		5BA35DEC2A72BB020010AA7F /* AvailableUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableUser.swift; sourceTree = "<group>"; };
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 		5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 				5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */,
 				5B4C0D502A6EF5FD002E0894 /* BlockedUsers */,
 				5B5411CA2A617AC700A024E8 /* Chat */,
+				5BA35DEC2A72BB020010AA7F /* AvailableUser.swift */,
 			);
 			path = AllChats;
 			sourceTree = "<group>";
@@ -539,6 +542,7 @@
 				5BC6FDFD2A5EB399006459F8 /* ProfileScreen.swift in Sources */,
 				5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */,
 				5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */,
+				5BA35DED2A72BB020010AA7F /* AvailableUser.swift in Sources */,
 				5BFBC07D2A6923EE005E89FC /* CryptoOtherUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

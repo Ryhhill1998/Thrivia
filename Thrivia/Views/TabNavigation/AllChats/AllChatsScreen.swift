@@ -131,23 +131,3 @@ struct ChatsScreen_Previews: PreviewProvider {
         AllChatsScreen(userId: "fL9uh1E9wrZGTgRt0twwmkxOzHg2")
     }
 }
-
-struct AvailableUser: View {
-    
-    let backgroundColour: Color
-    let name: String
-    
-    var body: some View {
-        VStack(alignment: .center, spacing: 8) {
-            ActiveUserIcon(size: "large", borderColour: .white, backgroundColour: backgroundColour, name: name)
-            
-            Text(name)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .frame(width: 65.0)
-                .font(.custom("Montserrat", size: 12))
-                .fontWeight(.medium)
-                .foregroundColor(Color("Black"))
-        }
-    }
-}
