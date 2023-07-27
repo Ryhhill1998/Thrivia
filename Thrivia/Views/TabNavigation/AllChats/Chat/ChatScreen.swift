@@ -62,10 +62,15 @@ struct ChatScreen: View {
                                 .padding(.bottom, 5.0)
                                 .padding(.top, index == 0 ? 15.0 : 0)
                                 .onTapGesture {
-                                    messageIdShowTime = message.id
+                                    if isSelectMode {
+                                        selectMessage(messageId: message.id)
+                                    } else {
+                                        messageIdShowTime = message.id
+                                    }
                                 }
                                 .onLongPressGesture {
                                     isSelectMode = true
+                                    messageIdShowTime = nil
                                 }
                         }
                     }
