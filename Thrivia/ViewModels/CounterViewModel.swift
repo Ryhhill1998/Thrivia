@@ -25,6 +25,10 @@ class CounterViewModel: ObservableObject {
     @Published var timeValue3 = 0
     @Published var timeValue4 = 0
     
+    @Published var errorTitle = ""
+    @Published var errorMessage = ""
+    @Published var errorExists = false
+    
     init(preview: Bool) {
         if !preview {
             counter = counterModel.getStoredCounter()
@@ -32,10 +36,23 @@ class CounterViewModel: ObservableObject {
         }
     }
     
+    private func resetError() {
+        errorExists = false
+        errorTitle = ""
+        errorMessage = ""
+    }
+    
+    private func setError(title: String, message: String) {
+        errorTitle = title
+        errorMessage = message
+        errorExists = true
+    }
+    
     private func updateCounterCreationStatus() {
         if counter != nil {
             counterNotCreated = false
             createTimerDisplay()
+            resetError()
         }
     }
     
@@ -49,10 +66,19 @@ class CounterViewModel: ObservableObject {
         }
     }
     
-    func createCounter(name: String, startDate: Date) {
-        // create counter object and store in User Defaults
-        counter = counterModel.createCounter(name: name, startDate: startDate)
-        updateCounterCreationStatus()
+    func createCounter(name: String, startDate: Date) -> Bool {
+        if name.isEmpty {
+            setError(title: "Creation failure", message: "Counter name cannot be empty.")
+            return false
+        } else if name.count > 20 {
+            setError(title: "Creation failure", message: "Counter name must include 20 characters or fewer.")
+            return false
+        } else {
+            // create counter object and store in User Defaults
+            counter = counterModel.createCounter(name: name, startDate: startDate)
+            updateCounterCreationStatus()
+            return true
+        }
     }
     
     func createTimerDisplay() {
@@ -61,10 +87,19 @@ class CounterViewModel: ObservableObject {
         }
     }
     
-    func editCounter(newName: String, newStart: Date) {
-        let updateOriginalStart = newStart < getCounterOriginalStart()
-        
-        counter = counterModel.editCounter(newName: newName, newStartDate: newStart, updateOriginalStart: updateOriginalStart)
+    func editCounter(newName: String, newStart: Date) -> Bool {
+        if newName.isEmpty {
+            setError(title: "Creation failure", message: "Counter name cannot be empty.")
+            return false
+        } else if newName.count > 20 {
+            setError(title: "Save failure", message: "Counter name must include 20 characters or fewer.")
+            return false
+        } else {
+            let updateOriginalStart = newStart < getCounterOriginalStart()
+            counter = counterModel.editCounter(newName: newName, newStartDate: newStart, updateOriginalStart: updateOriginalStart)
+            updateCounterCreationStatus()
+            return true
+        }
     }
     
     func resetCounter() {

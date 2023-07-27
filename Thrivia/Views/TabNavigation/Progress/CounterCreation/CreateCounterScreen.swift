@@ -26,10 +26,9 @@ struct CreateCounterScreen: View {
     }
     
     func createCounter() {
-        if counterName.isEmpty {
-            showEmptyNameAlert = true
-        } else {
-            counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+        let counterCreated = counterViewModel.createCounter(name: counterName, startDate: selectedDate)
+        
+        if counterCreated {
             presentationMode.wrappedValue.dismiss()
         }
     }
@@ -59,9 +58,11 @@ struct CreateCounterScreen: View {
                         .font(.custom("Montserrat", size: 18))
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
-                        .alert("Counter name cannot be empty.", isPresented: $showEmptyNameAlert) {
-                            Button("OK", role: .cancel) { }
-                        }
+                        .alert(counterViewModel.errorTitle, isPresented: $counterViewModel.errorExists, actions: {
+                            Button("OK", role: .cancel) {}
+                        }, message: {
+                            Text(counterViewModel.errorMessage)
+                        })
                     
                     LineSeparator()
                     
