@@ -28,10 +28,6 @@ struct ChatScreen: View {
         self.loadedChat = loadedChat
     }
     
-    func sendPressed(text: String) {
-        chatViewModel.sendMessage(content: text)
-    }
-    
     func backPressed() {
         presentationMode.wrappedValue.dismiss()
     }
@@ -91,7 +87,7 @@ struct ChatScreen: View {
             if isSelectedMode {
                 SelectModeToolbar(selectedItems: selectedMessageIds.count, backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
             } else {
-                MessageField(sendPressed: sendPressed)
+                MessageField()
                     .background(Color("Background"))
                     .focused($inputIsFocused)
                     .alert("Send failed", isPresented: $chatViewModel.errorExists, actions: {
@@ -99,6 +95,7 @@ struct ChatScreen: View {
                     }, message: {
                         Text(chatViewModel.sendError)
                     })
+                    .environmentObject(chatViewModel)
             }
         }
         .onDisappear() {

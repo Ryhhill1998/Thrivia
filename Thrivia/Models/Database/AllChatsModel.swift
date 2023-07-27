@@ -455,7 +455,7 @@ class AllChatsModel {
         return nil
     }
     
-    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void) {
+    func sendMessage(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void, messageSentSetter: @escaping () -> Void) {
         if checkMessageForUrl(message: content) {
             errorSetter("Sending URLs is forbidden.")
             return
@@ -519,6 +519,8 @@ class AllChatsModel {
                         if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
                             // create message doc
                             self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
+                            
+                            messageSentSetter()
                         }
                     } else {
                         errorSetter("Error establishing encryption.")

@@ -19,6 +19,7 @@ class ChatViewModel: ObservableObject {
     @Published var lastMessageIndex = 0
     @Published var sendError = ""
     @Published var errorExists = false
+    @Published var messageSent = false
     
     func setMessages(messages: [Message]) {
         self.messages = messages
@@ -37,10 +38,16 @@ class ChatViewModel: ObservableObject {
     }
     
     func sendMessage(content: String) {
+        if content.isEmpty {
+            setError(error: "Message cannot be empty.")
+        }
+        
         if let userId = userId,
            let chatId = loadedChat?.id,
            let otherUserId = loadedChat?.otherUser.id {
-            allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:))
+            allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
+                self.messageSent = true
+            }
         }
     }
     

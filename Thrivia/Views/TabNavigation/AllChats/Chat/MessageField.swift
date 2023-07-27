@@ -9,10 +9,11 @@ import SwiftUI
 
 struct MessageField: View {
     
-    let sendPressed: (String) -> Void
+    @EnvironmentObject var chatViewModel: ChatViewModel
     
     var body: some View {
-        CustomMessageTextField(sendPressed: sendPressed)
+        CustomMessageTextField()
+            .environmentObject(chatViewModel)
     }
 }
 
@@ -21,38 +22,36 @@ struct MessageField_Previews: PreviewProvider {
         ZStack {
             Color("Background")
             
-            MessageField { text in
-                print(text)
-            }
+            MessageField()
+                .environmentObject(ChatViewModel())
         }
     }
 }
 
 struct CustomMessageTextField: View {
+    
+    @EnvironmentObject var chatViewModel: ChatViewModel
+    
     @State var textFieldText: String = ""
     
-    let sendPressed: (String) -> Void
+    func sendPressed(text: String) {
+        chatViewModel.sendMessage(content: text)
+    }
     
     var body: some View {
         HStack(alignment: .bottom, spacing: 10.0) {
-            ZStack(alignment: .leading) {
-                TextField("Type something", text: $textFieldText, axis: .vertical)
-                    .lineLimit(7)
-                    .lineSpacing(4)
-                    .padding(.vertical, 8)
-                    .frame(minHeight: 35)
-                    .padding(.horizontal)
-                    .background(.white)
-                    .cornerRadius(15)
-                    .font(.custom("Montserrat", size: 15))
-                    .foregroundColor(Color("Black"))
-            }
+            TextField("Type something", text: $textFieldText, axis: .vertical)
+                .lineLimit(7)
+                .padding(.vertical, 8)
+                .frame(minHeight: 35)
+                .padding(.horizontal)
+                .background(.white)
+                .cornerRadius(15)
+                .font(.custom("Montserrat", size: 15))
+                .foregroundColor(Color("Black"))
             
             Button {
-                if textFieldText != "" {
-                    sendPressed(textFieldText)
-                    textFieldText = ""
-                }
+                sendPressed(text: textFieldText)
             } label: {
                 Image(systemName: "paperplane.circle.fill")
                     .resizable()
