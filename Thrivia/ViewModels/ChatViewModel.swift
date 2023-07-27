@@ -40,13 +40,13 @@ class ChatViewModel: ObservableObject {
     func sendMessage(content: String) {
         if content.isEmpty {
             setError(error: "Message cannot be empty.")
-        }
-        
-        if let userId = userId,
-           let chatId = loadedChat?.id,
-           let otherUserId = loadedChat?.otherUser.id {
-            allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
-                self.setMessageSent(messageSent: true)
+        } else {
+            if let userId = userId,
+               let chatId = loadedChat?.id,
+               let otherUserId = loadedChat?.otherUser.id {
+                allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
+                    self.setMessageSent(messageSent: true)
+                }
             }
         }
     }

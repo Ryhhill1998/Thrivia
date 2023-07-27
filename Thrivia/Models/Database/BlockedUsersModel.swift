@@ -17,20 +17,20 @@ class BlockedUsersModel {
         
         docRef.getDocument { (document, error) in
             if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
-                if let blockedUserIds = userData["blockedUserIds"] as? [String] {
-                    let setOfBlockedUserIds = Set(blockedUserIds)
-                    let userIsBlocked = setOfBlockedUserIds.contains(userIdToBlock)
+                let blockedUserIds = userData["blockedUserIds"] as? [String]
+                
+                let setOfBlockedUserIds = Set(blockedUserIds ?? [])
+                let userIsBlocked = setOfBlockedUserIds.contains(userIdToBlock)
+                
+                if userIsBlocked {
+                    errorSetter("You have already blocked this user.")
+                    print("already blocked")
+                } else {
+                    docRef.updateData([
+                        "blockedUserIds": FieldValue.arrayUnion([userIdToBlock])
+                    ])
                     
-                    if userIsBlocked {
-                        errorSetter("You have already blocked this user.")
-                        print("already blocked")
-                    } else {
-                        docRef.updateData([
-                            "blockedUserIds": FieldValue.arrayUnion([userIdToBlock])
-                        ])
-                        
-                        successSetter()
-                    }
+                    successSetter()
                 }
             }
         }

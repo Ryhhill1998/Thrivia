@@ -46,6 +46,12 @@ struct ChatScreen: View {
         selectedMessageIds = []
     }
     
+    func deleteButtonClicked() {
+        if !selectedMessageIds.isEmpty {
+            showConfirmDeleteAlert = true
+        }
+    }
+    
     func deleteSelectedMessages() {
         chatViewModel.deleteMessages(messageIds: selectedMessageIds)
         
@@ -59,8 +65,6 @@ struct ChatScreen: View {
                     ScrollView {
                         ForEach(Array(chatViewModel.messages.enumerated()), id: \.offset) { index, message in
                             MessageBubble(message: message, showTime: messageIdShowTime == message.id, isSelectMode: isSelectMode, isSelected: selectedMessageIds.contains(message.id), messageSelected: selectMessage(messageId:))
-                                .padding(.bottom, 5.0)
-                                .padding(.top, index == 0 ? 15.0 : 0)
                                 .onTapGesture {
                                     if isSelectMode {
                                         selectMessage(messageId: message.id)
@@ -78,6 +82,8 @@ struct ChatScreen: View {
                                     isSelectMode = true
                                     messageIdShowTime = nil
                                 }
+                                .padding(.bottom, 5.0)
+                                .padding(.top, index == 0 ? 15.0 : 0)
                         }
                     }
                     .onChange(of: chatViewModel.lastMessageIndex) { _ in
@@ -96,11 +102,11 @@ struct ChatScreen: View {
                 
                 Button("Cancel", role: .cancel) {}
             }, message: {
-                Text("Are you sure you want to delete these messages?")
+                Text("Are you sure you want to delete the selected messages?")
             })
             
             if isSelectMode {
-                SelectModeToolbar(selectedItems: selectedMessageIds.count, backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
+                SelectModeToolbar(selectedItems: selectedMessageIds.count, backgroundColour: Color("Background"), cancel: cancelSelectMode, delete: deleteButtonClicked)
             } else {
                 MessageField()
                     .background(Color("Background"))

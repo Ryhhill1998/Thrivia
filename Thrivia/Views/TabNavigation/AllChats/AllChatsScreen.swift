@@ -41,6 +41,12 @@ struct AllChatsScreen: View {
         selectedChatIds = []
     }
     
+    func deleteClicked() {
+        if !selectedChatIds.isEmpty {
+            showConfirmDeleteAlert = true
+        }
+    }
+    
     func deleteSelectedChats() {
         chatsViewModel.deleteChats(chatIds: selectedChatIds)
         
@@ -100,7 +106,7 @@ struct AllChatsScreen: View {
                     }
                     
                     if isSelectMode {
-                        SelectModeToolbar(selectedItems: selectedChatIds.count, backgroundColour: Color("White"), cancel: cancelSelectMode, delete: { showConfirmDeleteAlert = true })
+                        SelectModeToolbar(selectedItems: selectedChatIds.count, backgroundColour: Color("White"), cancel: cancelSelectMode, delete: deleteClicked)
                     }
                 }
             }
@@ -123,7 +129,7 @@ struct AllChatsScreen: View {
                 ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
             }
             .navigationDestination(isPresented: $navigateToBlockedList) {
-                BlockedUsers(userId: userId)
+                BlockedUsersScreen(userId: userId)
             }
         }
         .accentColor(Color("Black"))

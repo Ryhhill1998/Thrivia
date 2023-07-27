@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BlockedUsers: View {
+struct BlockedUsersScreen: View {
     
     @StateObject private var blockedUsersViewModel = BlockedUsersViewModel()
     
@@ -91,6 +91,6 @@ struct BlockedUsers: View {
 
 struct BlockedUsers_Previews: PreviewProvider {
     static var previews: some View {
-        BlockedUsers(userId: "VxxliXRk4of9K0XqHtgQExc1l9L2")
+        BlockedUsersScreen(userId: "VxxliXRk4of9K0XqHtgQExc1l9L2")
     }
 }
