@@ -91,50 +91,90 @@ class CounterViewModel: ObservableObject {
         return formatDate(date: getCounterStart())
     }
     
+    private func getPlural(time: String, quantity: Int) -> String {
+        return "\(time)\(quantity != 1 ? "s" : "")"
+    }
+    
+    private func calculateDaysInMonth(date: Date) -> Int {
+        let calendar = Calendar.current
+        let range = calendar.range(of: .day, in: .month, for: date)!
+        return range.count
+    }
+    
     func updateTimeDisplay() {
         let yearsPassed = getYearsPassed()
         let monthsPassed = getMonthsPassed()
-        let weeksPassed = getWeeksPassed()
-        let daysPassed = getDaysPassed()
+        var weeksPassed = getWeeksPassed()
+        var daysPassed = getDaysPassed()
         let hoursPassed = getHoursPassed()
         let minutesPassed = getMinutesPassed()
         let secondsPassed = getSecondsPassed()
         
+        // check for errors in built-in calculations
+        // get date of current month
+        let dateNow = Calendar.current.dateComponents([.day], from: Date.now).day!
+        // get date of start date month
+        let start = counter?.start ?? Date.now
+        let startDate = Calendar.current.dateComponents([.day], from: start).day!
+        
+        // check if start date is greater than current date and that start date is not equal to 31
+        if startDate > dateNow && startDate != 31 {
+            // get the number of days in start month
+            let daysInMonth = calculateDaysInMonth(date: start)
+            
+            // check if number of days is not equal to 30
+            if daysInMonth != 30 {
+                // get difference between 30 and days in month (can be negative or positive)
+                let difference = daysInMonth - 30
+                
+                // adjust weeks passed and days passed accordingly
+                if difference > 0 && daysPassed + difference >= 7 {
+                    daysPassed = (daysPassed + difference) % 7
+                    weeksPassed += 1
+                } else if daysPassed + difference < 0 {
+                    daysPassed += (7 + difference)
+                    weeksPassed -= 1
+                } else {
+                    daysPassed += difference
+                }
+            }
+        }
+        
         if yearsPassed > 0 {
-            timeUnits1 = "Years"
-            timeUnits2 = "Months"
-            timeUnits3 = "Weeks"
-            timeUnits4 = "Days"
+            timeUnits1 = getPlural(time: "Year", quantity: yearsPassed)
+            timeUnits2 = getPlural(time: "Month", quantity: monthsPassed)
+            timeUnits3 = getPlural(time: "Week", quantity: weeksPassed)
+            timeUnits4 = getPlural(time: "Day", quantity: daysPassed)
             
             timeValue1 = yearsPassed
             timeValue2 = monthsPassed
             timeValue3 = weeksPassed
             timeValue4 = daysPassed
         } else if monthsPassed > 0 {
-            timeUnits1 = "Months"
-            timeUnits2 = "Weeks"
-            timeUnits3 = "Days"
-            timeUnits4 = "Hours"
+            timeUnits1 = getPlural(time: "Month", quantity: monthsPassed)
+            timeUnits2 = getPlural(time: "Week", quantity: weeksPassed)
+            timeUnits3 = getPlural(time: "Day", quantity: daysPassed)
+            timeUnits4 = getPlural(time: "Hour", quantity: hoursPassed)
             
             timeValue1 = monthsPassed
             timeValue2 = weeksPassed
             timeValue3 = daysPassed
             timeValue4 = hoursPassed
         } else if weeksPassed > 0 {
-            timeUnits1 = "Weeks"
-            timeUnits2 = "Days"
-            timeUnits3 = "Hours"
-            timeUnits4 = "Minutes"
+            timeUnits1 = getPlural(time: "Week", quantity: weeksPassed)
+            timeUnits2 = getPlural(time: "Day", quantity: daysPassed)
+            timeUnits3 = getPlural(time: "Hour", quantity: hoursPassed)
+            timeUnits4 = getPlural(time: "Minute", quantity: minutesPassed)
             
             timeValue1 = weeksPassed
             timeValue2 = daysPassed
             timeValue3 = hoursPassed
             timeValue4 = minutesPassed
         } else {
-            timeUnits1 = "Days"
-            timeUnits2 = "Hours"
-            timeUnits3 = "Minutes"
-            timeUnits4 = "Seconds"
+            timeUnits1 = getPlural(time: "Day", quantity: daysPassed)
+            timeUnits2 = getPlural(time: "Hour", quantity: hoursPassed)
+            timeUnits3 = getPlural(time: "Minute", quantity: minutesPassed)
+            timeUnits4 = getPlural(time: "Second", quantity: secondsPassed)
             
             timeValue1 = daysPassed
             timeValue2 = hoursPassed
