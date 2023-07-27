@@ -49,6 +49,9 @@ struct CustomMessageTextField: View {
                 .cornerRadius(15)
                 .font(.custom("Montserrat", size: 15))
                 .foregroundColor(Color("Black"))
+                .onSubmit {
+                    sendPressed(text: textFieldText)
+                }
             
             Button {
                 sendPressed(text: textFieldText)
@@ -66,6 +69,14 @@ struct CustomMessageTextField: View {
             }
         }
         .padding()
+        .onChange(of: chatViewModel.messageSent) { newValue in
+            if newValue == true {
+                textFieldText = ""
+            }
+        }
+        .onChange(of: textFieldText) { newValue in
+            chatViewModel.resetMessageSent()
+        }
     }
 }
 

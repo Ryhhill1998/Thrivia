@@ -46,9 +46,17 @@ class ChatViewModel: ObservableObject {
            let chatId = loadedChat?.id,
            let otherUserId = loadedChat?.otherUser.id {
             allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
-                self.messageSent = true
+                self.setMessageSent(messageSent: true)
             }
         }
+    }
+    
+    func setMessageSent(messageSent: Bool) {
+        self.messageSent = messageSent
+    }
+    
+    func resetMessageSent() {
+        setMessageSent(messageSent: false)
     }
     
     func setError(error: String) {
