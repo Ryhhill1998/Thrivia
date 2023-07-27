@@ -10,6 +10,7 @@ import SwiftUI
 struct MessagePreview: View {
     
     let id: String
+    let isActive: Bool
     let name: String
     let backgroundColour: Color
     let lastMessage: String
@@ -21,7 +22,11 @@ struct MessagePreview: View {
     var body: some View {
         HStack {
             HStack(spacing: 15.0) {
-                UserIcon(size: "medium", borderColour: .white, backgroundColour: backgroundColour, name: name)
+                if isActive {
+                    ActiveUserIcon(size: "medium", borderColour: Color("White"), backgroundColour: backgroundColour, name: name)
+                } else {
+                    UserIcon(size: "medium", borderColour: Color("White"), backgroundColour: backgroundColour, name: name)
+                }
                 
                 VStack(alignment: .leading, spacing: 5) {
                     Text(name)
@@ -68,7 +73,7 @@ struct MessagePreview_Previews: PreviewProvider {
         ZStack {
             Color("Background").ignoresSafeArea()
             
-            MessagePreview(id: "1", name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", read: false, isSelectMode: true, isSelected: true) { print($0) }
+            MessagePreview(id: "1", isActive: true, name: "ZigzagZebra24", backgroundColour: .purple, lastMessage: "That’s what thrivia is here for! What would you like to talk about?", read: false, isSelectMode: true, isSelected: true) { print($0) }
         }
     }
 }

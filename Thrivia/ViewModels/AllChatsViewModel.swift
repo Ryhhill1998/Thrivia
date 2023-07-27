@@ -48,6 +48,10 @@ class AllChatsViewModel: ObservableObject {
         }
     }
     
+    func getUserActivityStatus(userId: String) -> Bool {
+        return activeUsers.contains { $0.id == userId }
+    }
+    
     func setLoadedChat(loadedChat: Chat, chatIsLoaded: Bool) {
         self.loadedChat = loadedChat
         self.chatIsLoaded = chatIsLoaded
