@@ -75,11 +75,14 @@ struct EditIconColour: View {
             }
             .padding(.top, 20.0)
         }
-        .alert("Update icon colour failure", isPresented: $profileViewModel.errorExists, actions: {
+        .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
             Button("Okay", role: .cancel) {}
         }, message: {
-            Text(profileViewModel.error)
+            Text(profileViewModel.errorMessage)
         })
+        .onDisappear() {
+            profileViewModel.resetFetchStatus()
+        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {

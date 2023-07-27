@@ -26,14 +26,13 @@ struct EditField: View {
     @State var newFieldValue = ""
     
     func saveField() {
-        if newFieldValue.isEmpty {
-            profileViewModel.setError(error: "New \(fieldType) cannot be empty.")
-        } else if fieldType == "email" {
+        if fieldType == "email" {
             profileViewModel.updateUserEmail(newEmail: newFieldValue)
         } else {
             profileViewModel.updateUserUsername(newUsername: newFieldValue)
-            newFieldValue = ""
         }
+        
+        newFieldValue = ""
     }
     
     func backPressed() {
@@ -103,11 +102,14 @@ struct EditField: View {
             }
             .padding(.top, 20.0)
         }
-        .alert("Update failure", isPresented: $profileViewModel.errorExists, actions: {
-            Button("Okay", role: .cancel) {}
+        .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
+            Button("OK", role: .cancel) {}
         }, message: {
-            Text(profileViewModel.error)
+            Text(profileViewModel.errorMessage)
         })
+        .onDisappear() {
+            profileViewModel.resetFetchStatus()
+        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {

@@ -115,7 +115,6 @@ struct ProfileScreen: View {
         .accentColor(Color("Black"))
         .onAppear() {
             profileViewModel.userId = userId
-            
             profileViewModel.getProfileData()
         }
     }

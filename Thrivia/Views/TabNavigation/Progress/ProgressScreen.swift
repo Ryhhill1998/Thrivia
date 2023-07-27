@@ -83,7 +83,7 @@ struct ProgressScreen: View {
                     .environmentObject(counterViewModel)
             }
             .navigationDestination(isPresented: $inEditMode) {
-                EditCounter(counterName: counterViewModel.counter?.name ?? "", startDate: counterViewModel.getCounterStart())
+                EditCounterScreen(counterName: counterViewModel.counter?.name ?? "", startDate: counterViewModel.getCounterStart())
                     .environmentObject(counterViewModel)
             }
         }

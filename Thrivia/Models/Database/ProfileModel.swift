@@ -12,13 +12,13 @@ class ProfileModel {
     
     private let db = Firestore.firestore()
     
-    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void, errorSetter: @escaping (String) -> Void, fetchStatusSetter: @escaping (String) -> Void) {
+    func getProfileData(userId: String, usernameSetter: @escaping (String) -> Void, emailSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void, fetchStatusSetter: @escaping (String) -> Void) {
         // connect to db and retrieve user data
         let docRef = db.collection("users").document(userId)
 
         docRef.getDocument { (document, error) in
             if let error = error {
-                errorSetter(error.localizedDescription)
+                print(error.localizedDescription)
             } else if let document = document, document.exists {
                 let data = document.data()
                 

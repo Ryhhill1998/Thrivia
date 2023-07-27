@@ -19,15 +19,9 @@ struct EditPassword: View {
     @State var showPassword = false
     
     func savePassword() {
-        if newPassword.isEmpty || confirmPassword.isEmpty {
-            profileViewModel.setError(error: "Fields must not be empty.")
-        } else if newPassword != confirmPassword {
-            profileViewModel.setError(error: "Passwords must match.")
-        } else {
-            profileViewModel.updateUserPassword(newPassword: newPassword)
-            newPassword = ""
-            confirmPassword = ""
-        }
+        profileViewModel.updateUserPassword(newPassword: newPassword, confirmPassword: confirmPassword)
+        newPassword = ""
+        confirmPassword = ""
     }
     
     func backPressed() {
@@ -128,11 +122,14 @@ struct EditPassword: View {
             }
             .padding(.top, 20.0)
         }
-        .alert("Update password failure", isPresented: $profileViewModel.errorExists, actions: {
+        .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
             Button("Okay", role: .cancel) {}
         }, message: {
-            Text(profileViewModel.error)
+            Text(profileViewModel.errorMessage)
         })
+        .onDisappear() {
+            profileViewModel.resetFetchStatus()
+        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {

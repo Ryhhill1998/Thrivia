@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EditCounter: View {
+struct EditCounterScreen: View {
     
     @StateObject var counterViewModelPreview = CounterViewModel(preview: true)
     
@@ -113,6 +113,6 @@ struct EditCounter: View {
 
 struct EditCounter_Previews: PreviewProvider {
     static var previews: some View {
-        EditCounter(counterName: "Counter Name", startDate: Date.now)
+        EditCounterScreen(counterName: "Counter Name", startDate: Date.now)
     }
 }
