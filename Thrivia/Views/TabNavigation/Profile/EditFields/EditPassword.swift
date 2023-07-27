@@ -122,6 +122,10 @@ struct EditPassword: View {
             }
             .padding(.top, 20.0)
         }
+        .onDisappear() {
+            profileViewModel.resetFetchStatus()
+            profileViewModel.resetError()
+        }
         .onChange(of: newPassword, perform: { newValue in
             profileViewModel.resetFetchStatus()
         })
@@ -130,9 +134,6 @@ struct EditPassword: View {
         }, message: {
             Text(profileViewModel.errorMessage)
         })
-        .onDisappear() {
-            profileViewModel.resetFetchStatus()
-        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {

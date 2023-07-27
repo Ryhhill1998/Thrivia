@@ -40,7 +40,21 @@ class ProfileModel {
     }
     
     func updateUserUsername(userId: String, newUsername: String, errorSetter: @escaping (String) -> Void, usernameSetter: @escaping (String) -> Void) {
-        updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, errorSetter: errorSetter, fieldSetter: usernameSetter)
+        // check if username already in use
+        db.collection("users").whereField("username", isEqualTo: newUsername)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    let foundDocuments = querySnapshot!.documents
+                    
+                    if foundDocuments.isEmpty {
+                        self.updateField(userId: userId, fieldName: "username", newFieldValue: newUsername, errorSetter: errorSetter, fieldSetter: usernameSetter)
+                    } else {
+                        errorSetter("The username is already in use by another account.")
+                    }
+                }
+            }
     }
     
     func updateUserIconColour(userId: String, newIconColour: String, errorSetter: @escaping (String) -> Void, iconColourSetter: @escaping (String) -> Void) {
@@ -70,7 +84,6 @@ class ProfileModel {
     private func updateField(userId: String, fieldName: String, newFieldValue: String, errorSetter: @escaping (String) -> Void, fieldSetter: @escaping (String) -> Void) {
         let docRef = db.collection("users").document(userId)
 
-        // Set the "capital" field of the city 'DC'
         docRef.updateData([
             fieldName: newFieldValue
         ]) { err in
@@ -78,7 +91,6 @@ class ProfileModel {
                 errorSetter(err.localizedDescription)
             } else {
                 print("Document successfully updated")
-                print(newFieldValue)
                 fieldSetter(newFieldValue)
             }
         }

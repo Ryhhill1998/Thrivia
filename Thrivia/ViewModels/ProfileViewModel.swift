@@ -46,6 +46,12 @@ class ProfileViewModel: ObservableObject {
         setFetchStatus(fetchStatus: "failure")
     }
     
+    func resetError() {
+        errorTitle = ""
+        errorMessage = ""
+        errorExists = false
+    }
+    
     func setIconColourChangeError(message: String) {
         setError(title: "Change Failure", message: message)
     }
@@ -83,7 +89,7 @@ class ProfileViewModel: ObservableObject {
         
         // don't update if it is the same value
         if newUsername == username {
-            setFetchStatus(fetchStatus: "success")
+            setUsernameChangeError(message: "Please enter a different username to your current one.")
             return
         }
         
@@ -101,7 +107,7 @@ class ProfileViewModel: ObservableObject {
         
         // don't update if it is the same value
         if newEmail == email {
-            setFetchStatus(fetchStatus: "success")
+            setEmailChangeError(message: "Please enter a different email to your current one.")
             return
         }
         
@@ -133,7 +139,7 @@ class ProfileViewModel: ObservableObject {
         
         // don't update if it is the same value
         if newIconColour == iconColourString {
-            setFetchStatus(fetchStatus: "success")
+            setIconColourChangeError(message: "Please select a different icon colour to your current one.")
             return
         }
         

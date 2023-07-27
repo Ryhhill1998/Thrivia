@@ -28,6 +28,7 @@ class AuthenticationModel {
     }
     
     func registerUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
+        // check if username already in use
         db.collection("users").whereField("username", isEqualTo: username)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
@@ -36,6 +37,7 @@ class AuthenticationModel {
                     let foundDocuments = querySnapshot!.documents
                     
                     if foundDocuments.isEmpty {
+                        // create new user if username not already in use
                         self.createAuthUser(email: email, username: username, password: password, errorSetter: errorSetter)
                     } else {
                         errorSetter("The username is already in use by another account.")

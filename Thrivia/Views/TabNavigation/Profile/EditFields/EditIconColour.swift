@@ -76,14 +76,15 @@ struct EditIconColour: View {
             }
             .padding(.top, 20.0)
         }
+        .onDisappear() {
+            profileViewModel.resetFetchStatus()
+            profileViewModel.resetError()
+        }
         .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
             Button("Okay", role: .cancel) {}
         }, message: {
             Text(profileViewModel.errorMessage)
         })
-        .onDisappear() {
-            profileViewModel.resetFetchStatus()
-        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {

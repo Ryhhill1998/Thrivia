@@ -102,6 +102,10 @@ struct EditField: View {
             }
             .padding(.top, 20.0)
         }
+        .onDisappear() {
+            profileViewModel.resetFetchStatus()
+            profileViewModel.resetError()
+        }
         .onChange(of: newFieldValue, perform: { newValue in
             profileViewModel.resetFetchStatus()
         })
@@ -110,9 +114,6 @@ struct EditField: View {
         }, message: {
             Text(profileViewModel.errorMessage)
         })
-        .onDisappear() {
-            profileViewModel.resetFetchStatus()
-        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -136,7 +137,7 @@ struct EditField: View {
 
 struct EditEmail_Previews: PreviewProvider {
     static var previews: some View {
-        EditField(fieldType: "username", currentFieldValue: "ZigzagZebra24@mail.com")
+        EditField(fieldType: "email", currentFieldValue: "ZigzagZebra24@mail.com")
             .environmentObject(ProfileViewModel())
     }
 }
