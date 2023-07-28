@@ -20,10 +20,6 @@ class AuthenticationModel {
         auth.addStateDidChangeListener { auth, user in
             let userId = user?.uid
             setAuthState(userId)
-            
-            if let userId = userId {
-                self.updateUserActivityStatusInDB(userId: userId, activityStatus: true)
-            }
         }
     }
     
@@ -111,15 +107,23 @@ class AuthenticationModel {
     func updateUserActivityStatusInDB(userId: String, activityStatus: Bool) {
         let docRef = db.collection("users").document(userId)
         
-        print(docRef.documentID)
-        
         docRef.updateData([
             "isActive": activityStatus
-        ]) { error in
-            print("doc ref being updated")
-        }
+        ])
+    }
+    
+    func retrieveSavedActivityStatusFromUserDefaults() -> Bool? {
+        let defaults = UserDefaults.standard
         
-        print("ghdklahdslkdghlk")
+        return defaults.object(forKey: "activityStatus") as? Bool
+    }
+    
+    func loadSavedActivityStatus(userId: String) {
+        let savedActivtiyStatus = retrieveSavedActivityStatusFromUserDefaults() ?? true
+        
+        print("saved activity status: \(savedActivtiyStatus)")
+        
+        updateUserActivityStatusInDB(userId: userId, activityStatus: savedActivtiyStatus)
     }
     
     func LoginAuthUser(email: String, password: String,  errorSetter: @escaping (String) -> Void) {

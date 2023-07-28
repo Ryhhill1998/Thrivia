@@ -687,4 +687,37 @@ class AllChatsModel {
             }
         }
     }
+    
+    func updateUserActivityStatus(userId: String, activityStatus: Bool) {
+        let userDocRef = db.collection("users").document(userId)
+        
+        userDocRef.updateData([
+            "isActive": activityStatus
+        ])
+    }
+    
+    func saveUserActivityStatus(userId: String, activityStatus: Bool) {
+        let defaults = UserDefaults.standard
+        
+        defaults.set(activityStatus, forKey: "activityStatus")
+        
+        updateUserActivityStatus(userId: userId, activityStatus: activityStatus)
+    }
+    
+    func getUserActivityStatus(userId: String, activityStatusSetter: @escaping (Bool) -> Void) {
+        let userDocRef = db.collection("users").document(userId)
+        
+        userDocRef.getDocument { document, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let data = document?.data() {
+                if let activityStatus = data["isActive"] as? Bool {
+                    activityStatusSetter(activityStatus)
+                }
+            }
+        }
+    }
 }

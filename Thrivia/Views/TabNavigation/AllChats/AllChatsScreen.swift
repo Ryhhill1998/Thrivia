@@ -14,7 +14,7 @@ struct AllChatsScreen: View {
     @State var showConfirmDeleteAlert = false
     @State var isSelectMode = false
     @State var selectedChatIds: Set<String> = []
-    @State var navigateToBlockedList = false
+    @State var navigateToSettings = false
     
     var userId: String
     
@@ -114,9 +114,9 @@ struct AllChatsScreen: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        navigateToBlockedList = true
+                        navigateToSettings = true
                     } label: {
-                        Image(systemName: "minus.circle")
+                        Image(systemName: "gearshape.fill")
                             .foregroundColor(Color("Black"))
                     }
 
@@ -128,8 +128,9 @@ struct AllChatsScreen: View {
             .navigationDestination(isPresented: $chatsViewModel.chatIsLoaded) {
                 ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
             }
-            .navigationDestination(isPresented: $navigateToBlockedList) {
-                BlockedUsersScreen(userId: userId)
+            .navigationDestination(isPresented: $navigateToSettings) {
+                ChatSettingsScreen(userId: userId)
+                    .environmentObject(chatsViewModel)
             }
         }
         .accentColor(Color("Black"))

@@ -9,10 +9,11 @@ import SwiftUI
 
 struct ChatSettingsScreen: View {
     
+    @EnvironmentObject var allChatsViewModel: AllChatsViewModel
+    
     @Environment(\.presentationMode) var presentationMode
     
-    @State var showConfirmUnblockAlert = false
-    @State var isActive = true
+    @State var showTurnOffActivityStatusAlert = false
     
     var userId: String
     
@@ -20,37 +21,69 @@ struct ChatSettingsScreen: View {
         presentationMode.wrappedValue.dismiss()
     }
     
+    func updateActivityStatus(status: Bool) {
+        allChatsViewModel.updateUserActivityStatus(activityStatus: status)
+    }
+    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
             
             ScrollView {
-                Toggle("Activity status", isOn: $isActive)
+                Toggle("Show activity status", isOn: $allChatsViewModel.activityStatus)
                     .font(.custom("Montserrat", size: 17))
                     .fontWeight(.medium)
+                    .foregroundColor(Color("Black"))
                     .frame(height: 55)
                     .padding(.horizontal)
                     .background(Color("White"))
                     .cornerRadius(10)
                     .padding(.horizontal)
                     .padding(.bottom, 1)
+                    .onChange(of: allChatsViewModel.activityStatus) { newValue in
+                        if newValue == true {
+                            updateActivityStatus(status: true)
+                        } else {
+                            showTurnOffActivityStatusAlert = true
+                        }
+                    }
+                    .alert("Hide activity status?", isPresented: $showTurnOffActivityStatusAlert, actions: {
+                        Button("Hide", role: .destructive) {
+                            updateActivityStatus(status: false)
+                        }
+                        
+                        Button("Cancel", role: .cancel) {
+                            allChatsViewModel.activityStatus = true
+                        }
+                    }, message: {
+                        Text("You won't be able to see when other users are active.")
+                    })
                 
-                HStack {
-                    Image(systemName: "minus.circle.fill")
-                        .foregroundColor(Color("Black"))
-                    
-                    Text("Blocked users")
+                NavigationLink {
+                    BlockedUsersScreen(userId: userId)
+                } label: {
+                    HStack {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundColor(Color("Black"))
+                        
+                        Text("Blocked users")
+                            .font(.custom("Montserrat", size: 17))
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("Black"))
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(height: 55)
+                    .padding(.horizontal)
+                    .background(Color("White"))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
                 }
-                .font(.custom("Montserrat", size: 17))
-                .fontWeight(.medium)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(height: 55)
-                .padding(.horizontal)
-                .background(Color("White"))
-                .cornerRadius(10)
-                .padding(.horizontal)
+
             }
             .padding(.top, 20)
+        }
+        .onAppear() {
+            allChatsViewModel.getActivityStatus()
         }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
@@ -77,5 +110,6 @@ struct ChatSettingsScreen: View {
 struct ChatSettingsScreen_Previews: PreviewProvider {
     static var previews: some View {
         ChatSettingsScreen(userId: "e7NhVK9n82Shd6UXyLDGzSuKqcD3")
+            .environmentObject(AllChatsViewModel(userId: "e7NhVK9n82Shd6UXyLDGzSuKqcD3"))
     }
 }
