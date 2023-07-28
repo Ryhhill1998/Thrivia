@@ -82,9 +82,6 @@ struct ChatSettingsScreen: View {
             }
             .padding(.top, 20)
         }
-        .onAppear() {
-            authenticationViewModel.getActivityStatus()
-        }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -110,6 +107,6 @@ struct ChatSettingsScreen: View {
 struct ChatSettingsScreen_Previews: PreviewProvider {
     static var previews: some View {
         ChatSettingsScreen(userId: "e7NhVK9n82Shd6UXyLDGzSuKqcD3")
-            .environmentObject(AllChatsViewModel(userId: "e7NhVK9n82Shd6UXyLDGzSuKqcD3"))
+            .environmentObject(AuthenticationViewModel())
     }
 }

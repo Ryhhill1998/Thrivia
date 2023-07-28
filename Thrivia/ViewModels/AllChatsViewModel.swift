@@ -11,7 +11,7 @@ import Firebase
 class AllChatsViewModel: ObservableObject {
     
     var allChatsModel = AllChatsModel()
-    var userId: String
+    var userId: String?
     var activeUsersListener: ListenerRegistration?
     var allChatsListener: ListenerRegistration?
     
@@ -20,15 +20,14 @@ class AllChatsViewModel: ObservableObject {
     @Published var loadedChat: Chat?
     @Published var chatIsLoaded = false
     
-    init(userId: String) {
-        self.userId = userId
-        
-        if activeUsers.isEmpty {
+    func listenToActiveUsers() {
+        if let userId = userId {
             allChatsModel.listenToActiveUsers(userId: userId, activeUsersSetter: setActiveUsers(activeUsers:)) { self.activeUsersListener = $0 }
         }
-        
-        // this needs to be fixed
-        if allChats.isEmpty {
+    }
+    
+    func listenToChats() {
+        if let userId = userId {
             allChatsModel.listenForChatUpdates(userId: userId, userChatsSetter: setAllChats(allChats:)) { self.allChatsListener = $0 }
         }
     }
@@ -76,7 +75,9 @@ class AllChatsViewModel: ObservableObject {
     }
     
     func loadChat(otherUser: OtherUser) {
-        allChatsModel.retrieveChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
+        if let userId = userId {
+            allChatsModel.retrieveChat(userId: userId, otherUser: otherUser, chatSetter: setLoadedChat(loadedChat:chatIsLoaded:))
+        }
     }
     
     func removeListeners() {

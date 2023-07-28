@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllChatsScreen: View {
     
-    @ObservedObject var chatsViewModel: AllChatsViewModel
+    @StateObject var chatsViewModel = AllChatsViewModel()
     
     @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
     
@@ -22,8 +22,6 @@ struct AllChatsScreen: View {
     
     init(userId: String) {
         self.userId = userId
-        
-        chatsViewModel = AllChatsViewModel(userId: userId)
     }
     
     func loadChat(otherUser: OtherUser) {
@@ -63,25 +61,27 @@ struct AllChatsScreen: View {
                 VStack {
                     ScrollView {
                         VStack(spacing: 25.0) {
-                            ScrollView(.horizontal) {
-                                HStack(spacing: 15.0) {
-                                    ForEach(chatsViewModel.activeUsers) { otherUser in
-                                        Button {
-                                            loadChat(otherUser: otherUser)
-                                        } label: {
-                                            AvailableUser(backgroundColour: otherUser.iconColour, name: otherUser.username)
+                            if authenticationViewModel.activityStatus == true {
+                                ScrollView(.horizontal) {
+                                    HStack(spacing: 15.0) {
+                                        ForEach(chatsViewModel.activeUsers) { otherUser in
+                                            Button {
+                                                loadChat(otherUser: otherUser)
+                                            } label: {
+                                                AvailableUser(backgroundColour: otherUser.iconColour, name: otherUser.username)
+                                            }
                                         }
                                     }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.top)
                                 }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal)
-                                .padding(.top)
                             }
                             
                             VStack(spacing: 15.0) {
                                 ForEach(chatsViewModel.allChats) { chat in
                                     if chat.messages.last != nil {
-                                        MessagePreview(id: chat.id, isActive: chatsViewModel.getUserActivityStatus(userId: chat.otherUser.id), name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, read: chat.messages.last!.read, isSelectMode: isSelectMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
+                                        MessagePreview(id: chat.id, isActive: authenticationViewModel.activityStatus == true && chatsViewModel.getUserActivityStatus(userId: chat.otherUser.id), name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, read: chat.messages.last!.read, isSelectMode: isSelectMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
                                             .onTapGesture {
                                                 if !isSelectMode {
                                                     loadChat(otherUser: chat.otherUser)
@@ -95,6 +95,7 @@ struct AllChatsScreen: View {
                                     }
                                 }
                             }
+                            .padding(.top, authenticationViewModel.activityStatus == true ? 0 : 20)
                             .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
                                 Button("Delete", role: .destructive) {
                                     deleteSelectedChats()
@@ -112,6 +113,13 @@ struct AllChatsScreen: View {
                     }
                 }
             }
+            .onAppear() {
+                chatsViewModel.userId = userId
+                chatsViewModel.listenToActiveUsers()
+                chatsViewModel.listenToChats()
+                
+                authenticationViewModel.getActivityStatus()
+            }
             .toolbar(isSelectMode ? .hidden : .visible, for: .tabBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -128,7 +136,7 @@ struct AllChatsScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $chatsViewModel.chatIsLoaded) {
-                ChatScreen(userId: chatsViewModel.userId, loadedChat: chatsViewModel.loadedChat ?? nil)
+                ChatScreen(userId: userId, loadedChat: chatsViewModel.loadedChat ?? nil)
             }
             .navigationDestination(isPresented: $navigateToSettings) {
                 ChatSettingsScreen(userId: userId)
@@ -142,5 +150,6 @@ struct AllChatsScreen: View {
 struct ChatsScreen_Previews: PreviewProvider {
     static var previews: some View {
         AllChatsScreen(userId: "fL9uh1E9wrZGTgRt0twwmkxOzHg2")
+            .environmentObject(AuthenticationViewModel())
     }
 }

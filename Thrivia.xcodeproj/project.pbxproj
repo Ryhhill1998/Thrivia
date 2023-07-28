@@ -360,9 +360,9 @@
 				5BC6FDFA2A5EB372006459F8 /* AllChatsScreen.swift */,
 				5B8186C82A60552A0093853D /* MessagePreview.swift */,
 				5B8186CA2A60994F0093853D /* ActiveUserIcon.swift */,
+				5BA35DEC2A72BB020010AA7F /* AvailableUser.swift */,
 				5BA35DEE2A7304FD0010AA7F /* ChatSettingsScreen */,
 				5B5411CA2A617AC700A024E8 /* Chat */,
-				5BA35DEC2A72BB020010AA7F /* AvailableUser.swift */,
 			);
 			path = AllChats;
 			sourceTree = "<group>";
