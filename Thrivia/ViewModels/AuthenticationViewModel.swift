@@ -15,6 +15,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var fetchingAuthStatus = false
     @Published var error: String = ""
     @Published var errorExists = false
+    @Published var activityStatus = false
     
     init() {
         authenticationModel.listenForAuthStateChanges(setAuthState: setAuthState(userId:))
@@ -45,6 +46,22 @@ class AuthenticationViewModel: ObservableObject {
         self.error = error
         errorExists = true
         setFetchingStatus(fetchingStatus: false)
+    }
+    
+    func getActivityStatus() {
+        if let userId = authUserId {
+            authenticationModel.getUserActivityStatus(userId: userId, activityStatusSetter: setActivityStatus(activityStatus:))
+        }
+    }
+    
+    func setActivityStatus(activityStatus: Bool) {
+        self.activityStatus = activityStatus
+    }
+    
+    func updateUserActivityStatus(activityStatus: Bool) {
+        if let userId = authUserId {
+            authenticationModel.saveUserActivityStatus(userId: userId, activityStatus: activityStatus)
+        }
     }
     
     func loginUser(email: String, password: String) {

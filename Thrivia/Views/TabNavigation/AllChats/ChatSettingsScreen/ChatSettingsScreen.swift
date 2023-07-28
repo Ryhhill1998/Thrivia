@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChatSettingsScreen: View {
     
-    @EnvironmentObject var allChatsViewModel: AllChatsViewModel
+    @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -22,7 +22,7 @@ struct ChatSettingsScreen: View {
     }
     
     func updateActivityStatus(status: Bool) {
-        allChatsViewModel.updateUserActivityStatus(activityStatus: status)
+        authenticationViewModel.updateUserActivityStatus(activityStatus: status)
     }
     
     var body: some View {
@@ -30,7 +30,7 @@ struct ChatSettingsScreen: View {
             Color("Background").ignoresSafeArea()
             
             ScrollView {
-                Toggle("Show activity status", isOn: $allChatsViewModel.activityStatus)
+                Toggle("Show activity status", isOn: $authenticationViewModel.activityStatus)
                     .font(.custom("Montserrat", size: 17))
                     .fontWeight(.medium)
                     .foregroundColor(Color("Black"))
@@ -40,7 +40,7 @@ struct ChatSettingsScreen: View {
                     .cornerRadius(10)
                     .padding(.horizontal)
                     .padding(.bottom, 1)
-                    .onChange(of: allChatsViewModel.activityStatus) { newValue in
+                    .onChange(of: authenticationViewModel.activityStatus) { newValue in
                         if newValue == true {
                             updateActivityStatus(status: true)
                         } else {
@@ -53,7 +53,7 @@ struct ChatSettingsScreen: View {
                         }
                         
                         Button("Cancel", role: .cancel) {
-                            allChatsViewModel.activityStatus = true
+                            authenticationViewModel.activityStatus = true
                         }
                     }, message: {
                         Text("You won't be able to see when other users are active.")
@@ -83,7 +83,7 @@ struct ChatSettingsScreen: View {
             .padding(.top, 20)
         }
         .onAppear() {
-            allChatsViewModel.getActivityStatus()
+            authenticationViewModel.getActivityStatus()
         }
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)

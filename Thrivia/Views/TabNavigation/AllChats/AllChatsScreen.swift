@@ -11,6 +11,8 @@ struct AllChatsScreen: View {
     
     @ObservedObject var chatsViewModel: AllChatsViewModel
     
+    @EnvironmentObject var authenticationViewModel: AuthenticationViewModel
+    
     @State var showConfirmDeleteAlert = false
     @State var isSelectMode = false
     @State var selectedChatIds: Set<String> = []
@@ -130,7 +132,7 @@ struct AllChatsScreen: View {
             }
             .navigationDestination(isPresented: $navigateToSettings) {
                 ChatSettingsScreen(userId: userId)
-                    .environmentObject(chatsViewModel)
+                    .environmentObject(authenticationViewModel)
             }
         }
         .accentColor(Color("Black"))

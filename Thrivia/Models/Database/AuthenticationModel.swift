@@ -20,6 +20,10 @@ class AuthenticationModel {
         auth.addStateDidChangeListener { auth, user in
             let userId = user?.uid
             setAuthState(userId)
+            
+            if let userId = userId {
+                self.loadSavedActivityStatus(userId: userId)
+            }
         }
     }
     
@@ -112,6 +116,31 @@ class AuthenticationModel {
         ])
     }
     
+    func saveUserActivityStatus(userId: String, activityStatus: Bool) {
+        let defaults = UserDefaults.standard
+        
+        defaults.set(activityStatus, forKey: "activityStatus")
+        
+        updateUserActivityStatusInDB(userId: userId, activityStatus: activityStatus)
+    }
+    
+    func getUserActivityStatus(userId: String, activityStatusSetter: @escaping (Bool) -> Void) {
+        let userDocRef = db.collection("users").document(userId)
+        
+        userDocRef.getDocument { document, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let data = document?.data() {
+                if let activityStatus = data["isActive"] as? Bool {
+                    activityStatusSetter(activityStatus)
+                }
+            }
+        }
+    }
+    
     func retrieveSavedActivityStatusFromUserDefaults() -> Bool? {
         let defaults = UserDefaults.standard
         
@@ -120,8 +149,6 @@ class AuthenticationModel {
     
     func loadSavedActivityStatus(userId: String) {
         let savedActivtiyStatus = retrieveSavedActivityStatusFromUserDefaults() ?? true
-        
-        print("saved activity status: \(savedActivtiyStatus)")
         
         updateUserActivityStatusInDB(userId: userId, activityStatus: savedActivtiyStatus)
     }

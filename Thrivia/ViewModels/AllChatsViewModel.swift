@@ -19,7 +19,6 @@ class AllChatsViewModel: ObservableObject {
     @Published var allChats: [Chat] = []
     @Published var loadedChat: Chat?
     @Published var chatIsLoaded = false
-    @Published var activityStatus = false
     
     init(userId: String) {
         self.userId = userId
@@ -32,14 +31,6 @@ class AllChatsViewModel: ObservableObject {
         if allChats.isEmpty {
             allChatsModel.listenForChatUpdates(userId: userId, userChatsSetter: setAllChats(allChats:)) { self.allChatsListener = $0 }
         }
-    }
-    
-    func getActivityStatus() {
-        allChatsModel.getUserActivityStatus(userId: userId, activityStatusSetter: setActivityStatus(activityStatus:))
-    }
-    
-    func setActivityStatus(activityStatus: Bool) {
-        self.activityStatus = activityStatus
     }
     
     func setActiveUsers(activeUsers: [OtherUser]) {
@@ -91,10 +82,5 @@ class AllChatsViewModel: ObservableObject {
     func removeListeners() {
         activeUsersListener?.remove()
         allChatsListener?.remove()
-    }
-    
-    func updateUserActivityStatus(activityStatus: Bool) {
-        allChatsModel.saveUserActivityStatus(userId: userId, activityStatus: activityStatus)
-        print("Status: \(activityStatus)")
     }
 }
