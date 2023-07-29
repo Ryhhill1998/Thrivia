@@ -275,9 +275,10 @@ class AllChatsModel {
                             if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                                let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
                                 let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
-                                let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
-                                conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
-                                self.decryptAndSetMessages(chatId: chatId, messageIds: messageIds, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
+                                if let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser) {
+                                    conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                                    self.decryptAndSetMessages(chatId: chatId, messageIds: messageIds, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
+                                }
                             }
                         }
                     }
@@ -483,11 +484,12 @@ class AllChatsModel {
                 
                 // get conversation data stored locally in user defaults
                 var conversation: Conversation?
-                
+                print("getting convo")
                 if let storedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
-                    print("Retrieved conversation: \(storedConversation)")
                     conversation = storedConversation
+                    print("got convo")
                 }
+                print("next step")
                 
                 let receiverDocRef = self.db.collection("users").document(receiverId)
                 
@@ -502,16 +504,17 @@ class AllChatsModel {
                     }
                     
                     if conversation == nil {
-                        // get stored crypto user
-                        let cryptoUser = self.retrieveCryptoUserFromUserDefaults()
-                        // get prekey bundle from server
-                        if let cryptoUser = cryptoUser,
+                        print("conversation is nil")
+                        // get stored crypto user and prekey bundle from server
+                        if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                            let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
+                            print("got crypto user and prekey bundle")
                             self.deleteOneTimePrekey(userId: receiverId, oneTimePrekey: prekeyBundle["oneTimePrekey"]!)
                             
                             let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
-                            let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
-                            conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                            if let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser) {
+                                conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                            }
                         }
                     }
                     

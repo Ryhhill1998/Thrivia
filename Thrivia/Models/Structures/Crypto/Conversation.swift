@@ -66,8 +66,11 @@ class Conversation {
     // initialiser to restore object from local storage codable format
     init?(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
         // users
-        user = CryptoUser(codableCryptoUser: codableConversation.user)
-        otherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser)
+        guard let cryptoUser = CryptoUser(codableCryptoUser: codableConversation.user) else { return nil }
+        user = cryptoUser
+        
+        guard let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser) else { return nil }
+        otherUser = cryptoOtherUser
         
         messages = codableConversation.messages
         

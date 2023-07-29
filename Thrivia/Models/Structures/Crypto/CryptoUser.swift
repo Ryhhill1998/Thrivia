@@ -47,23 +47,27 @@ struct CryptoUser {
         oneTimePrekeysPrivate = (0..<10).map { _ in Curve25519.KeyAgreement.PrivateKey() }
     }
     
-    init(codableCryptoUser: CodableCryptoUser) {
+    init?(codableCryptoUser: CodableCryptoUser) {
         id = codableCryptoUser.id
         
-        // identity keys
-        identityKeyPrivate = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableCryptoUser.identityKeyPrivate)
-        identityKeyPublic = identityKeyPrivate.publicKey
-        
-        // signed prekeys
-        signedPrekeyPrivate = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeyPrivate)
-        signedPrekeyPublic = signedPrekeyPrivate.publicKey
-        
-        // signed prekey signings
-        signedPrekeySigningPrivate = try! Curve25519.Signing.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeySigningPrivate)
-        signedPrekeySigningPublic = signedPrekeySigningPrivate.publicKey
-        
-        // private one-time prekeys
-        oneTimePrekeysPrivate = codableCryptoUser.oneTimePrekeysPrivate.map { try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: $0) }
+        do {
+            // identity keys
+            identityKeyPrivate = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableCryptoUser.identityKeyPrivate)
+            identityKeyPublic = identityKeyPrivate.publicKey
+            
+            // signed prekeys
+            signedPrekeyPrivate = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeyPrivate)
+            signedPrekeyPublic = signedPrekeyPrivate.publicKey
+            
+            // signed prekey signings
+            signedPrekeySigningPrivate = try Curve25519.Signing.PrivateKey(rawRepresentation: codableCryptoUser.signedPrekeySigningPrivate)
+            signedPrekeySigningPublic = signedPrekeySigningPrivate.publicKey
+            
+            // private one-time prekeys
+            oneTimePrekeysPrivate = try codableCryptoUser.oneTimePrekeysPrivate.map { try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: $0) }
+        } catch {
+            return nil
+        }
     }
     
     mutating func replaceOneTimePrekeyAndGetPublicKeyString(prekeyIdentifier: Int) -> String {

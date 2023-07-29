@@ -29,24 +29,28 @@ struct CryptoOtherUser {
     
     let prekeyIdentifier: Int
     
-    init(codableCryptoOtherUser: CodableCryptoOtherUser) {
+    init?(codableCryptoOtherUser: CodableCryptoOtherUser) {
         // id
         id = codableCryptoOtherUser.id
         
-        // public identity key retrieved from server
-        identityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.identityKey)
-        
-        // public signed prekey retrieved from server
-        signedPrekey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekey)
-        
-        // signed prekey signing
-        signedPrekeySigning = try! Curve25519.Signing.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekeySigning)
+        do {
+            // public identity key retrieved from server
+            identityKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.identityKey)
+            
+            // public signed prekey retrieved from server
+            signedPrekey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekey)
+            
+            // signed prekey signing
+            signedPrekeySigning = try Curve25519.Signing.PublicKey(rawRepresentation: codableCryptoOtherUser.signedPrekeySigning)
+            
+            // one-time prekey
+            oneTimePrekey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.oneTimePrekey)
+        } catch {
+            return nil
+        }
         
         // prekey signature retrieved from server
         prekeySignature = codableCryptoOtherUser.prekeySignature
-        
-        // one-time prekey
-        oneTimePrekey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableCryptoOtherUser.oneTimePrekey)
         
         prekeyIdentifier = codableCryptoOtherUser.prekeyIdentifier
     }
