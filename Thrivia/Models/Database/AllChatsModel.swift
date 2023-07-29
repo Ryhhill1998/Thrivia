@@ -275,10 +275,9 @@ class AllChatsModel {
                             if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                                let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
                                 let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
-                                if let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser) {
-                                    conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
-                                    self.decryptAndSetMessages(chatId: chatId, messageIds: messageIds, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
-                                }
+                                let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
+                                conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
+                                self.decryptAndSetMessages(chatId: chatId, messageIds: messageIds, userId: userId, conversation: conversation, messagesSetter: messagesSetter)
                             }
                         }
                     }
@@ -318,7 +317,6 @@ class AllChatsModel {
             // decrypt messages
             if let conversation = conversation {
                 for message in encryptedMessages {
-                    print(message)
                     
                     // remove message doc from db
                     self.removeMessageDocFromDB(messageId: message.id)
@@ -359,6 +357,7 @@ class AllChatsModel {
         
         if var cryptoUser = retrieveCryptoUserFromUserDefaults() {
             newOneTimePrekey = cryptoUser.replaceOneTimePrekeyAndGetPublicKeyString(prekeyIdentifier: prekeyIdentifier)
+            print("New OTPK: \(newOneTimePrekey ?? "none")")
         }
         
         return newOneTimePrekey
@@ -484,12 +483,11 @@ class AllChatsModel {
                 
                 // get conversation data stored locally in user defaults
                 var conversation: Conversation?
-                print("getting convo")
+
                 if let storedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
                     conversation = storedConversation
-                    print("got convo")
+                    print(conversation?.messages.map { $0.content } ?? "nothing")
                 }
-                print("next step")
                 
                 let receiverDocRef = self.db.collection("users").document(receiverId)
                 
@@ -504,23 +502,20 @@ class AllChatsModel {
                     }
                     
                     if conversation == nil {
-                        print("conversation is nil")
                         // get stored crypto user and prekey bundle from server
                         if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                            let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
-                            print("got crypto user and prekey bundle")
                             self.deleteOneTimePrekey(userId: receiverId, oneTimePrekey: prekeyBundle["oneTimePrekey"]!)
+                            print("OTPK: \(prekeyBundle["oneTimePrekey"]!)")
                             
                             let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
-                            if let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser) {
-                                conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
-                            }
+                            let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
+                            conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
                         }
                     }
                     
                     // create encrypted message using conversation object
                     if let encryptedMessage = conversation!.sendMessage(messageContent: content) {
-                        print(encryptedMessage)
                         
                         // save conversation locally and to db
                         if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {

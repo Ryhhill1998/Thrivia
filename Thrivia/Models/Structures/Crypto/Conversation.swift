@@ -64,62 +64,52 @@ class Conversation {
     }
     
     // initialiser to restore object from local storage codable format
-    init?(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
+    init(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
         // users
-        guard let cryptoUser = CryptoUser(codableCryptoUser: codableConversation.user) else { return nil }
-        user = cryptoUser
+        user = CryptoUser(codableCryptoUser: codableConversation.user)
         
-        guard let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser) else { return nil }
-        otherUser = cryptoOtherUser
+        otherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser)
         
         messages = codableConversation.messages
         
         // last message received
         lastMessageReceived = codableConversation.lastMessageReceived
-
+        
         // dh ratchet key pair
-        do {
-            dhRatchetPrivateKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableConversation.dhRatchetPrivateKey)
-            dhRatchetPublicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableConversation.dhRatchetPublicKey)
-        } catch {
-            return nil
-        }
-
+        dhRatchetPrivateKey = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableConversation.dhRatchetPrivateKey)
+        dhRatchetPublicKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableConversation.dhRatchetPublicKey)
+        
         // other user dh ratchet key
         if let otherUserDhRatchetKey = codableConversation.otherUserDhRatchetKey {
-            do {
-                self.otherUserDhRatchetKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUserDhRatchetKey)
-            } catch {
-                return nil
-            }
+            self.otherUserDhRatchetKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUserDhRatchetKey)
         }
-
+        
         // chain keys
         if let rootChainKey = codableConversation.rootChainKey {
             self.rootChainKey = SymmetricKey(data: rootChainKey)
         }
-
+        
         if let sendChainKey = codableConversation.sendChainKey {
             self.sendChainKey = SymmetricKey(data: sendChainKey)
         }
-
+        
         if let receiveChainKey = codableConversation.receiveChainKey {
             self.receiveChainKey = SymmetricKey(data: receiveChainKey)
         }
-
+        
         // send chain lengths
         previousSendChainLength = codableConversation.previousSendChainLength
         currentSendChainLength = codableConversation.currentSendChainLength
-
+        
         // receive chain length
         currentReceiveChainLength = codableConversation.currentReceiveChainLength
-
+        
         // last ephemeral key received
         lastEphemeralKeyReceived = codableConversation.lastEphemeralKeyReceived
-
+        
         // previous ephemeral keys received to check if message is new or old chain
         self.previouslyReceivedEphemeralKeys = previouslyReceivedEphemeralKeys
-
+        
         // store message keys for missed messages
         self.storedMessageKeys = storedMessageKeys
     }
@@ -146,6 +136,8 @@ class Conversation {
         let masterSecret = SymmetricKey(data: byteSequence)
         let masterKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: masterSecret, outputByteCount: 32)
         
+        print("Master key: \(convertSymmetricKeyToByteSequence(symmetricKey: masterKey).base64EncodedString())")
+        
         return masterKey
     }
     
@@ -166,6 +158,11 @@ class Conversation {
             let dh2 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
             let dh3 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
             let dh4 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
+            
+            print("DH1: \(convertSharedSecretToByteSequence(sharedSecret: dh1).base64EncodedString())")
+            print("DH2: \(convertSharedSecretToByteSequence(sharedSecret: dh2).base64EncodedString())")
+            print("DH3: \(convertSharedSecretToByteSequence(sharedSecret: dh3).base64EncodedString())")
+            print("DH4: \(convertSharedSecretToByteSequence(sharedSecret: dh4).base64EncodedString())")
             
             // generate and return master key
             let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
@@ -261,8 +258,8 @@ class Conversation {
             // generate new DH ratchet key pair
             generateDhRatchetPair()
             
-//            print("DH private key: \(dhRatchetPrivateKey.rawRepresentation.base64EncodedString())\n")
-//            print("DH public key: \(dhRatchetPublicKey.rawRepresentation.base64EncodedString())\n")
+            //            print("DH private key: \(dhRatchetPrivateKey.rawRepresentation.base64EncodedString())\n")
+            //            print("DH public key: \(dhRatchetPublicKey.rawRepresentation.base64EncodedString())\n")
             
             // calculate dh output
             let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.signedPrekey
@@ -278,10 +275,10 @@ class Conversation {
             }
             
             // derive and store new root and send chain keys
-//            print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
+            //            print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
             let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey) // problem step
             rootChainKey = kdfRootOutput[0]
-//            print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
+            //            print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
             sendChainKey = kdfRootOutput[1]
             
             // set previous send chain length equal to current send chain length
@@ -294,17 +291,17 @@ class Conversation {
         // derive new send chain key and message key for encryption
         let kdfMessageOutput = kdfMessage(currentChainKey: sendChainKey!)
         sendChainKey = kdfMessageOutput[0]
-//        print("Send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())\n")
+        //        print("Send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())\n")
         
         let messageKey = kdfMessageOutput[1]
-//        print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())\n")
+        //        print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())\n")
         
         // generate associated data
         let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
-//        print("Associated data: \(associatedData.base64EncodedString())\n")
+        //        print("Associated data: \(associatedData.base64EncodedString())\n")
         
-//        print("Other user identity key: \(otherUser.identityKey.rawRepresentation.base64EncodedString())\n")
-//        print("Other user DH key: \(otherUserDhRatchetKey?.rawRepresentation.base64EncodedString() ?? "none")\n")
+        //        print("Other user identity key: \(otherUser.identityKey.rawRepresentation.base64EncodedString())\n")
+        //        print("Other user DH key: \(otherUserDhRatchetKey?.rawRepresentation.base64EncodedString() ?? "none")\n")
         
         // convert message content to data
         let messageData = messageContent.data(using: .utf8)!
@@ -337,6 +334,11 @@ class Conversation {
             let dh2 = try user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
             let dh3 = try user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
             let dh4 = try user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
+            
+            print("DH1: \(convertSharedSecretToByteSequence(sharedSecret: dh1).base64EncodedString())")
+            print("DH2: \(convertSharedSecretToByteSequence(sharedSecret: dh2).base64EncodedString())")
+            print("DH3: \(convertSharedSecretToByteSequence(sharedSecret: dh3).base64EncodedString())")
+            print("DH4: \(convertSharedSecretToByteSequence(sharedSecret: dh4).base64EncodedString())")
             
             // generate and return master key
             let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
