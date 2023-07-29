@@ -64,7 +64,7 @@ class Conversation {
     }
     
     // initialiser to restore object from local storage codable format
-    init(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
+    init?(codableConversation: CodableConversation, previouslyReceivedEphemeralKeys: Set<Data>, storedMessageKeys: [StoredKey]) {
         // users
         user = CryptoUser(codableCryptoUser: codableConversation.user)
         otherUser = CryptoOtherUser(codableCryptoOtherUser: codableConversation.otherUser)
@@ -75,12 +75,20 @@ class Conversation {
         lastMessageReceived = codableConversation.lastMessageReceived
 
         // dh ratchet key pair
-        dhRatchetPrivateKey = try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableConversation.dhRatchetPrivateKey)
-        dhRatchetPublicKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableConversation.dhRatchetPublicKey)
+        do {
+            dhRatchetPrivateKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: codableConversation.dhRatchetPrivateKey)
+            dhRatchetPublicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: codableConversation.dhRatchetPublicKey)
+        } catch {
+            return nil
+        }
 
         // other user dh ratchet key
         if let otherUserDhRatchetKey = codableConversation.otherUserDhRatchetKey {
-            self.otherUserDhRatchetKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUserDhRatchetKey)
+            do {
+                self.otherUserDhRatchetKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: otherUserDhRatchetKey)
+            } catch {
+                return nil
+            }
         }
 
         // chain keys
