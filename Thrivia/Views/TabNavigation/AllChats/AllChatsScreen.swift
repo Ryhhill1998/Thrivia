@@ -117,8 +117,6 @@ struct AllChatsScreen: View {
                 chatsViewModel.userId = userId
                 chatsViewModel.listenToActiveUsers()
                 chatsViewModel.listenToChats()
-                
-                authenticationViewModel.getActivityStatus()
             }
             .toolbar(isSelectMode ? .hidden : .visible, for: .tabBar)
             .toolbar {

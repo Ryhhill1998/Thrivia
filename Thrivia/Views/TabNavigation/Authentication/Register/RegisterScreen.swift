@@ -161,6 +161,12 @@ struct RegisterScreen: View {
                 })
             }
         }
+        .onDisappear() {
+            emailFieldText = ""
+            usernameFieldField = ""
+            passwordFieldText = ""
+            confirmPasswordFieldText = ""
+        }
     }
 }
 

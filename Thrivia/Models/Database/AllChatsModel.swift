@@ -317,6 +317,8 @@ class AllChatsModel {
             // decrypt messages
             if let conversation = conversation {
                 for message in encryptedMessages {
+                    print(message)
+                    
                     // remove message doc from db
                     self.removeMessageDocFromDB(messageId: message.id)
                     
@@ -515,6 +517,8 @@ class AllChatsModel {
                     
                     // create encrypted message using conversation object
                     if let encryptedMessage = conversation!.sendMessage(messageContent: content) {
+                        print(encryptedMessage)
+                        
                         // save conversation locally and to db
                         if self.saveConversationToUserDefaults(conversation: conversation!, chatId: chatId) {
                             // create message doc

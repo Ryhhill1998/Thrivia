@@ -36,6 +36,7 @@ class AuthenticationViewModel: ObservableObject {
     func setAuthState(userId: String?) {
         authUserId = userId
         setFetchingStatus(fetchingStatus: false)
+        getActivityStatus()
     }
     
     func setFetchingStatus(fetchingStatus: Bool) {

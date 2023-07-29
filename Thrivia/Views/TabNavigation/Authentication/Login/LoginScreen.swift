@@ -110,6 +110,10 @@ struct LoginScreen: View {
                 })
             }
         }
+        .onDisappear() {
+            emailFieldText = ""
+            passwordFieldText = ""
+        }
     }
 }
 
