@@ -150,14 +150,18 @@ class Conversation {
         }
         
         // generate Diffie-Hellman shared secrets
-        let dh1 = try! user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
-        let dh2 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
-        let dh3 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
-        let dh4 = try! ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
-        
-        // generate and return master key
-        let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
-        return masterKey
+        do {
+            let dh1 = try user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
+            let dh2 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
+            let dh3 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
+            let dh4 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
+            
+            // generate and return master key
+            let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
+            return masterKey
+        } catch {
+            return nil
+        }
     }
     
     func generateAssociatedData(senderId: String, senderIdentityKey: Data, recipientId: String, recipientIdentityKey: Data) -> Data {
@@ -198,11 +202,15 @@ class Conversation {
         dhRatchetPublicKey = dhRatchetPrivateKey.publicKey
     }
     
-    func generateDhOutputKey(otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey {
-        let dhOutput = try! dhRatchetPrivateKey.sharedSecretFromKeyAgreement(with: otherUserDhRatchetKey)
-        let dhOutputBytes = convertSharedSecretToByteSequence(sharedSecret: dhOutput)
-        let dhOutputKey = SymmetricKey(data: dhOutputBytes)
-        return dhOutputKey
+    func generateDhOutputKey(otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey? {
+        do {
+            let dhOutput = try dhRatchetPrivateKey.sharedSecretFromKeyAgreement(with: otherUserDhRatchetKey)
+            let dhOutputBytes = convertSharedSecretToByteSequence(sharedSecret: dhOutput)
+            let dhOutputKey = SymmetricKey(data: dhOutputBytes)
+            return dhOutputKey
+        } catch {
+            return nil
+        }
     }
     
     func kdfRoot(dhOutputKey: SymmetricKey) -> [SymmetricKey] {
@@ -247,7 +255,7 @@ class Conversation {
             
             // calculate dh output
             let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.signedPrekey
-            let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey)
+            guard let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey) else { return nil }
             
             // derive root chain and send chain keys from KDF output
             if rootChainKey == nil {
@@ -311,16 +319,20 @@ class Conversation {
         }
     }
     
-    func generateRecipientMasterKey(oneTimePrekeyIdentifier: Int, senderIdentityKey: Curve25519.KeyAgreement.PublicKey, ephemeralKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey {
-        // generate Diffie-Hellman shared secrets
-        let dh1 = try! user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: senderIdentityKey)
-        let dh2 = try! user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
-        let dh3 = try! user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
-        let dh4 = try! user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
-        
-        // generate and return master key
-        let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
-        return masterKey
+    func generateRecipientMasterKey(oneTimePrekeyIdentifier: Int, senderIdentityKey: Curve25519.KeyAgreement.PublicKey, ephemeralKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey? {
+        do {
+            // generate Diffie-Hellman shared secrets
+            let dh1 = try user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: senderIdentityKey)
+            let dh2 = try user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
+            let dh3 = try user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
+            let dh4 = try user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
+            
+            // generate and return master key
+            let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
+            return masterKey
+        } catch {
+            return nil
+        }
     }
     
     func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey, associatedData: Data) -> Data? {
@@ -369,8 +381,16 @@ class Conversation {
     }
     
     func receiveMessage(message: EncryptedMessage) {
-        let senderIdentityKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.identityKey)!)
-        let ephemeralKey = try! Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.ephemeralKey)!)
+        var senderIdentityKey: Curve25519.KeyAgreement.PublicKey
+        var ephemeralKey: Curve25519.KeyAgreement.PublicKey
+        
+        do {
+            senderIdentityKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.identityKey)!)
+            ephemeralKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.ephemeralKey)!)
+        } catch {
+            return
+        }
+        
         otherUserDhRatchetKey = ephemeralKey
         let prekeyIdentifier = message.oneTimePreKeyIdentifier
         let N = message.sendChainLength
@@ -396,7 +416,7 @@ class Conversation {
                 }
                 
                 // calculate dh output
-                let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: ephemeralKey)
+                guard let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: ephemeralKey) else { return }
                 
                 // derive root chain and send chain keys from KDF output
                 if rootChainKey == nil {

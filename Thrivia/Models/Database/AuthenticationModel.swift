@@ -175,13 +175,13 @@ class AuthenticationModel {
         }
     }
     
-    func deleteUserAccount(userId: String) {
+    func deleteUserAccount(userId: String, errorSetter: @escaping (String) -> Void) {
         // connect to db and delete account
         let user = Auth.auth().currentUser
 
         user?.delete { error in
             if let error = error {
-                print(error.localizedDescription)
+                errorSetter(error.localizedDescription)
             } else {
                 self.deleteUserAndAllDataFromDB(userId: userId)
             }

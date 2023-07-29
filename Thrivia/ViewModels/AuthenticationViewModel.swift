@@ -112,6 +112,6 @@ class AuthenticationViewModel: ObservableObject {
     func deleteUserAccount() {
         guard let userId = authUserId else { return }
         
-        authenticationModel.deleteUserAccount(userId: userId)
+        authenticationModel.deleteUserAccount(userId: userId, errorSetter: setError(error:))
     }
 }
