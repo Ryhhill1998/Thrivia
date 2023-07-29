@@ -28,6 +28,8 @@ class AuthenticationModel {
     }
     
     func registerUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
+        UserDefaults.resetStandardUserDefaults()
+        
         // check if username already in use
         db.collection("users").whereField("username", isEqualTo: username)
             .getDocuments() { (querySnapshot, err) in

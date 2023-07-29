@@ -72,6 +72,16 @@
 		5BFBC0882A6946D3005E89FC /* EncryptedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFBC0872A6946D3005E89FC /* EncryptedMessage.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		5BF2EE792A75612D00CAC268 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5B8F31D12A5027FC001F92B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5B8F31D82A5027FC001F92B8;
+			remoteInfo = Thrivia;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatOptions.swift; sourceTree = "<group>"; };
 		5B4C0D512A6EF64A002E0894 /* BlockedUsersScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersScreen.swift; sourceTree = "<group>"; };
@@ -128,6 +138,7 @@
 		5BC6FE062A60508C006459F8 /* TimeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeDisplay.swift; sourceTree = "<group>"; };
 		5BC6FE082A6050DB006459F8 /* UserIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIcon.swift; sourceTree = "<group>"; };
 		5BCE87052A716F9B00B416FD /* EditCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCounterScreen.swift; sourceTree = "<group>"; };
+		5BF2EE752A75612D00CAC268 /* ThriviaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ThriviaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BFBC0762A691B37005E89FC /* CodableConversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableConversation.swift; sourceTree = "<group>"; };
 		5BFBC0782A691CE4005E89FC /* StoredKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredKey.swift; sourceTree = "<group>"; };
 		5BFBC07A2A691D4E005E89FC /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -145,6 +156,13 @@
 			files = (
 				5B9792E82A64566B00F078C6 /* FirebaseAuth in Frameworks */,
 				5B9792EA2A64566B00F078C6 /* FirebaseFirestore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5BF2EE722A75612D00CAC268 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				5B8F31D92A5027FC001F92B8 /* Thrivia.app */,
+				5BF2EE752A75612D00CAC268 /* ThriviaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -436,6 +455,24 @@
 			productReference = 5B8F31D92A5027FC001F92B8 /* Thrivia.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5BF2EE742A75612D00CAC268 /* ThriviaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5BF2EE7D2A75612D00CAC268 /* Build configuration list for PBXNativeTarget "ThriviaTests" */;
+			buildPhases = (
+				5BF2EE712A75612D00CAC268 /* Sources */,
+				5BF2EE722A75612D00CAC268 /* Frameworks */,
+				5BF2EE732A75612D00CAC268 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5BF2EE7A2A75612D00CAC268 /* PBXTargetDependency */,
+			);
+			name = ThriviaTests;
+			productName = ThriviaTests;
+			productReference = 5BF2EE752A75612D00CAC268 /* ThriviaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -448,6 +485,10 @@
 				TargetAttributes = {
 					5B8F31D82A5027FC001F92B8 = {
 						CreatedOnToolsVersion = 14.3.1;
+					};
+					5BF2EE742A75612D00CAC268 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 5B8F31D82A5027FC001F92B8;
 					};
 				};
 			};
@@ -468,6 +509,7 @@
 			projectRoot = "";
 			targets = (
 				5B8F31D82A5027FC001F92B8 /* Thrivia */,
+				5BF2EE742A75612D00CAC268 /* ThriviaTests */,
 			);
 		};
 /* End PBXProject section */
@@ -481,6 +523,13 @@
 				5B9792E52A6455AA00F078C6 /* GoogleService-Info.plist in Resources */,
 				5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */,
 				5B8F31E12A5027FE001F92B8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5BF2EE732A75612D00CAC268 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,7 +600,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5BF2EE712A75612D00CAC268 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5BF2EE7A2A75612D00CAC268 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5B8F31D82A5027FC001F92B8 /* Thrivia */;
+			targetProxy = 5BF2EE792A75612D00CAC268 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5B8F31E52A5027FE001F92B8 /* Debug */ = {
@@ -728,6 +792,42 @@
 			};
 			name = Release;
 		};
+		5BF2EE7B2A75612D00CAC268 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JY26887NFX;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ryanhenzellhill.ThriviaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Thrivia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Thrivia";
+			};
+			name = Debug;
+		};
+		5BF2EE7C2A75612D00CAC268 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JY26887NFX;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ryanhenzellhill.ThriviaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Thrivia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Thrivia";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -745,6 +845,15 @@
 			buildConfigurations = (
 				5B8F31E82A5027FE001F92B8 /* Debug */,
 				5B8F31E92A5027FE001F92B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5BF2EE7D2A75612D00CAC268 /* Build configuration list for PBXNativeTarget "ThriviaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BF2EE7B2A75612D00CAC268 /* Debug */,
+				5BF2EE7C2A75612D00CAC268 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

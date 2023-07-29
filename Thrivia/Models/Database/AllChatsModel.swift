@@ -61,7 +61,7 @@ class AllChatsModel {
                                     continue
                                 }
                             }
-
+                            
                             if let username = data["username"] as? String,
                                let iconColour = data["iconColour"] as? String {
                                 let otherUser = OtherUser(id: document.documentID, username: username, iconColour: Color(iconColour))
@@ -85,7 +85,7 @@ class AllChatsModel {
             if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
                 let blockedUserIds = userData["blockedUserIds"] as? [String]
                 let setOfBlockedUserIds: Set<String> = Set(blockedUserIds ?? [])
-             
+                
                 // listen to chats
                 let listener = self.db.collection("chats").whereField("userIds", arrayContains: userId)
                     .addSnapshotListener { querySnapshot, error in
@@ -190,47 +190,54 @@ class AllChatsModel {
     func retrieveChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
         let otherUserId = otherUser.id
         
-        db.collection("chats")
-            .whereField("userIds", in: [[userId, otherUserId], [otherUserId, userId]])
-            .getDocuments() { (querySnapshot, error) in
-                guard let documents = querySnapshot?.documents else {
-                    print("Error fetching documents: \(error!)")
-                    return
-                }
-                
-                if let error = error {
-                    print("Error getting documents: \(error)")
-                    return
-                }
-                
-                if documents.isEmpty {
-                    self.createNewChat(userId: userId, otherUser: otherUser, chatSetter: chatSetter)
-                } else {
-                    for document in documents {
-                        let chatId = document.documentID
-                        let chat = Chat(id: chatId, otherUser: otherUser, messages: [])
-                        chatSetter(chat, true)
-                    }
-                }
+        let chatId = generateChatId(userId: userId, otherUserId: otherUserId)
+        
+        let chatDocRef = db.collection("chats").document(chatId)
+        
+        chatDocRef.getDocument { (document, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+                return
             }
+            
+            if let document = document, document.exists {
+                let chat = Chat(id: chatId, otherUser: otherUser, messages: [])
+                chatSetter(chat, true)
+            } else {
+                self.createNewChat(userId: userId, otherUser: otherUser, chatSetter: chatSetter)
+            }
+        }
+    }
+    
+    func generateChatId(userId: String, otherUserId: String) -> String {
+        let id1Numbers = userId.asciiValues
+        let id2Numbers = otherUserId.asciiValues
+        
+        var averagedNumbers: [UInt8] = []
+        
+        for i in 0..<id1Numbers.count {
+            let num1 = id1Numbers[i]
+            let num2 = id2Numbers[i]
+            
+            averagedNumbers.append((num1 + num2) / 2)
+        }
+        
+        return averagedNumbers.map( { String(UnicodeScalar(UInt8($0))) }).reduce("", +)
     }
     
     func createNewChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
         let otherUserId = otherUser.id
         
-        // create new chat doc
-        // create counter doc in db
-        var ref: DocumentReference? = nil
+        let chatId = generateChatId(userId: userId, otherUserId: otherUserId)
+        print(chatId)
         
-        ref = self.db.collection("chats").addDocument(data: [
+        // create new chat doc
+        self.db.collection("chats").document(chatId).setData([
             "userIds": [userId, otherUserId]
         ]) { err in
             if let err = err {
                 print("Error adding document: \(err)")
             } else {
-                let chatId = ref!.documentID
-                print("Document added with ID: \(chatId)")
-                
                 // add chatId to user and otherUser docs
                 self.addChatIdToUserDoc(userId: userId, chatId: chatId)
                 self.addChatIdToUserDoc(userId: otherUserId, chatId: chatId)
@@ -324,11 +331,13 @@ class AllChatsModel {
                     // remove message ID from chat doc
                     self.removeMessageIdFromChatDoc(chatId: chatId, messageId: message.id)
                     
+                    let isFirstMessage = conversation.lastMessageReceived == nil
+                    
                     // decrypt message
                     conversation.receiveMessage(message: message)
                     
                     // if first message, delete local private OTK, replace and send public key to server
-                    if conversation.lastMessageReceived == nil {
+                    if isFirstMessage {
                         let prekeyIdentifier = message.oneTimePreKeyIdentifier
                         if let newOneTimePrekey = self.replaceOneTimePrekeyInUserDefaults(prekeyIdentifier: prekeyIdentifier) {
                             self.saveOneTimePrekeyInDB(userId: userId, oneTimePrekey: newOneTimePrekey)
@@ -483,7 +492,7 @@ class AllChatsModel {
                 
                 // get conversation data stored locally in user defaults
                 var conversation: Conversation?
-
+                
                 if let storedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
                     conversation = storedConversation
                     print(conversation?.messages.map { $0.content } ?? "nothing")
@@ -689,4 +698,8 @@ class AllChatsModel {
             }
         }
     }
+}
+
+extension StringProtocol {
+    var asciiValues: [UInt8] { compactMap(\.asciiValue) }
 }
