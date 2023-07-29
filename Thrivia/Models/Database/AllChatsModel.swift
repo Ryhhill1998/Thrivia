@@ -477,8 +477,51 @@ class AllChatsModel {
             return
         }
         
+        if let storedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
+            sendMessageDB(senderId: senderId, receiverId: receiverId, content: content, chatId: chatId, errorSetter: errorSetter, messageSentSetter: messageSentSetter)
+        } else {
+            let chatDocRef = db.collection("chats").document(chatId)
+            
+            // transaction to prevent other user accessing data at same time
+            db.runTransaction({ (transaction, errorPointer) -> Any? in
+                let chatDoc: DocumentSnapshot
+                
+                do {
+                    try chatDoc = transaction.getDocument(chatDocRef)
+                } catch let fetchError as NSError {
+                    errorPointer?.pointee = fetchError
+                    return nil
+                }
+                
+                if let userIdSendingMessage = chatDoc.data()?["userIdSendingMessage"] as? String {
+                    let error = NSError(
+                        domain: "AppErrorDomain",
+                        code: -1,
+                        userInfo: [
+                            NSLocalizedDescriptionKey: "Unable to retrieve population from snapshot \(chatDoc)"
+                        ]
+                    )
+                    
+                    return nil
+                }
+                
+                transaction.updateData(["userIdSendingMessage": senderId], forDocument: chatDocRef)
+                return nil
+            }) { (object, error) in
+                if let error = error {
+                    print("Transaction failed: \(error)")
+                    errorSetter("An error occurred while sending this message.")
+                    return
+                }
+                
+                self.sendMessageDB(senderId: senderId, receiverId: receiverId, content: content, chatId: chatId, errorSetter: errorSetter, messageSentSetter: messageSentSetter)
+            }
+        }
+    }
+    
+    private func sendMessageDB(senderId: String, receiverId: String, content: String, chatId: String, errorSetter: @escaping (String) -> Void, messageSentSetter: @escaping () -> Void) {
         // get user blocked IDs
-        let userDocRef = db.collection("users").document(senderId)
+        let userDocRef = self.db.collection("users").document(senderId)
         
         userDocRef.getDocument { (document, error) in
             if let userDoc = document, userDoc.exists, let userData = userDoc.data() {
@@ -488,14 +531,6 @@ class AllChatsModel {
                 if setOfBlockedUserIds.contains(receiverId) {
                     errorSetter("You cannot message this user because you have blocked them.")
                     return
-                }
-                
-                // get conversation data stored locally in user defaults
-                var conversation: Conversation?
-                
-                if let storedConversation = self.retrieveConversationFromUserDefaults(chatId: chatId) {
-                    conversation = storedConversation
-                    print(conversation?.messages.map { $0.content } ?? "nothing")
                 }
                 
                 let receiverDocRef = self.db.collection("users").document(receiverId)
@@ -510,13 +545,13 @@ class AllChatsModel {
                         }
                     }
                     
+                    var conversation = self.retrieveConversationFromUserDefaults(chatId: chatId)
+                    
                     if conversation == nil {
                         // get stored crypto user and prekey bundle from server
                         if let cryptoUser = self.retrieveCryptoUserFromUserDefaults(),
                            let prekeyBundle = self.getPrekeyBundleFromDocument(document: document) {
                             self.deleteOneTimePrekey(userId: receiverId, oneTimePrekey: prekeyBundle["oneTimePrekey"]!)
-                            print("OTPK: \(prekeyBundle["oneTimePrekey"]!)")
-                            
                             let codableCryptoOtherUser = CodableCryptoOtherUser(prekeyBundle: prekeyBundle)
                             let cryptoOtherUser = CryptoOtherUser(codableCryptoOtherUser: codableCryptoOtherUser)
                             conversation = Conversation(user: cryptoUser, otherUser: cryptoOtherUser)
@@ -531,6 +566,7 @@ class AllChatsModel {
                             // create message doc
                             self.createMessageDocInDB(senderId: senderId, chatId: chatId, encryptedMessage: encryptedMessage)
                             
+                            // set messages
                             messageSentSetter()
                         }
                     } else {
