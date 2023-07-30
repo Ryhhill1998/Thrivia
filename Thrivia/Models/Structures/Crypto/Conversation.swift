@@ -397,8 +397,6 @@ class Conversation {
             print("Found stored message key: \(storedMessageKey?.key.base64EncodedString() ?? "none")")
         }
         
-        print(storedMessageKeys.map { "Stored key: \($0.key.base64EncodedString())" })
-        
         if storedMessageKey == nil {
             // RESET ROOT CHAIN IF LAST MESSAGE SENT
             if (lastMessageReceived == nil || !lastMessageReceived!) && (lastEphemeralKeyReceived == nil || lastEphemeralKeyReceived! != ephemeralKey.rawRepresentation) {
@@ -406,8 +404,6 @@ class Conversation {
                 
                 // check if any messages missed from previous chain
                 var skippedMessages = PN - currentReceiveChainLength
-                
-                print("Skipped messages: \(skippedMessages)")
                 
                 if skippedMessages > 0 {
                     storeSkippedMessageKeys(skippedMessages: skippedMessages, messageNumber: PN - 1, ephemeralKeyRaw: lastEphemeralKeyReceived!)
@@ -431,8 +427,6 @@ class Conversation {
                 
                 // check if any missed messages from current chain
                 skippedMessages = N
-                
-                print("Skipped messages: \(skippedMessages)")
                 
                 if skippedMessages > 0 {
                     storeSkippedMessageKeys(skippedMessages: skippedMessages, messageNumber: 0, ephemeralKeyRaw: ephemeralKey.rawRepresentation)
@@ -473,8 +467,12 @@ class Conversation {
         if let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData) {
             // add new message object to messages array
             let messageContent = String(data: decryptedData, encoding: .utf8)!
-            let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: Date.now)
+            let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: message.timestamp)
             messages.append(newMessage)
+            
+            messages.sort {
+                $0.timestamp < $1.timestamp
+            }
         }
     }
     

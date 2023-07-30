@@ -399,6 +399,7 @@ class AllChatsModel {
         
         let codableConversation = CodableConversation(conversation: conversation)
         let ephemeralKeySet = conversation.previouslyReceivedEphemeralKeys
+        let ephemeralKeyArray = Array(ephemeralKeySet)
         let storedMessageKeys = conversation.storedMessageKeys
         
         do {
@@ -407,13 +408,12 @@ class AllChatsModel {
             
             // Encode Note
             let data = try encoder.encode(codableConversation)
-            let setData = try encoder.encode(ephemeralKeySet)
-            let arrayData = try encoder.encode(storedMessageKeys)
+            let storedKeyData = try encoder.encode(storedMessageKeys)
             
             // Write/Set Data
             defaults.set(data, forKey: chatId)
-            defaults.set(Array(setData), forKey: "previouslyReceivedEphemeralKeys-\(chatId)")
-            defaults.set(arrayData, forKey: "storedMessageKeys-\(chatId)")
+            defaults.set(ephemeralKeyArray, forKey: "previouslyReceivedEphemeralKeys-\(chatId)")
+            defaults.set(storedKeyData, forKey: "storedMessageKeys-\(chatId)")
             
             conversationSaved = true
         } catch {
