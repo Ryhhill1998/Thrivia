@@ -494,14 +494,6 @@ class AllChatsModel {
                 }
                 
                 if let userIdSendingMessage = chatDoc.data()?["userIdSendingMessage"] as? String {
-                    let error = NSError(
-                        domain: "AppErrorDomain",
-                        code: -1,
-                        userInfo: [
-                            NSLocalizedDescriptionKey: "Unable to retrieve population from snapshot \(chatDoc)"
-                        ]
-                    )
-                    
                     return nil
                 }
                 

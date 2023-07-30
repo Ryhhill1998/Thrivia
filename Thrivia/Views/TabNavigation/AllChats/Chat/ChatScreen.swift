@@ -86,6 +86,8 @@ struct ChatScreen: View {
                                 .padding(.top, index == 0 ? 15.0 : 0)
                         }
                     }
+                    .background(Color("White"))
+                    .padding(.top, 5.0)
                     .onChange(of: chatViewModel.lastMessageIndex) { _ in
                         value.scrollTo(chatViewModel.lastMessageIndex)
                     }
@@ -94,7 +96,6 @@ struct ChatScreen: View {
             .onTapGesture {
                 inputIsFocused = false
             }
-            .background(Color("White"))
             .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
                 Button("Delete", role: .destructive) {
                     deleteSelectedMessages()
@@ -160,9 +161,9 @@ struct ChatScreen: View {
 
             }
         }
+        .toolbarBackground(Color("White"), for: .navigationBar)
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
-        .toolbarBackground(Color("White"), for: .navigationBar)
         .onAppear() {
             chatViewModel.userId = userId
             chatViewModel.loadedChat = loadedChat
