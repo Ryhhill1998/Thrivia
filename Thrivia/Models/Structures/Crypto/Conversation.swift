@@ -47,10 +47,10 @@ class Conversation {
     var lastEphemeralKeyReceived: Data?
     
     // previous ephemeral keys received to check if message is new or old chain
-    var previouslyReceivedEphemeralKeys: Set<Data> = []
+    var previouslyReceivedEphemeralKeys: Set<Data>
     
     // store message keys for missed messages
-    var storedMessageKeys: [StoredKey] = []
+    var storedMessageKeys: [StoredKey]
     
     // new object initialiser
     init(user: CryptoUser, otherUser: CryptoOtherUser) {
@@ -61,6 +61,9 @@ class Conversation {
         
         dhRatchetPrivateKey = user.signedPrekeyPrivate
         dhRatchetPublicKey = user.signedPrekeyPublic
+        
+        previouslyReceivedEphemeralKeys = []
+        storedMessageKeys = []
     }
     
     // initialiser to restore object from local storage codable format
@@ -251,9 +254,6 @@ class Conversation {
             // generate new DH ratchet key pair
             generateDhRatchetPair()
             
-//            print("DH private key: \(dhRatchetPrivateKey.rawRepresentation.base64EncodedString())\n")
-//            print("DH public key: \(dhRatchetPublicKey.rawRepresentation.base64EncodedString())\n")
-            
             // calculate dh output
             let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.signedPrekey
             guard let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey) else { return nil }
@@ -268,12 +268,9 @@ class Conversation {
             }
             
             // derive and store new root and send chain keys
-            print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
-            let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey) // problem step
+            let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey)
             rootChainKey = kdfRootOutput[0]
-            print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
             sendChainKey = kdfRootOutput[1]
-            print("Send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())\n")
             
             // set previous send chain length equal to current send chain length
             previousSendChainLength = currentSendChainLength
@@ -285,17 +282,11 @@ class Conversation {
         // derive new send chain key and message key for encryption
         let kdfMessageOutput = kdfMessage(currentChainKey: sendChainKey!)
         sendChainKey = kdfMessageOutput[0]
-        print("Send chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey!).base64EncodedString())\n")
         
         let messageKey = kdfMessageOutput[1]
-        print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())\n")
         
         // generate associated data
         let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
-//        print("Associated data: \(associatedData.base64EncodedString())\n")
-        
-        //        print("Other user identity key: \(otherUser.identityKey.rawRepresentation.base64EncodedString())\n")
-        //        print("Other user DH key: \(otherUserDhRatchetKey?.rawRepresentation.base64EncodedString() ?? "none")\n")
         
         // convert message content to data
         let messageData = messageContent.data(using: .utf8)!
@@ -375,6 +366,7 @@ class Conversation {
             let messageKey = kdfMessageOutput[1]
             let keyToStore = StoredKey(messageNumber: N, key: convertSymmetricKeyToByteSequence(symmetricKey: messageKey), rawEphemeralKey: ephemeralKeyRaw)
             storedMessageKeys.append(keyToStore)
+            print("Storing message key: \(keyToStore.key.base64EncodedString())")
             N += 1
             count -= 1
             currentReceiveChainLength += 1
@@ -402,15 +394,20 @@ class Conversation {
         
         if previouslyReceivedEphemeralKeys.contains(ephemeralKey.rawRepresentation) {
             storedMessageKey = findStoredKey(ephemeralKeyRaw: ephemeralKey.rawRepresentation, messageNumber: N)
+            print("Found stored message key: \(storedMessageKey?.key.base64EncodedString() ?? "none")")
         }
+        
+        print(storedMessageKeys.map { "Stored key: \($0.key.base64EncodedString())" })
         
         if storedMessageKey == nil {
             // RESET ROOT CHAIN IF LAST MESSAGE SENT
             if (lastMessageReceived == nil || !lastMessageReceived!) && (lastEphemeralKeyReceived == nil || lastEphemeralKeyReceived! != ephemeralKey.rawRepresentation) {
                 // if enters block, DH ratchet step is triggered
                 
-                // check if any messages missed
+                // check if any messages missed from previous chain
                 var skippedMessages = PN - currentReceiveChainLength
+                
+                print("Skipped messages: \(skippedMessages)")
                 
                 if skippedMessages > 0 {
                     storeSkippedMessageKeys(skippedMessages: skippedMessages, messageNumber: PN - 1, ephemeralKeyRaw: lastEphemeralKeyReceived!)
@@ -425,17 +422,17 @@ class Conversation {
                 }
                 
                 // derive and store new root and receive chain keys
-                print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
                 let kdfRootOutput = kdfRoot(dhOutputKey: dhOutputKey)
                 rootChainKey = kdfRootOutput[0]
-                print("Root chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!).base64EncodedString())\n")
                 receiveChainKey = kdfRootOutput[1]
-                print("Receive chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey!).base64EncodedString())\n")
                 
                 // reset receive chain length after Diffie-Hellman
                 currentReceiveChainLength = 0
                 
+                // check if any missed messages from current chain
                 skippedMessages = N
+                
+                print("Skipped messages: \(skippedMessages)")
                 
                 if skippedMessages > 0 {
                     storeSkippedMessageKeys(skippedMessages: skippedMessages, messageNumber: 0, ephemeralKeyRaw: ephemeralKey.rawRepresentation)
@@ -455,9 +452,7 @@ class Conversation {
             // derive new receive chain key and message key for decryption
             let kdfMessageOutput = kdfMessage(currentChainKey: receiveChainKey!)
             receiveChainKey = kdfMessageOutput[0]
-            print("Receive chain key: \(convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey!).base64EncodedString())\n")
             messageKey = kdfMessageOutput[1]
-            print("Message key: \(convertSymmetricKeyToByteSequence(symmetricKey: messageKey).base64EncodedString())\n")
             
             // set last ephemeral key received to current ephemeral key
             lastEphemeralKeyReceived = ephemeralKey.rawRepresentation

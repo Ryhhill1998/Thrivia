@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StoredKey {
+struct StoredKey: Codable {
     let messageNumber: Int
     let key: Data
     let rawEphemeralKey: Data

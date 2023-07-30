@@ -345,10 +345,12 @@ class AllChatsModel {
                     }
                 }
                 
-                if self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
-                    // set messages
-                    messagesSetter(conversation.messages)
+                if !encryptedMessages.isEmpty {
+                    self.saveConversationToUserDefaults(conversation: conversation, chatId: chatId)
                 }
+                
+                // set messages
+                messagesSetter(conversation.messages)
             }
         }
     }
@@ -396,6 +398,8 @@ class AllChatsModel {
         let defaults = UserDefaults.standard
         
         let codableConversation = CodableConversation(conversation: conversation)
+        let ephemeralKeySet = conversation.previouslyReceivedEphemeralKeys
+        let storedMessageKeys = conversation.storedMessageKeys
         
         do {
             // Create JSON Encoder
@@ -403,11 +407,14 @@ class AllChatsModel {
             
             // Encode Note
             let data = try encoder.encode(codableConversation)
+            let setData = try encoder.encode(ephemeralKeySet)
+            let arrayData = try encoder.encode(storedMessageKeys)
             
             // Write/Set Data
             defaults.set(data, forKey: chatId)
+            defaults.set(Array(setData), forKey: "previouslyReceivedEphemeralKeys-\(chatId)")
+            defaults.set(arrayData, forKey: "storedMessageKeys-\(chatId)")
             
-            print("Saved conversation locally")
             conversationSaved = true
         } catch {
             print("Unable to Encode Note (\(error))")
@@ -660,16 +667,26 @@ class AllChatsModel {
                 // Decode Note
                 codableConversation = try decoder.decode(CodableConversation.self, from: conversationData)
             } catch {
-                print("Unable to Decode Note (\(error))")
+                print("Unable to Decode (\(error))")
             }
         }
         
         if let retrievedConversation = codableConversation {
-            let previouslyReceivedEphemeralKeys = defaults.array(forKey: "previouslyReceivedEphemeralKeys-\(chatId)") as? [Data]
-            let storedMessageKeys = defaults.array(forKey: "storedMessageKeys-\(chatId)") as? [StoredKey] ?? []
-            let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys ?? [])
+            let previouslyReceivedEphemeralKeys = defaults.object(forKey: "previouslyReceivedEphemeralKeys-\(chatId)") as? [Data] ?? []
+            print("previouslyReceivedEphemeralKeys: \(previouslyReceivedEphemeralKeys)")
             
-            conversation = Conversation(codableConversation: retrievedConversation, previouslyReceivedEphemeralKeys: setOfPreviouslyReceivedEphemeralKeys, storedMessageKeys: storedMessageKeys)
+            if let savedData = defaults.object(forKey: "storedMessageKeys-\(chatId)") as? Data {
+
+                do {
+                    let storedMessageKeys = try JSONDecoder().decode([StoredKey].self, from: savedData)
+                    print("storedMessageKeys: \(storedMessageKeys)")
+                    let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys)
+                    
+                    conversation = Conversation(codableConversation: retrievedConversation, previouslyReceivedEphemeralKeys: setOfPreviouslyReceivedEphemeralKeys, storedMessageKeys: storedMessageKeys)
+                } catch {
+                    print("Unable to Decode (\(error))")
+                }
+            }
         }
         
         return conversation
