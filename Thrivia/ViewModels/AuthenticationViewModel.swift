@@ -9,7 +9,7 @@ import SwiftUI
 import Firebase
 
 class AuthenticationViewModel: ObservableObject {
-    var authenticationModel: AuthenticationModel = AuthenticationModel()
+    private var authenticationModel: AuthenticationModel = AuthenticationModel()
     
     @Published var authUserId: String?
     @Published var fetchingAuthStatus = false

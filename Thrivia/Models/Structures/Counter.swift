@@ -13,21 +13,19 @@ struct Counter: Codable {
         case years, months, weeks, days, hours, minutes, seconds
     }
     
-    let id: String
-    var name: String
-    var originalStart: Date
-    var start: Date
-    var edits = 0
-    var resets = 0
+    private var name: String
+    private var originalStart: Date
+    private var start: Date
+    private var edits = 0
+    private var resets = 0
     
-    var timePassedComponents: DateComponents?
+    private var timePassedComponents: DateComponents?
     
     init(name: String, start: Date) {
-        self.init(id: UUID().uuidString, name: name, originalStart: start, start: start, edits: 0, resets: 0)
+        self.init(name: name, originalStart: start, start: start, edits: 0, resets: 0)
     }
     
-    init(id: String, name: String, originalStart: Date, start: Date, edits: Int, resets: Int) {
-        self.id = id
+    init(name: String, originalStart: Date, start: Date, edits: Int, resets: Int) {
         self.name = name
         self.originalStart = originalStart
         self.start = start
@@ -68,14 +66,36 @@ struct Counter: Codable {
     mutating func edit(newName: String, newStart: Date, updateOriginalStart: Bool) {
         name = newName
         start = newStart
+        
         if updateOriginalStart {
             originalStart = start
         }
+        
         edits += 1
     }
     
     mutating func reset() {
         start = Date.now
         resets += 1
+    }
+    
+    func getName() -> String {
+        return name
+    }
+    
+    func getOriginalStart() -> Date {
+        return originalStart
+    }
+    
+    func getStart() -> Date {
+        return start
+    }
+    
+    func getEdits() -> Int {
+        return edits
+    }
+    
+    func getResets() -> Int {
+        return resets
     }
 }

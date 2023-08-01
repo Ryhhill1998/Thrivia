@@ -8,9 +8,9 @@
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
-    var profileModel = ProfileModel()
+    private var profileModel = ProfileModel()
     
-    var userId: String?
+    private var userId: String?
     
     @Published var username = ""
     @Published var email = ""
@@ -22,6 +22,10 @@ class ProfileViewModel: ObservableObject {
     @Published var errorTitle = ""
     @Published var errorMessage = ""
     @Published var errorExists = false
+    
+    func setUserId(userId: String) {
+        self.userId = userId
+    }
     
     func getProfileData() {
         guard let userId = userId else { return }

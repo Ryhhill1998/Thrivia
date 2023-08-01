@@ -48,7 +48,7 @@ class AuthenticationModel {
             }
     }
     
-    func createAuthUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
+    private func createAuthUser(email: String, username: String, password: String,  errorSetter: @escaping (String) -> Void) {
         auth.createUser(withEmail: email, password: password) { authResult, error in
             if let authError = error {
                 errorSetter(authError.localizedDescription)
@@ -143,7 +143,7 @@ class AuthenticationModel {
         }
     }
     
-    func retrieveSavedActivityStatusFromUserDefaults() -> Bool? {
+    private func retrieveSavedActivityStatusFromUserDefaults() -> Bool? {
         let defaults = UserDefaults.standard
         
         return defaults.object(forKey: "activityStatus") as? Bool
@@ -190,7 +190,7 @@ class AuthenticationModel {
         }
     }
     
-    func deleteUserAndAllDataFromDB(userId: String) {
+    private func deleteUserAndAllDataFromDB(userId: String) {
         let docRef = db.collection("users").document(userId)
         
         docRef.getDocument { (document, error) in
@@ -217,7 +217,7 @@ class AuthenticationModel {
         }
     }
     
-    func deleteUserDoc(userId: String) {
+    private func deleteUserDoc(userId: String) {
         db.collection("users").document(userId).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
@@ -227,7 +227,7 @@ class AuthenticationModel {
         }
     }
     
-    func deleteChatDoc(chatId: String) {
+    private func deleteChatDoc(chatId: String) {
         db.collection("chats").document(chatId).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
@@ -237,7 +237,7 @@ class AuthenticationModel {
         }
     }
     
-    func deleteChatIdFromAllUserDocs(chatId: String) {
+    private func deleteChatIdFromAllUserDocs(chatId: String) {
         db.collection("users").whereField("chatIds", arrayContains: chatId)
             .getDocuments() { (querySnapshot, err) in
                 if let err = err {
@@ -253,7 +253,7 @@ class AuthenticationModel {
             }
     }
     
-    func deleteChatIdFromUserDoc(userId: String, chatId: String) {
+    private func deleteChatIdFromUserDoc(userId: String, chatId: String) {
         let docRef = db.collection("users").document(userId)
         
         docRef.updateData([
@@ -261,7 +261,7 @@ class AuthenticationModel {
         ])
     }
     
-    func storeCryptoUserLocally(codableCryptoUser: CodableCryptoUser) {
+    private func storeCryptoUserLocally(codableCryptoUser: CodableCryptoUser) {
         let defaults = UserDefaults.standard
         
         do {

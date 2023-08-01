@@ -41,14 +41,7 @@ class CounterModel {
         var editedCounter: Counter?
         
         if var counter = retrieveCounterFromUserDefaults() {
-            counter.name = newName
-            counter.start = newStartDate
-            
-            if updateOriginalStart {
-                counter.originalStart = newStartDate
-            }
-            
-            counter.edits += 1
+            counter.edit(newName: newName, newStart: newStartDate, updateOriginalStart: updateOriginalStart)
             
             storeCounterInUserDefaults(counter: counter)
             
@@ -62,8 +55,7 @@ class CounterModel {
         var resetCounter: Counter?
         
         if var counter = retrieveCounterFromUserDefaults() {
-            counter.start = Date.now
-            counter.resets += 1
+            counter.reset()
             
             storeCounterInUserDefaults(counter: counter)
             

@@ -24,7 +24,6 @@
 		5B5411E22A62EBC400A024E8 /* AccountDetailField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E12A62EBC400A024E8 /* AccountDetailField.swift */; };
 		5B5411E42A62EDC300A024E8 /* AllChatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */; };
 		5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E52A630C7B00A024E8 /* Chat.swift */; };
-		5B5411E82A631CC800A024E8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411E72A631CC800A024E8 /* User.swift */; };
 		5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411F22A63207800A024E8 /* AllChatsModel.swift */; };
 		5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */; };
 		5B7A93612A6E75F20038A4C1 /* SelectModeToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */; };
@@ -100,7 +99,6 @@
 		5B5411E12A62EBC400A024E8 /* AccountDetailField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailField.swift; sourceTree = "<group>"; };
 		5B5411E32A62EDC300A024E8 /* AllChatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChatsViewModel.swift; sourceTree = "<group>"; };
 		5B5411E52A630C7B00A024E8 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
-		5B5411E72A631CC800A024E8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5B5411F22A63207800A024E8 /* AllChatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllChatsModel.swift; sourceTree = "<group>"; };
 		5B5411F42A63220000A024E8 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		5B7A93602A6E75F20038A4C1 /* SelectModeToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectModeToolbar.swift; sourceTree = "<group>"; };
@@ -265,7 +263,6 @@
 				5B5411C62A615A6700A024E8 /* Message.swift */,
 				5B5411D42A61E62800A024E8 /* Counter.swift */,
 				5B5411E52A630C7B00A024E8 /* Chat.swift */,
-				5B5411E72A631CC800A024E8 /* User.swift */,
 				5B9792E22A63FCC600F078C6 /* OtherUser.swift */,
 				5BFBC0812A692B86005E89FC /* Crypto */,
 			);
@@ -545,7 +542,6 @@
 				5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */,
 				5B5411C12A61389F00A024E8 /* ChatScreen.swift in Sources */,
 				5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */,
-				5B5411E82A631CC800A024E8 /* User.swift in Sources */,
 				5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */,
 				5B5411DF2A62E2D700A024E8 /* ProfileViewModel.swift in Sources */,
 				5B8F03B02A6C155100B5192D /* EditIconColour.swift in Sources */,

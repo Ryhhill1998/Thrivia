@@ -9,9 +9,9 @@ import Foundation
 
 class CounterViewModel: ObservableObject {
     
-    var counterModel = CounterModel()
+    private var counterModel = CounterModel()
     
-    var counter: Counter?
+    private var counter: Counter?
     
     @Published var counterNotCreated = true
     
@@ -81,10 +81,14 @@ class CounterViewModel: ObservableObject {
         }
     }
     
-    func createTimerDisplay() {
+    private func createTimerDisplay() {
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.updateTimeDisplay()
         }
+    }
+    
+    func getCounterName() -> String {
+        return counter?.getName() ?? ""
     }
     
     func editCounter(newName: String, newStart: Date) -> Bool {
@@ -107,14 +111,14 @@ class CounterViewModel: ObservableObject {
     }
     
     func getCounterStart() -> Date {
-        return counter?.start ?? Date.now
+        return counter?.getStart() ?? Date.now
     }
     
     func getCounterOriginalStart() -> Date {
-        return counter?.originalStart ?? Date.now
+        return counter?.getOriginalStart() ?? Date.now
     }
     
-    func formatDate(date: Date) -> String {
+    private func formatDate(date: Date) -> String {
         return date.formatted(date: .long, time: .omitted)
     }
     
@@ -136,7 +140,7 @@ class CounterViewModel: ObservableObject {
         return range.count
     }
     
-    func updateTimeDisplay() {
+    private func updateTimeDisplay() {
         let yearsPassed = getYearsPassed()
         let monthsPassed = getMonthsPassed()
         var weeksPassed = getWeeksPassed()
@@ -149,7 +153,7 @@ class CounterViewModel: ObservableObject {
         // get date of current month
         let dateNow = Calendar.current.dateComponents([.day], from: Date.now).day!
         // get date of start date month
-        let start = counter?.start ?? Date.now
+        let start = counter?.getStart() ?? Date.now
         let startDate = Calendar.current.dateComponents([.day], from: start).day!
         
         // check if start date is greater than current date and that start date is not equal to 31
@@ -218,31 +222,31 @@ class CounterViewModel: ObservableObject {
         }
     }
     
-    func getYearsPassed() -> Int {
+    private func getYearsPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.years) ?? 0
     }
     
-    func getMonthsPassed() -> Int {
+    private func getMonthsPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.months) ?? 0
     }
     
-    func getWeeksPassed() -> Int {
+    private func getWeeksPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.weeks) ?? 0
     }
     
-    func getDaysPassed() -> Int {
+    private func getDaysPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.days) ?? 0
     }
     
-    func getHoursPassed() -> Int {
+    private func getHoursPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.hours) ?? 0
     }
     
-    func getMinutesPassed() -> Int {
+    private func getMinutesPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.minutes) ?? 0
     }
     
-    func getSecondsPassed() -> Int {
+    private func getSecondsPassed() -> Int {
         return counter?.getTimePassed(unitOfTime: Counter.UnitOfTime.seconds) ?? 0
     }
 }

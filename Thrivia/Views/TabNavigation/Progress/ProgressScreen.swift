@@ -75,7 +75,7 @@ struct ProgressScreen: View {
                     }
                 }
             }
-            .navigationTitle(counterViewModel.counter?.name ?? "")
+            .navigationTitle(counterViewModel.getCounterName())
             .navigationBarTitleDisplayMode(.automatic)
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .navigationDestination(isPresented: $counterViewModel.counterNotCreated) {
@@ -83,7 +83,7 @@ struct ProgressScreen: View {
                     .environmentObject(counterViewModel)
             }
             .navigationDestination(isPresented: $inEditMode) {
-                EditCounterScreen(counterName: counterViewModel.counter?.name ?? "", startDate: counterViewModel.getCounterStart())
+                EditCounterScreen(counterName: counterViewModel.getCounterName(), startDate: counterViewModel.getCounterStart())
                     .environmentObject(counterViewModel)
             }
         }

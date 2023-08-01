@@ -368,7 +368,6 @@ class AllChatsModel {
         
         if var cryptoUser = retrieveCryptoUserFromUserDefaults() {
             newOneTimePrekey = cryptoUser.replaceOneTimePrekeyAndGetPublicKeyString(prekeyIdentifier: prekeyIdentifier)
-            print("New OTPK: \(newOneTimePrekey ?? "none")")
         }
         
         return newOneTimePrekey
@@ -673,13 +672,11 @@ class AllChatsModel {
         
         if let retrievedConversation = codableConversation {
             let previouslyReceivedEphemeralKeys = defaults.object(forKey: "previouslyReceivedEphemeralKeys-\(chatId)") as? [Data] ?? []
-            print("previouslyReceivedEphemeralKeys: \(previouslyReceivedEphemeralKeys)")
             
             if let savedData = defaults.object(forKey: "storedMessageKeys-\(chatId)") as? Data {
 
                 do {
                     let storedMessageKeys = try JSONDecoder().decode([StoredKey].self, from: savedData)
-                    print("storedMessageKeys: \(storedMessageKeys)")
                     let setOfPreviouslyReceivedEphemeralKeys = Set(previouslyReceivedEphemeralKeys)
                     
                     conversation = Conversation(codableConversation: retrievedConversation, previouslyReceivedEphemeralKeys: setOfPreviouslyReceivedEphemeralKeys, storedMessageKeys: storedMessageKeys)

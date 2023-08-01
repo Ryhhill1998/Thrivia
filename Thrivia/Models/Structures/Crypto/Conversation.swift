@@ -335,6 +335,7 @@ class Conversation {
             let decryptedData = try ChaChaPoly.open(sealedBox, using: messageKey, authenticating: associatedData)
             return decryptedData
         } catch {
+            print("failed to decrypt")
             return nil
         }
     }
@@ -366,7 +367,6 @@ class Conversation {
             let messageKey = kdfMessageOutput[1]
             let keyToStore = StoredKey(messageNumber: N, key: convertSymmetricKeyToByteSequence(symmetricKey: messageKey), rawEphemeralKey: ephemeralKeyRaw)
             storedMessageKeys.append(keyToStore)
-            print("Storing message key: \(keyToStore.key.base64EncodedString())")
             N += 1
             count -= 1
             currentReceiveChainLength += 1
@@ -394,7 +394,6 @@ class Conversation {
         
         if previouslyReceivedEphemeralKeys.contains(ephemeralKey.rawRepresentation) {
             storedMessageKey = findStoredKey(ephemeralKeyRaw: ephemeralKey.rawRepresentation, messageNumber: N)
-            print("Found stored message key: \(storedMessageKey?.key.base64EncodedString() ?? "none")")
         }
         
         if storedMessageKey == nil {
