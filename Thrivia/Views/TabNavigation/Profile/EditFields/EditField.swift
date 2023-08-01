@@ -105,7 +105,9 @@ struct EditField: View {
             profileViewModel.resetError()
         }
         .onChange(of: newFieldValue, perform: { newValue in
-            profileViewModel.resetFetchStatus()
+            if !newValue.isEmpty {
+                profileViewModel.resetFetchStatus()
+            }
         })
         .onChange(of: profileViewModel.fetchStatus, perform: { newValue in
             if newValue == "success" {
