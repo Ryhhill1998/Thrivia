@@ -43,7 +43,7 @@ class ChatViewModel: ObservableObject {
         } else {
             if let userId = userId,
                let chatId = loadedChat?.id,
-               let otherUserId = loadedChat?.otherUser.id {
+               let otherUserId = loadedChat?.getOtherUser().id {
                 chatModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
                     self.setMessageSent(messageSent: true)
                 }

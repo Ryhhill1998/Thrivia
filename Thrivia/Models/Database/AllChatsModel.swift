@@ -206,7 +206,7 @@ class AllChatsModel {
         }
     }
     
-    func generateChatId(userId: String, otherUserId: String) -> String {
+    private func generateChatId(userId: String, otherUserId: String) -> String {
         let id1Numbers = userId.asciiValues
         let id2Numbers = otherUserId.asciiValues
         
@@ -222,11 +222,10 @@ class AllChatsModel {
         return averagedNumbers.map( { String(UnicodeScalar(UInt8($0))) }).reduce("", +)
     }
     
-    func createNewChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
+    private func createNewChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
         let otherUserId = otherUser.id
         
         let chatId = generateChatId(userId: userId, otherUserId: otherUserId)
-        print(chatId)
         
         // create new chat doc
         self.db.collection("chats").document(chatId).setData([

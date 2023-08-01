@@ -132,15 +132,14 @@ struct ChatScreen: View {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color("Black"))
                 }
-                
             }
             
             ToolbarItem(placement: .navigationBarLeading) {
                 HStack(spacing: 10.0) {
-                    UserIcon(size: "small", borderColour: .white, backgroundColour: chatViewModel.loadedChat?.otherUser.iconColour ?? .purple, name: chatViewModel.loadedChat?.otherUser.username ?? "Username")
+                    UserIcon(size: "small", borderColour: .white, backgroundColour: chatViewModel.loadedChat?.getOtherUser().getIconColour() ?? .purple, name: chatViewModel.loadedChat?.getOtherUser().getUsername() ?? "Username")
                     
                     VStack(alignment: .leading, spacing: 1.0) {
-                        Text(chatViewModel.loadedChat?.otherUser.username ?? "Username")
+                        Text(chatViewModel.loadedChat?.getOtherUser().getUsername() ?? "Username")
                             .font(.custom("Montserrat", size: 13))
                             .foregroundColor(Color("Black"))
                             .fontWeight(.medium)
@@ -171,9 +170,11 @@ struct ChatScreen: View {
             chatViewModel.listenToChat()
         }
         .navigationDestination(isPresented: $navigateToOptions) {
-            if let otherUserId = loadedChat?.otherUser.id,
-               let iconColour = loadedChat?.otherUser.iconColour,
-               let username = loadedChat?.otherUser.username {
+            let otherUser = loadedChat?.getOtherUser()
+            
+            if let otherUserId = otherUser?.id,
+               let iconColour = otherUser?.getIconColour(),
+               let username = otherUser?.getUsername() {
                 ChatOptions(userId: userId, otherUserId: otherUserId, backgroundColour: iconColour, name: username)
             }
         }

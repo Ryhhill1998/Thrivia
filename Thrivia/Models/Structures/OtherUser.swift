@@ -9,6 +9,20 @@ import SwiftUI
 
 struct OtherUser: Identifiable {
     let id: String
-    var username: String
-    var iconColour: Color
+    private var username: String
+    private var iconColour: Color
+    
+    init(id: String, username: String, iconColour: Color) {
+        self.id = id
+        self.username = username
+        self.iconColour = iconColour
+    }
+    
+    func getUsername() -> String {
+        return username
+    }
+    
+    func getIconColour() -> Color {
+        return iconColour
+    }
 }

@@ -68,7 +68,7 @@ struct AllChatsScreen: View {
                                             Button {
                                                 loadChat(otherUser: otherUser)
                                             } label: {
-                                                AvailableUser(backgroundColour: otherUser.iconColour, name: otherUser.username)
+                                                AvailableUser(backgroundColour: otherUser.getIconColour(), name: otherUser.getUsername())
                                             }
                                         }
                                     }
@@ -80,11 +80,11 @@ struct AllChatsScreen: View {
                             
                             VStack(spacing: 15.0) {
                                 ForEach(chatsViewModel.allChats) { chat in
-                                    if chat.messages.last != nil {
-                                        MessagePreview(id: chat.id, isActive: authenticationViewModel.activityStatus == true && chatsViewModel.getUserActivityStatus(userId: chat.otherUser.id), name: chat.otherUser.username, backgroundColour: chat.otherUser.iconColour, lastMessage: chat.messages.last!.content, read: chat.messages.last!.read, isSelectMode: isSelectMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
+                                    if chat.getLastMessage() != nil {
+                                        MessagePreview(id: chat.id, isActive: authenticationViewModel.activityStatus == true && chatsViewModel.getUserActivityStatus(userId: chat.getOtherUser().id), name: chat.getOtherUser().getUsername(), backgroundColour: chat.getOtherUser().getIconColour(), lastMessage: chat.getLastMessage()!.getContent(), read: chat.getLastMessage()!.getRead(), isSelectMode: isSelectMode, isSelected: selectedChatIds.contains(chat.id), selectChat: selectChat(chatId:))
                                             .onTapGesture {
                                                 if !isSelectMode {
-                                                    loadChat(otherUser: chat.otherUser)
+                                                    loadChat(otherUser: chat.getOtherUser())
                                                 } else {
                                                     selectChat(chatId: chat.id)
                                                 }
@@ -114,7 +114,7 @@ struct AllChatsScreen: View {
                 }
             }
             .onAppear() {
-                chatsViewModel.userId = userId
+                chatsViewModel.setUserId(userId: userId)
                 chatsViewModel.listenToActiveUsers()
                 chatsViewModel.listenToChats()
             }

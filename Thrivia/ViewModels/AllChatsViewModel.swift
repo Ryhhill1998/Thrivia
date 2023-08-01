@@ -10,15 +10,19 @@ import Firebase
 
 class AllChatsViewModel: ObservableObject {
     
-    var allChatsModel = AllChatsModel()
-    var userId: String?
-    var activeUsersListener: ListenerRegistration?
-    var allChatsListener: ListenerRegistration?
+    private var allChatsModel = AllChatsModel()
+    private var userId: String?
+    private var activeUsersListener: ListenerRegistration?
+    private var allChatsListener: ListenerRegistration?
     
     @Published var activeUsers: [OtherUser] = []
     @Published var allChats: [Chat] = []
     @Published var loadedChat: Chat?
     @Published var chatIsLoaded = false
+    
+    func setUserId(userId: String) {
+        self.userId = userId
+    }
     
     func listenToActiveUsers() {
         if let userId = userId {
@@ -40,13 +44,11 @@ class AllChatsViewModel: ObservableObject {
         self.allChats = allChats
         
         self.allChats.sort { chat1, chat2 in
-            let date1 = chat1.messages.last?.timestamp ?? Date.now
-            let date2 = chat2.messages.last?.timestamp ?? Date.now
+            let date1 = chat1.getLastMessage()?.getTimestamp() ?? Date.now
+            let date2 = chat2.getLastMessage()?.getTimestamp() ?? Date.now
             
             return date1 > date2
         }
-        
-        print(allChats)
     }
     
     func getUserActivityStatus(userId: String) -> Bool {
@@ -66,7 +68,7 @@ class AllChatsViewModel: ObservableObject {
     
     func deleteChat(id: String) {
         if var foundChat = (allChats.filter { $0.id == id }).first {
-            foundChat.messages = []
+            foundChat.clearMessages()
             
             var updatedChats = allChats.filter { $0.id != id }
             updatedChats.append(foundChat)

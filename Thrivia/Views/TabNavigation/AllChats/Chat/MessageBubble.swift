@@ -16,29 +16,29 @@ struct MessageBubble: View {
     let messageSelected: (String) -> Void
     
     var backgroundColour: Color {
-        Color(message.sent ? "LightGreen" : "Green")
+        Color(message.getSent() ? "LightGreen" : "Green")
     }
     
     var foregroundColour: Color {
-        Color(message.sent ? "DarkGreen" : "White")
+        Color(message.getSent() ? "DarkGreen" : "White")
     }
     
     var alignment: Alignment {
-        message.sent ? .trailing : .leading
+        message.getSent() ? .trailing : .leading
     }
     
     var paddingEdge: Edge.Set {
-        message.sent ? .trailing : .leading
+        message.getSent() ? .trailing : .leading
     }
     
     var oppositePaddingEdge: Edge.Set {
-        message.sent ? .leading : .trailing
+        message.getSent() ? .leading : .trailing
     }
     
     var body: some View {
-        VStack(alignment: message.sent ? .trailing : .leading) {
+        VStack(alignment: message.getSent() ? .trailing : .leading) {
             HStack {
-                if isSelectMode && !message.sent {
+                if isSelectMode && !message.getSent() {
                     Button {
                         messageSelected(message.id)
                     } label: {
@@ -51,7 +51,7 @@ struct MessageBubble: View {
                     .padding(paddingEdge, 10)
                 }
                 
-                Text(message.content)
+                Text(message.getContent())
                     .font(.custom("Montserrat", size: 15))
                     .padding(.horizontal)
                     .padding(.vertical, 10)
@@ -59,11 +59,11 @@ struct MessageBubble: View {
                     .fontWeight(.medium)
                     .background(backgroundColour)
                     .cornerRadius(15)
-                    .frame(maxWidth: 300, alignment: message.sent ? .trailing : .leading)
+                    .frame(maxWidth: 300, alignment: message.getSent() ? .trailing : .leading)
                     .frame(maxWidth: .infinity, alignment: alignment)
                     .padding(paddingEdge)
                 
-                if isSelectMode && message.sent {
+                if isSelectMode && message.getSent() {
                     Button {
                         messageSelected(message.id)
                     } label: {
@@ -78,9 +78,9 @@ struct MessageBubble: View {
             }
             
             if showTime {
-                Text("\(message.sent ? "Sent" : "Received") at \(message.timestamp.formatted(.dateTime.hour().minute()))")
+                Text("\(message.getSent() ? "Sent" : "Received") at \(message.getTimestamp().formatted(.dateTime.hour().minute()))")
                     .font(.caption)
-                    .padding(message.sent ? .trailing : .leading)
+                    .padding(message.getSent() ? .trailing : .leading)
             }
         }
     }
