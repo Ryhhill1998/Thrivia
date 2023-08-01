@@ -298,9 +298,9 @@
 		5BC6FDDD2A5DD6BF006459F8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5B19413B2A792927002B3907 /* Utilities.swift */,
 				5B9792D92A63D2FB00F078C6 /* Database */,
 				5B9792D82A63D2E300F078C6 /* Structures */,
-				5B19413B2A792927002B3907 /* Utilities.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";

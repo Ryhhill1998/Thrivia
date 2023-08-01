@@ -71,7 +71,7 @@ class AuthenticationModel {
         
         // create and store codable crypto user
         let codableCryptoUser = CodableCryptoUser(cryptoUser: cryptoUser)
-        storeCryptoUserLocally(codableCryptoUser: codableCryptoUser)
+        Utilities.storeCryptoUserInUserDefaults(codableCryptoUser: codableCryptoUser)
         
         // generate key strings for the server
         // identity key
@@ -143,14 +143,8 @@ class AuthenticationModel {
         }
     }
     
-    private func retrieveSavedActivityStatusFromUserDefaults() -> Bool? {
-        let defaults = UserDefaults.standard
-        
-        return defaults.object(forKey: "activityStatus") as? Bool
-    }
-    
     func loadSavedActivityStatus(userId: String) {
-        let savedActivtiyStatus = retrieveSavedActivityStatusFromUserDefaults() ?? true
+        let savedActivtiyStatus = Utilities.retrieveSavedActivityStatusFromUserDefaults() ?? true
         
         updateUserActivityStatusInDB(userId: userId, activityStatus: savedActivtiyStatus)
     }
@@ -259,22 +253,5 @@ class AuthenticationModel {
         docRef.updateData([
             "chatIds": FieldValue.arrayRemove([chatId])
         ])
-    }
-    
-    private func storeCryptoUserLocally(codableCryptoUser: CodableCryptoUser) {
-        let defaults = UserDefaults.standard
-        
-        do {
-            // Create JSON Encoder
-            let encoder = JSONEncoder()
-            
-            // Encode Note
-            let data = try encoder.encode(codableCryptoUser)
-            
-            // Write/Set Data
-            defaults.set(data, forKey: "codableCryptoUser")
-        } catch {
-            print("Unable to Encode Note (\(error))")
-        }
     }
 }

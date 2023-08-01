@@ -111,4 +111,62 @@ class Utilities {
         
         return conversation
     }
+    
+    static func retrieveSavedActivityStatusFromUserDefaults() -> Bool? {
+        let defaults = UserDefaults.standard
+        
+        return defaults.object(forKey: "activityStatus") as? Bool
+    }
+    
+    static func storeCryptoUserInUserDefaults(codableCryptoUser: CodableCryptoUser) {
+        let defaults = UserDefaults.standard
+        
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+            
+            // Encode Note
+            let data = try encoder.encode(codableCryptoUser)
+            
+            // Write/Set Data
+            defaults.set(data, forKey: "codableCryptoUser")
+        } catch {
+            print("Unable to Encode Note (\(error))")
+        }
+    }
+    
+    static func retrieveCounterFromUserDefaults() -> Counter? {
+        var counter: Counter?
+        
+        if let data = UserDefaults.standard.data(forKey: "counter") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+
+                // Decode Note
+                counter = try decoder.decode(Counter.self, from: data)
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        }
+        
+        return counter
+    }
+    
+    static func storeCounterInUserDefaults(counter: Counter) {
+        let defaults = UserDefaults.standard
+        
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+
+            // Encode Note
+            let data = try encoder.encode(counter)
+
+            // Write/Set Data
+            defaults.set(data, forKey: "counter")
+        } catch {
+            print("Unable to Encode Note (\(error))")
+        }
+    }
 }

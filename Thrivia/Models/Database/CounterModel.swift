@@ -15,35 +15,18 @@ class CounterModel {
     func createCounter(name: String, startDate: Date) -> Counter {
         let counter = Counter(name: name, start: startDate)
         
-        storeCounterInUserDefaults(counter: counter)
+        Utilities.storeCounterInUserDefaults(counter: counter)
         
         return counter
-    }
-    
-    private func storeCounterInUserDefaults(counter: Counter) {
-        let defaults = UserDefaults.standard
-        
-        do {
-            // Create JSON Encoder
-            let encoder = JSONEncoder()
-
-            // Encode Note
-            let data = try encoder.encode(counter)
-
-            // Write/Set Data
-            defaults.set(data, forKey: "counter")
-        } catch {
-            print("Unable to Encode Note (\(error))")
-        }
     }
     
     func editCounter(newName: String, newStartDate: Date, updateOriginalStart: Bool) -> Counter? {
         var editedCounter: Counter?
         
-        if var counter = retrieveCounterFromUserDefaults() {
+        if var counter = Utilities.retrieveCounterFromUserDefaults() {
             counter.edit(newName: newName, newStart: newStartDate, updateOriginalStart: updateOriginalStart)
             
-            storeCounterInUserDefaults(counter: counter)
+            Utilities.storeCounterInUserDefaults(counter: counter)
             
             editedCounter = counter
         }
@@ -54,10 +37,10 @@ class CounterModel {
     func resetCounter() -> Counter? {
         var resetCounter: Counter?
         
-        if var counter = retrieveCounterFromUserDefaults() {
+        if var counter = Utilities.retrieveCounterFromUserDefaults() {
             counter.reset()
             
-            storeCounterInUserDefaults(counter: counter)
+            Utilities.storeCounterInUserDefaults(counter: counter)
             
             resetCounter = counter
         }
@@ -66,24 +49,6 @@ class CounterModel {
     }
     
     func getStoredCounter() -> Counter? {
-        return retrieveCounterFromUserDefaults()
-    }
-    
-    private func retrieveCounterFromUserDefaults() -> Counter? {
-        var counter: Counter?
-        
-        if let data = UserDefaults.standard.data(forKey: "counter") {
-            do {
-                // Create JSON Decoder
-                let decoder = JSONDecoder()
-
-                // Decode Note
-                counter = try decoder.decode(Counter.self, from: data)
-            } catch {
-                print("Unable to Decode Note (\(error))")
-            }
-        }
-        
-        return counter
+        return Utilities.retrieveCounterFromUserDefaults()
     }
 }
