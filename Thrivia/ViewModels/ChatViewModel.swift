@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 
 class ChatViewModel: ObservableObject {
-    var allChatsModel = AllChatsModel()
+    var chatModel = ChatModel()
     
     var userId: String?
     var chatListener: ListenerRegistration?
@@ -33,7 +33,7 @@ class ChatViewModel: ObservableObject {
         
         if let chatId = loadedChat?.id,
            let userId = userId {
-            chatListener = allChatsModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
+            chatListener = chatModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
         }
     }
     
@@ -44,7 +44,7 @@ class ChatViewModel: ObservableObject {
             if let userId = userId,
                let chatId = loadedChat?.id,
                let otherUserId = loadedChat?.otherUser.id {
-                allChatsModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
+                chatModel.sendMessage(senderId: userId, receiverId: otherUserId, content: content, chatId: chatId, errorSetter: setError(error:)) {
                     self.setMessageSent(messageSent: true)
                 }
             }
@@ -66,7 +66,7 @@ class ChatViewModel: ObservableObject {
     
     func deleteMessages(messageIds: Set<String>) {
         if let chatId = loadedChat?.id {
-            allChatsModel.deleteMessages(chatId: chatId, messageIds: messageIds, messagesSetter: setMessages(messages:))
+            chatModel.deleteMessages(chatId: chatId, messageIds: messageIds, messagesSetter: setMessages(messages:))
         }
     }
     

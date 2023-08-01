@@ -45,6 +45,8 @@ class AllChatsViewModel: ObservableObject {
             
             return date1 > date2
         }
+        
+        print(allChats)
     }
     
     func getUserActivityStatus(userId: String) -> Bool {
