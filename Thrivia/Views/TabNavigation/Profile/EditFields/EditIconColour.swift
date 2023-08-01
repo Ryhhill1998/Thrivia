@@ -17,11 +17,11 @@ struct EditIconColour: View {
     
     func setSelectedColour(colour: String) {
         selectedColour = colour
+        profileViewModel.resetFetchStatus()
     }
     
     func updateIconColour() {
         profileViewModel.updateUserIconColour(newIconColour: selectedColour)
-        profileViewModel.resetFetchStatus()
     }
     
     func backPressed() {
