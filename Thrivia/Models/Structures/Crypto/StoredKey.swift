@@ -8,7 +8,25 @@
 import Foundation
 
 struct StoredKey: Codable {
-    let messageNumber: Int
-    let key: Data
-    let rawEphemeralKey: Data
+    private let messageNumber: Int
+    private let key: Data
+    private let rawEphemeralKey: Data
+    
+    init(messageNumber: Int, key: Data, rawEphemeralKey: Data) {
+        self.messageNumber = messageNumber
+        self.key = key
+        self.rawEphemeralKey = rawEphemeralKey
+    }
+    
+    func getMessageNumber() -> Int {
+        return messageNumber
+    }
+    
+    func getKey() -> Data {
+        return key
+    }
+    
+    func getRawEphemeralKey() -> Data {
+        return rawEphemeralKey
+    }
 }

@@ -223,9 +223,9 @@ class Conversation {
     
     private func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey? {
         // verify prekey signature
-        let signedPrekey = otherUser.signedPrekeySigning
-        let prekeySignature = otherUser.prekeySignature
-        let identityKey = otherUser.identityKey
+        let signedPrekey = otherUser.getSignedPrekeySigning()
+        let prekeySignature = otherUser.getPrekeySignature()
+        let identityKey = otherUser.getIdentityKey()
         let isValidSignature = signedPrekey.isValidSignature(prekeySignature, for: identityKey.rawRepresentation)
         
         if !isValidSignature {
@@ -234,10 +234,10 @@ class Conversation {
         
         // generate Diffie-Hellman shared secrets
         do {
-            let dh1 = try user.getIdentityKeyPrivate().sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
-            let dh2 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
-            let dh3 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
-            let dh4 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
+            let dh1 = try user.getIdentityKeyPrivate().sharedSecretFromKeyAgreement(with: otherUser.getSignedPrekey())
+            let dh2 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.getIdentityKey())
+            let dh3 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.getSignedPrekey())
+            let dh4 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.getOneTimePrekey())
             
             // generate and return master key
             let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
@@ -334,7 +334,7 @@ class Conversation {
             generateDhRatchetPair()
             
             // calculate dh output
-            let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.signedPrekey
+            let dhRatchetKey = otherUserDhRatchetKey != nil ? otherUserDhRatchetKey! : otherUser.getSignedPrekey()
             guard let dhOutputKey = generateDhOutputKey(otherUserDhRatchetKey: dhRatchetKey) else { return nil }
             
             // derive root chain and send chain keys from KDF output
@@ -365,7 +365,7 @@ class Conversation {
         let messageKey = kdfMessageOutput[1]
         
         // generate associated data
-        let associatedData = generateAssociatedData(senderId: user.getId(), senderIdentityKey: user.getIdentityKeyPublic().rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
+        let associatedData = generateAssociatedData(senderId: user.getId(), senderIdentityKey: user.getIdentityKeyPublic().rawRepresentation, recipientId: otherUser.getId(), recipientIdentityKey: otherUser.getIdentityKey().rawRepresentation)
         
         // convert message content to data
         let messageData = messageContent.data(using: .utf8)!
@@ -375,7 +375,7 @@ class Conversation {
             // create new message
             let messageId = UUID().uuidString
             
-            let message = EncryptedMessage(id: messageId, content: encryptedMessage.base64EncodedString(), timestamp: Date.now, identityKey: user.getIdentityKeyPublic().rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
+            let message = EncryptedMessage(id: messageId, content: encryptedMessage.base64EncodedString(), timestamp: Date.now, identityKey: user.getIdentityKeyPublic().rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.getPrekeyIdentifier(), sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
             
             // set last message received to false since user sending this message
             lastMessageReceived = false
@@ -425,7 +425,7 @@ class Conversation {
         for i in 0..<storedMessageKeys.count {
             let storedKey = storedMessageKeys[i]
             
-            if storedKey.rawEphemeralKey == ephemeralKeyRaw && storedKey.messageNumber == messageNumber {
+            if storedKey.getRawEphemeralKey() == ephemeralKeyRaw && storedKey.getMessageNumber() == messageNumber {
                 foundKeyIndex = i
                 break
             }
@@ -535,11 +535,11 @@ class Conversation {
             // increment receive chain length
             currentReceiveChainLength += 1
         } else {
-            messageKey = SymmetricKey(data: storedMessageKey!.key)
+            messageKey = SymmetricKey(data: storedMessageKey!.getKey())
         }
         
         // generate associated data
-        let associatedData = generateAssociatedData(senderId: otherUser.id, senderIdentityKey: otherUser.identityKey.rawRepresentation, recipientId: user.getId(), recipientIdentityKey: user.getIdentityKeyPublic().rawRepresentation)
+        let associatedData = generateAssociatedData(senderId: otherUser.getId(), senderIdentityKey: otherUser.getIdentityKey().rawRepresentation, recipientId: user.getId(), recipientIdentityKey: user.getIdentityKeyPublic().rawRepresentation)
         
         // decrypt message
         if let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData) {

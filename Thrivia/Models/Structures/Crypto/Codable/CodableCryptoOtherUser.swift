@@ -45,23 +45,23 @@ struct CodableCryptoOtherUser: Codable {
     }
     
     init(cryptoOtherUser: CryptoOtherUser) {
-        id = cryptoOtherUser.id
+        id = cryptoOtherUser.getId()
         
         // public identity key retrieved from server
-        identityKey = cryptoOtherUser.identityKey.rawRepresentation
+        identityKey = cryptoOtherUser.getIdentityKey().rawRepresentation
         
         // public signed prekey retrieved from server
-        signedPrekey = cryptoOtherUser.signedPrekey.rawRepresentation
+        signedPrekey = cryptoOtherUser.getSignedPrekey().rawRepresentation
         
         // signed prekey signing
-        signedPrekeySigning = cryptoOtherUser.signedPrekeySigning.rawRepresentation
+        signedPrekeySigning = cryptoOtherUser.getSignedPrekeySigning().rawRepresentation
         
         // prekey signature retrieved from server
-        prekeySignature = cryptoOtherUser.prekeySignature
+        prekeySignature = cryptoOtherUser.getPrekeySignature()
         
         // one-time prekey retrieved from server
-        oneTimePrekey = cryptoOtherUser.oneTimePrekey.rawRepresentation
+        oneTimePrekey = cryptoOtherUser.getOneTimePrekey().rawRepresentation
         
-        prekeyIdentifier = cryptoOtherUser.prekeyIdentifier
+        prekeyIdentifier = cryptoOtherUser.getPrekeyIdentifier()
     }
 }
