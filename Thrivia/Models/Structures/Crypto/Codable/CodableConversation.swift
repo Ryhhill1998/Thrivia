@@ -42,43 +42,43 @@ struct CodableConversation: Codable {
     
     init(conversation: Conversation) {
         // users
-        user = CodableCryptoUser(cryptoUser: conversation.user)
-        otherUser = CodableCryptoOtherUser(cryptoOtherUser: conversation.otherUser)
+        user = CodableCryptoUser(cryptoUser: conversation.getUser())
+        otherUser = CodableCryptoOtherUser(cryptoOtherUser: conversation.getOtherUser())
         
-        messages = conversation.messages
+        messages = conversation.getMessages()
         
         // boolean to show whether last message was received from other user
-        lastMessageReceived = conversation.lastMessageReceived
+        lastMessageReceived = conversation.lastMessageWasReceived()
         
         // dh ratchet keys
-        dhRatchetPrivateKey = conversation.dhRatchetPrivateKey.rawRepresentation
-        dhRatchetPublicKey = conversation.dhRatchetPublicKey.rawRepresentation
+        dhRatchetPrivateKey = conversation.getDhRatchetPrivateKey().rawRepresentation
+        dhRatchetPublicKey = conversation.getDhRatchetPublicKey().rawRepresentation
         
         // other user dh key
-        otherUserDhRatchetKey = conversation.otherUserDhRatchetKey?.rawRepresentation
+        otherUserDhRatchetKey = conversation.getOtherUserDhRatchetKey()?.rawRepresentation
         
         // symmetric ratchet chainkeys
-        if let rootChainKey = conversation.rootChainKey {
+        if let rootChainKey = conversation.getRootChainKey() {
             self.rootChainKey = CodableConversation.convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey)
         }
         
-        if let sendChainKey = conversation.sendChainKey {
+        if let sendChainKey = conversation.getSendChainKey() {
             self.sendChainKey = CodableConversation.convertSymmetricKeyToByteSequence(symmetricKey: sendChainKey)
         }
         
-        if let receiveChainKey = conversation.receiveChainKey {
+        if let receiveChainKey = conversation.getReceiveChainKey() {
             self.receiveChainKey = CodableConversation.convertSymmetricKeyToByteSequence(symmetricKey: receiveChainKey)
         }
         
         // send chain lengths
-        previousSendChainLength = conversation.previousSendChainLength
-        currentSendChainLength = conversation.currentSendChainLength
+        previousSendChainLength = conversation.getPreviousSendChainLength()
+        currentSendChainLength = conversation.getCurrentSendChainLength()
         
         // receive chain length
-        currentReceiveChainLength = conversation.currentReceiveChainLength
+        currentReceiveChainLength = conversation.getCurrentReceiveChainLength()
         
         // last ephemeral key received
-        lastEphemeralKeyReceived = conversation.lastEphemeralKeyReceived
+        lastEphemeralKeyReceived = conversation.getLastEphemeralKeyReceived()
     }
     
     static func convertSymmetricKeyToByteSequence(symmetricKey: SymmetricKey) -> Data {

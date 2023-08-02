@@ -10,27 +10,27 @@ import CryptoKit
 
 struct CryptoUser {
     // user ID
-    let id: String
+    private let id: String
     
     // identity keys
-    let identityKeyPrivate: Curve25519.KeyAgreement.PrivateKey
-    let identityKeyPublic: Curve25519.KeyAgreement.PublicKey
+    private let identityKeyPrivate: Curve25519.KeyAgreement.PrivateKey
+    private let identityKeyPublic: Curve25519.KeyAgreement.PublicKey
     
     // signed prekeys
-    let signedPrekeyPrivate: Curve25519.KeyAgreement.PrivateKey
-    let signedPrekeyPublic: Curve25519.KeyAgreement.PublicKey
+    private let signedPrekeyPrivate: Curve25519.KeyAgreement.PrivateKey
+    private let signedPrekeyPublic: Curve25519.KeyAgreement.PublicKey
     
     // signed prekey signings
-    let signedPrekeySigningPrivate: Curve25519.Signing.PrivateKey
-    let signedPrekeySigningPublic: Curve25519.Signing.PublicKey
+    private let signedPrekeySigningPrivate: Curve25519.Signing.PrivateKey
+    private let signedPrekeySigningPublic: Curve25519.Signing.PublicKey
     
     // prekey signature
-    var prekeySignature: Data {
+    private var prekeySignature: Data {
         return try! signedPrekeySigningPrivate.signature(for: identityKeyPublic.rawRepresentation)
     }
     
     // private one-time prekeys
-    var oneTimePrekeysPrivate: [Curve25519.KeyAgreement.PrivateKey]
+    private var oneTimePrekeysPrivate: [Curve25519.KeyAgreement.PrivateKey]
     
     init(userId: String) {
         id = userId
@@ -64,6 +64,42 @@ struct CryptoUser {
         
         // private one-time prekeys
         oneTimePrekeysPrivate = codableCryptoUser.oneTimePrekeysPrivate.map { try! Curve25519.KeyAgreement.PrivateKey(rawRepresentation: $0) }
+    }
+    
+    func getId() -> String {
+        return id
+    }
+    
+    func getIdentityKeyPrivate() -> Curve25519.KeyAgreement.PrivateKey {
+        return identityKeyPrivate
+    }
+    
+    func getIdentityKeyPublic() -> Curve25519.KeyAgreement.PublicKey {
+        return identityKeyPublic
+    }
+    
+    func getSignedPrekeyPrivate() -> Curve25519.KeyAgreement.PrivateKey {
+        return signedPrekeyPrivate
+    }
+    
+    func getSignedPrekeyPublic() -> Curve25519.KeyAgreement.PublicKey {
+        return signedPrekeyPublic
+    }
+    
+    func getSignedPrekeySigningPrivate() -> Curve25519.Signing.PrivateKey {
+        return signedPrekeySigningPrivate
+    }
+    
+    func getSignedPrekeySigningPublic() -> Curve25519.Signing.PublicKey {
+        return signedPrekeySigningPublic
+    }
+    
+    func getPrekeySignature() -> Data {
+        return prekeySignature
+    }
+    
+    func getOneTimePrekeysPrivate() -> [Curve25519.KeyAgreement.PrivateKey] {
+        return oneTimePrekeysPrivate
     }
     
     mutating func replaceOneTimePrekeyAndGetPublicKeyString(prekeyIdentifier: Int) -> String {

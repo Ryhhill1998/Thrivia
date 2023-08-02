@@ -9,10 +9,10 @@ import Foundation
 import Firebase
 
 class ChatViewModel: ObservableObject {
-    var chatModel = ChatModel()
+    private var chatModel = ChatModel()
     
-    var userId: String?
-    var chatListener: ListenerRegistration?
+    private var userId: String?
+    private var chatListener: ListenerRegistration?
     
     @Published var loadedChat: Chat?
     @Published var messages: [Message] = []
@@ -20,6 +20,10 @@ class ChatViewModel: ObservableObject {
     @Published var sendError = ""
     @Published var errorExists = false
     @Published var messageSent = false
+    
+    func setUserId(userId: String) {
+        self.userId = userId
+    }
     
     func setMessages(messages: [Message]) {
         self.messages = messages
@@ -33,7 +37,7 @@ class ChatViewModel: ObservableObject {
         
         if let chatId = loadedChat?.id,
            let userId = userId {
-            chatListener = chatModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:))
+            chatModel.listenToChat(chatId: chatId, userId: userId, messagesSetter: setMessages(messages:)) { self.chatListener = $0 }
         }
     }
     

@@ -84,10 +84,10 @@ class AuthenticationModel {
         let publicSignedPrekeySigningString = codableCryptoUser.signedPrekeySigningPublic.base64EncodedString()
         
         // prekey signature
-        let signedPrekeySignatureString = cryptoUser.prekeySignature.base64EncodedString()
+        let signedPrekeySignatureString = cryptoUser.getPrekeySignature().base64EncodedString()
         
         // 10 x one-time prekeys
-        let privateOneTimePrekeys = cryptoUser.oneTimePrekeysPrivate
+        let privateOneTimePrekeys = cryptoUser.getOneTimePrekeysPrivate()
         let publicOneTimePrekeys = privateOneTimePrekeys.map { $0.publicKey }
         let publicOneTimePrekeyStrings = publicOneTimePrekeys.map { $0.rawRepresentation.base64EncodedString() } // to be stored on server
         

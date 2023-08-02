@@ -50,9 +50,9 @@ class Utilities {
         let defaults = UserDefaults.standard
         
         let codableConversation = CodableConversation(conversation: conversation)
-        let ephemeralKeySet = conversation.previouslyReceivedEphemeralKeys
+        let ephemeralKeySet = conversation.getPreviouslyReceivedEphemeralKeys()
         let ephemeralKeyArray = Array(ephemeralKeySet)
-        let storedMessageKeys = conversation.storedMessageKeys
+        let storedMessageKeys = conversation.getStoredMessageKeys()
         
         do {
             // Create JSON Encoder

@@ -15,55 +15,50 @@ class Conversation {
     private static let singleByte2 = Int8(bitPattern: 0x02).description.data(using: .utf8)!
     
     // users
-    var user: CryptoUser
-    var otherUser: CryptoOtherUser
+    private var user: CryptoUser
+    private var otherUser: CryptoOtherUser
     
     // decrypted messages
-    var messages: [Message]
+    private var messages: [Message] = []
     
     // boolean to show whether last message was received from other user
-    var lastMessageReceived: Bool?
+    private var lastMessageReceived: Bool?
     
     // dh ratchet keys
-    var dhRatchetPrivateKey: Curve25519.KeyAgreement.PrivateKey
-    var dhRatchetPublicKey: Curve25519.KeyAgreement.PublicKey
+    private var dhRatchetPrivateKey: Curve25519.KeyAgreement.PrivateKey
+    private var dhRatchetPublicKey: Curve25519.KeyAgreement.PublicKey
     
     // other user dh key
-    var otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey?
+    private var otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey?
     
     // symmetric ratchet chainkeys
-    var rootChainKey: SymmetricKey?
-    var sendChainKey: SymmetricKey?
-    var receiveChainKey: SymmetricKey?
+    private var rootChainKey: SymmetricKey?
+    private var sendChainKey: SymmetricKey?
+    private var receiveChainKey: SymmetricKey?
     
     // send chain lengths
-    var previousSendChainLength = 0
-    var currentSendChainLength = 0
+    private var previousSendChainLength = 0
+    private var currentSendChainLength = 0
     
     // receive chain length
-    var currentReceiveChainLength = 0
+    private var currentReceiveChainLength = 0
     
     // last ephemeral key received
-    var lastEphemeralKeyReceived: Data?
+    private var lastEphemeralKeyReceived: Data?
     
     // previous ephemeral keys received to check if message is new or old chain
-    var previouslyReceivedEphemeralKeys: Set<Data>
+    private var previouslyReceivedEphemeralKeys: Set<Data> = []
     
     // store message keys for missed messages
-    var storedMessageKeys: [StoredKey]
+    private var storedMessageKeys: [StoredKey] = []
     
     // new object initialiser
     init(user: CryptoUser, otherUser: CryptoOtherUser) {
         self.user = user
         self.otherUser = otherUser
         
-        messages = []
-        
-        dhRatchetPrivateKey = user.signedPrekeyPrivate
-        dhRatchetPublicKey = user.signedPrekeyPublic
-        
-        previouslyReceivedEphemeralKeys = []
-        storedMessageKeys = []
+        dhRatchetPrivateKey = user.getSignedPrekeyPrivate()
+        dhRatchetPublicKey = user.getSignedPrekeyPublic()
     }
     
     // initialiser to restore object from local storage codable format
@@ -117,19 +112,103 @@ class Conversation {
         self.storedMessageKeys = storedMessageKeys
     }
     
-    func convertSharedSecretToByteSequence(sharedSecret: SharedSecret) -> Data {
+    func getUser() -> CryptoUser {
+        return user
+    }
+    
+    func getOtherUser() -> CryptoOtherUser {
+        return otherUser
+    }
+    
+    func lastMessageWasReceived() -> Bool? {
+        return lastMessageReceived
+    }
+    
+    func getMessages() -> [Message] {
+        return messages
+    }
+    
+    func getDhRatchetPrivateKey() -> Curve25519.KeyAgreement.PrivateKey {
+        return dhRatchetPrivateKey
+    }
+    
+    func getDhRatchetPublicKey() -> Curve25519.KeyAgreement.PublicKey {
+        return dhRatchetPublicKey
+    }
+    
+    func getOtherUserDhRatchetKey() -> Curve25519.KeyAgreement.PublicKey? {
+        return otherUserDhRatchetKey
+    }
+    
+    func getRootChainKey() -> SymmetricKey? {
+        return rootChainKey
+    }
+    
+    func getSendChainKey() -> SymmetricKey? {
+        return sendChainKey
+    }
+    
+    func getReceiveChainKey() -> SymmetricKey? {
+        return receiveChainKey
+    }
+    
+    func getPreviousSendChainLength() -> Int {
+        return previousSendChainLength
+    }
+    
+    func getCurrentSendChainLength() -> Int {
+        return currentSendChainLength
+    }
+    
+    func getCurrentReceiveChainLength() -> Int {
+        return currentReceiveChainLength
+    }
+    
+    func getLastEphemeralKeyReceived() -> Data? {
+        return lastEphemeralKeyReceived
+    }
+    
+    func getPreviouslyReceivedEphemeralKeys() -> Set<Data> {
+        return previouslyReceivedEphemeralKeys
+    }
+    
+    func getStoredMessageKeys() -> [StoredKey] {
+        return storedMessageKeys
+    }
+    
+    func resetMessages() {
+        messages = []
+    }
+    
+    func removeMessages(messageIds: Set<String>) {
+        var editedMessages: [Message] = []
+        
+        for message in messages {
+            if !messageIds.contains(message.id) {
+                editedMessages.append(message)
+            }
+        }
+        
+        messages = editedMessages
+    }
+    
+    func isFirstMessage() -> Bool {
+        return lastMessageReceived == nil
+    }
+    
+    private func convertSharedSecretToByteSequence(sharedSecret: SharedSecret) -> Data {
         var result: Data?
         sharedSecret.withUnsafeBytes { result = Data($0) }
         return result!
     }
     
-    func convertSymmetricKeyToByteSequence(symmetricKey: SymmetricKey) -> Data {
+    private func convertSymmetricKeyToByteSequence(symmetricKey: SymmetricKey) -> Data {
         var result: Data?
         symmetricKey.withUnsafeBytes { result = Data($0) }
         return result!
     }
     
-    func generateMasterKeyFromDH(dh1: SharedSecret, dh2: SharedSecret, dh3: SharedSecret, dh4: SharedSecret) -> SymmetricKey {
+    private func generateMasterKeyFromDH(dh1: SharedSecret, dh2: SharedSecret, dh3: SharedSecret, dh4: SharedSecret) -> SymmetricKey {
         // combine shared secrets to calculate master symmetric key
         var byteSequence = convertSharedSecretToByteSequence(sharedSecret: dh1)
         byteSequence.append(convertSharedSecretToByteSequence(sharedSecret: dh2))
@@ -142,7 +221,7 @@ class Conversation {
         return masterKey
     }
     
-    func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey? {
+    private func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey? {
         // verify prekey signature
         let signedPrekey = otherUser.signedPrekeySigning
         let prekeySignature = otherUser.prekeySignature
@@ -155,7 +234,7 @@ class Conversation {
         
         // generate Diffie-Hellman shared secrets
         do {
-            let dh1 = try user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
+            let dh1 = try user.getIdentityKeyPrivate().sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
             let dh2 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.identityKey)
             let dh3 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.signedPrekey)
             let dh4 = try ephemeralKeyPrivate.sharedSecretFromKeyAgreement(with: otherUser.oneTimePrekey)
@@ -168,7 +247,7 @@ class Conversation {
         }
     }
     
-    func generateAssociatedData(senderId: String, senderIdentityKey: Data, recipientId: String, recipientIdentityKey: Data) -> Data {
+    private func generateAssociatedData(senderId: String, senderIdentityKey: Data, recipientId: String, recipientIdentityKey: Data) -> Data {
         // calculate associated data byte sequence - ***THIS SHOULD BE HASHED*** this forms the safety number
         // safety number is shown publicly for a conversation in signal to verify identities - should be same on both ends
         var associatedData = Data()
@@ -187,26 +266,26 @@ class Conversation {
         return hashData
     }
     
-    func getKdfKeyFromKdfOutput(output: SymmetricKey) -> SymmetricKey {
+    private func getKdfKeyFromKdfOutput(output: SymmetricKey) -> SymmetricKey {
         var outputBytes = Data()
         output.withUnsafeBytes { outputBytes = Data($0) }
         let kdfKeyBytes = outputBytes[..<32]
         return SymmetricKey(data: kdfKeyBytes)
     }
     
-    func getOutputKeyFromKdfOutput(output: SymmetricKey) -> SymmetricKey {
+    private func getOutputKeyFromKdfOutput(output: SymmetricKey) -> SymmetricKey {
         var outputBytes = Data()
         output.withUnsafeBytes { outputBytes = Data($0) }
         let messageKey = outputBytes[32...]
         return SymmetricKey(data: messageKey)
     }
     
-    func generateDhRatchetPair() {
+    private func generateDhRatchetPair() {
         dhRatchetPrivateKey = Curve25519.KeyAgreement.PrivateKey()
         dhRatchetPublicKey = dhRatchetPrivateKey.publicKey
     }
     
-    func generateDhOutputKey(otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey? {
+    private func generateDhOutputKey(otherUserDhRatchetKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey? {
         do {
             let dhOutput = try dhRatchetPrivateKey.sharedSecretFromKeyAgreement(with: otherUserDhRatchetKey)
             let dhOutputBytes = convertSharedSecretToByteSequence(sharedSecret: dhOutput)
@@ -217,7 +296,7 @@ class Conversation {
         }
     }
     
-    func kdfRoot(dhOutputKey: SymmetricKey) -> [SymmetricKey] {
+    private func kdfRoot(dhOutputKey: SymmetricKey) -> [SymmetricKey] {
         let rootChainKeyBytes = convertSymmetricKeyToByteSequence(symmetricKey: rootChainKey!)
         let rootChainOutput = HKDF<SHA256>.deriveKey(inputKeyMaterial: dhOutputKey, salt: rootChainKeyBytes, info: Conversation.rootDerivationInfo, outputByteCount: 64)
         
@@ -230,13 +309,13 @@ class Conversation {
         return [rootKey, chainKey]
     }
     
-    func kdfMessage(currentChainKey: SymmetricKey) -> [SymmetricKey] {
+    private func kdfMessage(currentChainKey: SymmetricKey) -> [SymmetricKey] {
         let messageKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: currentChainKey, info: Conversation.singleByte1, outputByteCount: 32)
         let chainKey = HKDF<SHA256>.deriveKey(inputKeyMaterial: currentChainKey, info: Conversation.singleByte2, outputByteCount: 32)
         return [chainKey, messageKey]
     }
     
-    func encryptMessage(messageData: Data, messageKey: SymmetricKey, associatedData: Data) -> Data? {
+    private func encryptMessage(messageData: Data, messageKey: SymmetricKey, associatedData: Data) -> Data? {
         do {
             let encryptedMessage = try ChaChaPoly.seal(messageData, using: messageKey, authenticating: associatedData).combined
             
@@ -286,7 +365,7 @@ class Conversation {
         let messageKey = kdfMessageOutput[1]
         
         // generate associated data
-        let associatedData = generateAssociatedData(senderId: user.id, senderIdentityKey: user.identityKeyPublic.rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
+        let associatedData = generateAssociatedData(senderId: user.getId(), senderIdentityKey: user.getIdentityKeyPublic().rawRepresentation, recipientId: otherUser.id, recipientIdentityKey: otherUser.identityKey.rawRepresentation)
         
         // convert message content to data
         let messageData = messageContent.data(using: .utf8)!
@@ -296,7 +375,7 @@ class Conversation {
             // create new message
             let messageId = UUID().uuidString
             
-            let message = EncryptedMessage(id: messageId, timestamp: Date.now, cipherText: encryptedMessage.base64EncodedString(), identityKey: user.identityKeyPublic.rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
+            let message = EncryptedMessage(id: messageId, content: encryptedMessage.base64EncodedString(), timestamp: Date.now, identityKey: user.getIdentityKeyPublic().rawRepresentation.base64EncodedString(), ephemeralKey: dhRatchetPublicKey.rawRepresentation.base64EncodedString(), oneTimePreKeyIdentifier: otherUser.prekeyIdentifier, sendChainLength: currentSendChainLength, previousSendChainLength: previousSendChainLength)
             
             // set last message received to false since user sending this message
             lastMessageReceived = false
@@ -312,13 +391,13 @@ class Conversation {
         }
     }
     
-    func generateRecipientMasterKey(oneTimePrekeyIdentifier: Int, senderIdentityKey: Curve25519.KeyAgreement.PublicKey, ephemeralKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey? {
+    private func generateRecipientMasterKey(oneTimePrekeyIdentifier: Int, senderIdentityKey: Curve25519.KeyAgreement.PublicKey, ephemeralKey: Curve25519.KeyAgreement.PublicKey) -> SymmetricKey? {
         do {
             // generate Diffie-Hellman shared secrets
-            let dh1 = try user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: senderIdentityKey)
-            let dh2 = try user.identityKeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
-            let dh3 = try user.signedPrekeyPrivate.sharedSecretFromKeyAgreement(with: ephemeralKey)
-            let dh4 = try user.oneTimePrekeysPrivate[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
+            let dh1 = try user.getSignedPrekeyPrivate().sharedSecretFromKeyAgreement(with: senderIdentityKey)
+            let dh2 = try user.getIdentityKeyPrivate().sharedSecretFromKeyAgreement(with: ephemeralKey)
+            let dh3 = try user.getSignedPrekeyPrivate().sharedSecretFromKeyAgreement(with: ephemeralKey)
+            let dh4 = try user.getOneTimePrekeysPrivate()[oneTimePrekeyIdentifier].sharedSecretFromKeyAgreement(with: ephemeralKey)
             
             // generate and return master key
             let masterKey = generateMasterKeyFromDH(dh1: dh1, dh2: dh2, dh3: dh3, dh4: dh4)
@@ -328,9 +407,9 @@ class Conversation {
         }
     }
     
-    func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey, associatedData: Data) -> Data? {
+    private func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey, associatedData: Data) -> Data? {
         do {
-            let cipherText = Data(base64Encoded: message.cipherText)!
+            let cipherText = Data(base64Encoded: message.getContent())!
             let sealedBox = try ChaChaPoly.SealedBox(combined: cipherText)
             let decryptedData = try ChaChaPoly.open(sealedBox, using: messageKey, authenticating: associatedData)
             return decryptedData
@@ -340,7 +419,7 @@ class Conversation {
         }
     }
     
-    func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
+    private func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
         var foundKeyIndex: Int?
         
         for i in 0..<storedMessageKeys.count {
@@ -357,7 +436,7 @@ class Conversation {
         return storedMessageKeys.remove(at: index)
     }
     
-    func storeSkippedMessageKeys(skippedMessages: Int, messageNumber: Int, ephemeralKeyRaw: Data) {
+    private func storeSkippedMessageKeys(skippedMessages: Int, messageNumber: Int, ephemeralKeyRaw: Data) {
         var count = skippedMessages
         var N = messageNumber
         
@@ -378,16 +457,16 @@ class Conversation {
         var ephemeralKey: Curve25519.KeyAgreement.PublicKey
         
         do {
-            senderIdentityKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.identityKey)!)
-            ephemeralKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.ephemeralKey)!)
+            senderIdentityKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.getIdentityKey())!)
+            ephemeralKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: Data(base64Encoded: message.getEphemeralKey())!)
         } catch {
             return
         }
         
         otherUserDhRatchetKey = ephemeralKey
-        let prekeyIdentifier = message.oneTimePreKeyIdentifier
-        let N = message.sendChainLength
-        let PN = message.previousSendChainLength
+        let prekeyIdentifier = message.getOneTimePrekeyIdentifier()
+        let N = message.getSendChainLength()
+        let PN = message.getPreviousSendChainLength()
         
         var storedMessageKey: StoredKey?
         var messageKey: SymmetricKey
@@ -460,34 +539,18 @@ class Conversation {
         }
         
         // generate associated data
-        let associatedData = generateAssociatedData(senderId: otherUser.id, senderIdentityKey: otherUser.identityKey.rawRepresentation, recipientId: user.id, recipientIdentityKey: user.identityKeyPublic.rawRepresentation)
+        let associatedData = generateAssociatedData(senderId: otherUser.id, senderIdentityKey: otherUser.identityKey.rawRepresentation, recipientId: user.getId(), recipientIdentityKey: user.getIdentityKeyPublic().rawRepresentation)
         
         // decrypt message
         if let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData) {
             // add new message object to messages array
             let messageContent = String(data: decryptedData, encoding: .utf8)!
-            let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: message.timestamp)
+            let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: message.getTimestamp())
             messages.append(newMessage)
             
             messages.sort {
-                $0.timestamp < $1.timestamp
+                $0.getTimestamp() < $1.getTimestamp()
             }
         }
-    }
-    
-    func resetMessages() {
-        messages = []
-    }
-    
-    func removeMessage(messageIds: Set<String>) {
-        var editedMessages: [Message] = []
-        
-        for message in messages {
-            if !messageIds.contains(message.id) {
-                editedMessages.append(message)
-            }
-        }
-        
-        messages = editedMessages
     }
 }

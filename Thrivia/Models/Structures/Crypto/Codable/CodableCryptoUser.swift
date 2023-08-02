@@ -28,21 +28,21 @@ struct CodableCryptoUser: Codable {
     
     init(cryptoUser: CryptoUser) {
         // id
-        id = cryptoUser.id
+        id = cryptoUser.getId()
         
         // identity keys
-        identityKeyPrivate = cryptoUser.identityKeyPrivate.rawRepresentation
-        identityKeyPublic = cryptoUser.identityKeyPublic.rawRepresentation
+        identityKeyPrivate = cryptoUser.getIdentityKeyPrivate().rawRepresentation
+        identityKeyPublic = cryptoUser.getIdentityKeyPublic().rawRepresentation
         
         // signed prekeys
-        signedPrekeyPrivate = cryptoUser.signedPrekeyPrivate.rawRepresentation
-        signedPrekeyPublic = cryptoUser.signedPrekeyPublic.rawRepresentation
+        signedPrekeyPrivate = cryptoUser.getSignedPrekeyPrivate().rawRepresentation
+        signedPrekeyPublic = cryptoUser.getSignedPrekeyPublic().rawRepresentation
         
         // signed prekey signings
-        signedPrekeySigningPrivate = cryptoUser.signedPrekeySigningPrivate.rawRepresentation
-        signedPrekeySigningPublic = cryptoUser.signedPrekeySigningPublic.rawRepresentation
+        signedPrekeySigningPrivate = cryptoUser.getSignedPrekeySigningPrivate().rawRepresentation
+        signedPrekeySigningPublic = cryptoUser.getSignedPrekeySigningPublic().rawRepresentation
         
         // private one-time prekeys
-        oneTimePrekeysPrivate = cryptoUser.oneTimePrekeysPrivate.map { $0.rawRepresentation }
+        oneTimePrekeysPrivate = cryptoUser.getOneTimePrekeysPrivate().map { $0.rawRepresentation }
     }
 }

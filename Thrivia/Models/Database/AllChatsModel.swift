@@ -158,7 +158,7 @@ class AllChatsModel {
                                                 let conversation = Utilities.retrieveConversationFromUserDefaults(chatId: chatId)
                                                 
                                                 // initialise empty messages array
-                                                var messages: [Message] = conversation?.messages ?? []
+                                                var messages: [Message] = conversation?.getMessages() ?? []
                                                 
                                                 if numberOfUnreadMessages > 0 {
                                                     messages.append(Message(id: UUID().uuidString, content: "\(numberOfUnreadMessages) new message\(numberOfUnreadMessages > 1 ? "s" : "")", sent: false, read: false, timestamp: Date.now))

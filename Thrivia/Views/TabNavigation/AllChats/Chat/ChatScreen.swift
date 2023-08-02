@@ -164,7 +164,7 @@ struct ChatScreen: View {
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
         .onAppear() {
-            chatViewModel.userId = userId
+            chatViewModel.setUserId(userId: userId)
             chatViewModel.loadedChat = loadedChat
             
             chatViewModel.listenToChat()
