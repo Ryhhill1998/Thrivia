@@ -1,5 +1,5 @@
 //
-//  PasswordField.swift
+//  SecurePasswordField.swift
 //  Thrivia
 //
 //  Created by Ryan Henzell-Hill on 03/08/2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PasswordField: View {
+struct SecurePasswordField: View {
     
     let fieldName: String
     @Binding var passwordFieldText: String
@@ -15,7 +15,7 @@ struct PasswordField: View {
     
     var body: some View {
         HStack {
-            TextField(fieldName, text: $passwordFieldText)
+            SecureField(fieldName, text: $passwordFieldText)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .font(.custom("Montserrat", size: 18))
@@ -25,7 +25,7 @@ struct PasswordField: View {
             Button {
                 action()
             } label: {
-                Image(systemName: "eye.slash.fill")
+                Image(systemName: "eye.fill")
             }
             .padding(.horizontal, 20)
             .foregroundColor(Color("Green"))

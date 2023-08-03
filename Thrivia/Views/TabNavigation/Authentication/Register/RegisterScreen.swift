@@ -141,26 +141,22 @@ struct RegisterScreen: View {
                 }
                 
                 HStack(spacing: 5.0) {
-                    Text("Already have an account?")
-                        .font(.custom("Montserrat", size: 15))
-                        .foregroundColor(Color("Black"))
+                    LinkText(text: "Already have an account?")
                     
                     NavigationLink {
                         LoginScreen()
+                            .environmentObject(authenticationViewModel)
                     } label: {
-                        Text("Login")
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color("Black"))
+                        LinkButtonText(text: "Login")
                     }
                 }
-                .alert("Register failure", isPresented: $authenticationViewModel.errorExists, actions: {
-                    Button("Okay", role: .cancel) {}
-                }, message: {
-                    Text(authenticationViewModel.error)
-                })
             }
         }
+        .alert("Register failure", isPresented: $authenticationViewModel.errorExists, actions: {
+            Button("Okay", role: .cancel) {}
+        }, message: {
+            Text(authenticationViewModel.error)
+        })
         .onDisappear() {
             emailFieldText = ""
             usernameFieldField = ""

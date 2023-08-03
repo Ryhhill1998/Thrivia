@@ -9,12 +9,10 @@ import SwiftUI
 import Firebase
 
 struct LoginScreen: View {
-    
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     
     @State var emailFieldText: String = ""
     @State var passwordFieldText: String = ""
-    
     @State var showPassword = false
     
     func login() {
@@ -28,41 +26,16 @@ struct LoginScreen: View {
             VStack(spacing: 15.0) {
                 AppIcon()
                 
-                TextField("Email", text: $emailFieldText)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .font(.custom("Montserrat", size: 18))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("Black"))
-                    .padding(.horizontal)
+                FormField(fieldName: "Email", fieldText: $emailFieldText)
                 
                 if !showPassword {
-                    PasswordField(passwordFieldText: $passwordFieldText) {
+                    SecurePasswordField(fieldName: "Password", passwordFieldText: $passwordFieldText) {
                         showPassword = true
                     }
                 } else {
-                    HStack {
-                        TextField("Password", text: $passwordFieldText)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .font(.custom("Montserrat", size: 18))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("Black"))
-                        
-                        Button {
-                            showPassword = false
-                        } label: {
-                            Image(systemName: "eye.slash.fill")
-                        }
-                        .padding(.horizontal, 20)
-                        .foregroundColor(Color("Green"))
-                        
+                    PasswordField(fieldName: "Password", passwordFieldText: $passwordFieldText) {
+                        showPassword = false
                     }
-                    .background(Color("White"))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
                 }
                 
                 if authenticationViewModel.fetchingAuthStatus {
@@ -72,27 +45,23 @@ struct LoginScreen: View {
                 }
                 
                 HStack(spacing: 5.0) {
-                    Text("Don't have an account?")
-                        .font(.custom("Montserrat", size: 15))
-                        .foregroundColor(Color("Black"))
+                    LinkText(text: "Don't have an account?")
                     
                     NavigationLink {
                         RegisterScreen()
                             .environmentObject(authenticationViewModel)
                     } label: {
-                        Text("Register")
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color("Black"))
+                        LinkButtonText(text: "Register")
                     }
                 }
-                .alert("Login failure", isPresented: $authenticationViewModel.errorExists, actions: {
-                    Button("Okay", role: .cancel) {}
-                }, message: {
-                    Text(authenticationViewModel.error)
-                })
+                
             }
         }
+        .alert("Login failure", isPresented: $authenticationViewModel.errorExists, actions: {
+            Button("Okay", role: .cancel) {}
+        }, message: {
+            Text(authenticationViewModel.error)
+        })
         .onDisappear() {
             emailFieldText = ""
             passwordFieldText = ""
