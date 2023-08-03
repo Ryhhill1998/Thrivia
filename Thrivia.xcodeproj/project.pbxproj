@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5B19413A2A79267B002B3907 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1941392A79267B002B3907 /* ChatModel.swift */; };
 		5B19413C2A792927002B3907 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B19413B2A792927002B3907 /* Utilities.swift */; };
+		5B19413E2A7B9DCB002B3907 /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B19413D2A7B9DCB002B3907 /* PasswordField.swift */; };
 		5B4C0D4E2A6EC898002E0894 /* ChatOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */; };
 		5B4C0D522A6EF64A002E0894 /* BlockedUsersScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D512A6EF64A002E0894 /* BlockedUsersScreen.swift */; };
 		5B4C0D542A6EF7F9002E0894 /* BlockedUsersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */; };
@@ -86,6 +87,7 @@
 /* Begin PBXFileReference section */
 		5B1941392A79267B002B3907 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
 		5B19413B2A792927002B3907 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		5B19413D2A7B9DCB002B3907 /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 		5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatOptions.swift; sourceTree = "<group>"; };
 		5B4C0D512A6EF64A002E0894 /* BlockedUsersScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersScreen.swift; sourceTree = "<group>"; };
 		5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersViewModel.swift; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				5BC6FDE62A5EA298006459F8 /* Register */,
 				5BC6FDE52A5EA28F006459F8 /* Login */,
 				5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */,
+				5B19413D2A7B9DCB002B3907 /* PasswordField.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -576,6 +579,7 @@
 				5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */,
 				5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */,
 				5B7A93612A6E75F20038A4C1 /* SelectModeToolbar.swift in Sources */,
+				5B19413E2A7B9DCB002B3907 /* PasswordField.swift in Sources */,
 				5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */,
 				5BCE87062A716F9B00B416FD /* EditCounterScreen.swift in Sources */,
 				5B5411D72A61EA2B00A024E8 /* CounterViewModel.swift in Sources */,

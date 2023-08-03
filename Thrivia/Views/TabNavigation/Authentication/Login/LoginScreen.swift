@@ -39,26 +39,9 @@ struct LoginScreen: View {
                     .padding(.horizontal)
                 
                 if !showPassword {
-                    HStack {
-                        SecureField("Password", text: $passwordFieldText)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .font(.custom("Montserrat", size: 18))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("Black"))
-                        
-                        Button {
-                            showPassword = true
-                        } label: {
-                            Image(systemName: "eye.fill")
-                        }
-                        .padding(.horizontal, 20)
-                        .foregroundColor(Color("Green"))
-                        
+                    PasswordField(passwordFieldText: $passwordFieldText) {
+                        showPassword = true
                     }
-                    .background(Color("White"))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
                 } else {
                     HStack {
                         TextField("Password", text: $passwordFieldText)

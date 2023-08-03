@@ -11,9 +11,6 @@ struct NavigationTab: View {
     
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     
-    @State var counterNotCreated = true
-    @State var isAuthenticated = false
-    
     var body: some View {
         TabView {
             if authenticationViewModel.authUserId != nil {
