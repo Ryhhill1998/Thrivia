@@ -103,6 +103,11 @@ struct ProfileScreen: View {
                         }, message: {
                             Text("Are you sure you want to delete your account")
                         })
+                        .alert("Delete failure", isPresented: $authenticationViewModel.errorExists, actions: {
+                            Button("OK", role: .cancel) {}
+                        }, message: {
+                            Text(authenticationViewModel.error)
+                        })
                     }
                     
                     Spacer()

@@ -48,13 +48,9 @@ struct ProgressScreen: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                         
-                        ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) {
-                            inEditMode = true
-                        }
+                        ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) { inEditMode = true }
                         
-                        ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
-                            showResetAlert = true
-                        }
+                        ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) { showResetAlert = true }
                         .alert("Reset Counter", isPresented: $showResetAlert, actions: {
                             Button("Reset", role: .destructive) {
                                 counterViewModel.resetCounter()
