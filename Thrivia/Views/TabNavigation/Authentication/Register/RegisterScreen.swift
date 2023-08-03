@@ -9,7 +9,6 @@ import SwiftUI
 import FirebaseAuth
 
 struct RegisterScreen: View {
-    
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     
     @State var emailFieldText: String = ""
@@ -17,7 +16,6 @@ struct RegisterScreen: View {
     @State var passwordFieldText: String = ""
     @State var confirmPasswordFieldText: String = ""
     @State var showPassword = false
-    
     @State var confirmPasswordBorderColour = Color.white
     
     func comparePasswords(password1: String, password2: String) {
@@ -36,24 +34,14 @@ struct RegisterScreen: View {
                 AppIcon()
                 
                 FormField(fieldName: "Email", fieldText: $emailFieldText)
-                
                 FormField(fieldName: "Username", fieldText: $usernameFieldField)
                 
                 if !showPassword {
-                    SecurePasswordField(passwordFieldText: $passwordFieldText) {
-                        showPassword = true
-                    }
-                } else {
-                    PasswordField(passwordFieldText: $passwordFieldText) {
-                        showPassword = false
-                    }
-                }
-                
-                if !showPassword {
+                    SecurePasswordField(passwordFieldText: $passwordFieldText) { showPassword = true }
                     SecureConfirmPasswordField(confirmPasswordFieldText: $confirmPasswordFieldText, borderColour: confirmPasswordBorderColour)
-                        .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText)
-                        }
+                        .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText) }
                 } else {
+                    PasswordField(passwordFieldText: $passwordFieldText) { showPassword = false }
                     ConfirmPasswordField(confirmPasswordFieldText: $confirmPasswordFieldText, borderColour: confirmPasswordBorderColour)
                         .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText) }
                 }

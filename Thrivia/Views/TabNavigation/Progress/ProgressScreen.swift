@@ -20,11 +20,7 @@ struct ProgressScreen: View {
                 Color("Background").ignoresSafeArea()
                 
                 ScrollView {
-                    Text("Tracked since \(counterViewModel.getFormattedOriginalStartDate())")
-                        .font(.custom("Montserrat", size: 15))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("Black"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    DescriptionText(text: "Tracked since \(counterViewModel.getFormattedOriginalStartDate())")
                         .padding(.leading)
                         .padding(.bottom, 15)
                     
@@ -37,11 +33,7 @@ struct ProgressScreen: View {
                                     .bold()
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 
-                                Text("Thriving since  \(counterViewModel.getFormattedRunStartDate())")
-                                    .font(.custom("Montserrat", size: 15))
-                                    .foregroundColor(Color("Black"))
-                                    .fontWeight(.medium)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                DescriptionText(text: "Thriving since  \(counterViewModel.getFormattedRunStartDate())")
                             }
                             
                             HStack {
@@ -91,8 +83,8 @@ struct ProgressScreen: View {
     }
 }
 
-//struct ProgressScreen_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProgressScreen()
-//    }
-//}
+struct ProgressScreen_Previews: PreviewProvider {
+    static var previews: some View {
+        ProgressScreen()
+    }
+}
