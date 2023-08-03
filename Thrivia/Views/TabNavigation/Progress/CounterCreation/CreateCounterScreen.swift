@@ -19,8 +19,6 @@ struct CreateCounterScreen: View {
     @State var counterName = ""
     @State private var showEmptyNameAlert = false
     
-    let minDate = Calendar.current.date(byAdding: .year, value: -50, to: Date.now)!
-    
     func createCounterPreview(name: String, startDate: Date) {
         counterViewModelPreview.generatePreview(name: name, startDate: startDate)
     }
@@ -66,23 +64,11 @@ struct CreateCounterScreen: View {
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedDate, in: minDate...Date.now, displayedComponents: .date) {
-                        Text("Start date")
-                            .font(.custom("Montserrat", size: 18))
-                            .foregroundColor(Color("Black"))
-                            .fontWeight(.semibold)
-                    }
-                    .padding(.vertical, 15)
+                    DateTimeSelector(selectedDate: $selectedDate, type: "date")
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedDate, in: minDate...Date.now, displayedComponents: .hourAndMinute) {
-                        Text("Start time")
-                            .font(.custom("Montserrat", size: 18))
-                            .foregroundColor(Color("Black"))
-                            .fontWeight(.semibold)
-                    }
-                    .padding(.vertical, 15)
+                    DateTimeSelector(selectedDate: $selectedDate, type: "time")
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -90,9 +76,7 @@ struct CreateCounterScreen: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) {
-                    createCounter()
-                }
+                ActionButton(text: "Create counter", fontColour: Color("White"), backgroundColour: Color("Green")) { createCounter() }
                 
                 Spacer()
             }
