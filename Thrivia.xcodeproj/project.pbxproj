@@ -14,6 +14,8 @@
 		5B1941422A7BA319002B3907 /* SecurePasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1941412A7BA319002B3907 /* SecurePasswordField.swift */; };
 		5B1941442A7BA51F002B3907 /* LinkText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1941432A7BA51F002B3907 /* LinkText.swift */; };
 		5B1941462A7BA5DB002B3907 /* LinkButtonText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1941452A7BA5DB002B3907 /* LinkButtonText.swift */; };
+		5B1941482A7BBB2C002B3907 /* SecureConfirmPasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1941472A7BBB2B002B3907 /* SecureConfirmPasswordField.swift */; };
+		5B19414A2A7BBC0E002B3907 /* ConfirmPasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1941492A7BBC0E002B3907 /* ConfirmPasswordField.swift */; };
 		5B4C0D4E2A6EC898002E0894 /* ChatOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */; };
 		5B4C0D522A6EF64A002E0894 /* BlockedUsersScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D512A6EF64A002E0894 /* BlockedUsersScreen.swift */; };
 		5B4C0D542A6EF7F9002E0894 /* BlockedUsersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */; };
@@ -96,6 +98,8 @@
 		5B1941412A7BA319002B3907 /* SecurePasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurePasswordField.swift; sourceTree = "<group>"; };
 		5B1941432A7BA51F002B3907 /* LinkText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkText.swift; sourceTree = "<group>"; };
 		5B1941452A7BA5DB002B3907 /* LinkButtonText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButtonText.swift; sourceTree = "<group>"; };
+		5B1941472A7BBB2B002B3907 /* SecureConfirmPasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureConfirmPasswordField.swift; sourceTree = "<group>"; };
+		5B1941492A7BBC0E002B3907 /* ConfirmPasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPasswordField.swift; sourceTree = "<group>"; };
 		5B4C0D4D2A6EC898002E0894 /* ChatOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatOptions.swift; sourceTree = "<group>"; };
 		5B4C0D512A6EF64A002E0894 /* BlockedUsersScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersScreen.swift; sourceTree = "<group>"; };
 		5B4C0D532A6EF7F9002E0894 /* BlockedUsersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUsersViewModel.swift; sourceTree = "<group>"; };
@@ -365,6 +369,8 @@
 			isa = PBXGroup;
 			children = (
 				5BC6FDF52A5EACB2006459F8 /* RegisterScreen.swift */,
+				5B1941472A7BBB2B002B3907 /* SecureConfirmPasswordField.swift */,
+				5B1941492A7BBC0E002B3907 /* ConfirmPasswordField.swift */,
 			);
 			path = Register;
 			sourceTree = "<group>";
@@ -562,6 +568,7 @@
 				5B8186C92A60552A0093853D /* MessagePreview.swift in Sources */,
 				5B19413A2A79267B002B3907 /* ChatModel.swift in Sources */,
 				5B1941462A7BA5DB002B3907 /* LinkButtonText.swift in Sources */,
+				5B19414A2A7BBC0E002B3907 /* ConfirmPasswordField.swift in Sources */,
 				5BC6FE092A6050DB006459F8 /* UserIcon.swift in Sources */,
 				5B5411C12A61389F00A024E8 /* ChatScreen.swift in Sources */,
 				5B1941422A7BA319002B3907 /* SecurePasswordField.swift in Sources */,
@@ -620,6 +627,7 @@
 				5BFBC07F2A692A29005E89FC /* CryptoUser.swift in Sources */,
 				5B5411E62A630C7B00A024E8 /* Chat.swift in Sources */,
 				5BA35DED2A72BB020010AA7F /* AvailableUser.swift in Sources */,
+				5B1941482A7BBB2C002B3907 /* SecureConfirmPasswordField.swift in Sources */,
 				5BFBC07D2A6923EE005E89FC /* CryptoOtherUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

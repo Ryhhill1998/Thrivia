@@ -9,13 +9,12 @@ import SwiftUI
 
 struct PasswordField: View {
     
-    let fieldName: String
     @Binding var passwordFieldText: String
     let action: () -> Void
     
     var body: some View {
         HStack {
-            TextField(fieldName, text: $passwordFieldText)
+            TextField("Password", text: $passwordFieldText)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .font(.custom("Montserrat", size: 18))

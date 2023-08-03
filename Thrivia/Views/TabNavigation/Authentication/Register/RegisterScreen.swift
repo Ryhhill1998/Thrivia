@@ -35,102 +35,26 @@ struct RegisterScreen: View {
             VStack(spacing: 15.0) {
                 AppIcon()
                 
-                TextField("Email", text: $emailFieldText)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .font(.custom("Montserrat", size: 18))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("Black"))
-                    .padding(.horizontal)
+                FormField(fieldName: "Email", fieldText: $emailFieldText)
                 
-                TextField("Username", text: $usernameFieldField)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(.white)
-                    .cornerRadius(10)
-                    .font(.custom("Montserrat", size: 18))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("Black"))
-                    .padding(.horizontal)
+                FormField(fieldName: "Username", fieldText: $usernameFieldField)
                 
                 if !showPassword {
-                    HStack {
-                        SecureField("Password", text: $passwordFieldText)
-                            .textContentType(.oneTimeCode)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .font(.custom("Montserrat", size: 18))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("Black"))
-                            .onChange(of: passwordFieldText) { comparePasswords(password1: $0, password2: confirmPasswordFieldText) }
-                        
-                        Button {
-                            showPassword = true
-                        } label: {
-                            Image(systemName: "eye.fill")
-                        }
-                        .padding(.horizontal, 20)
-                        .foregroundColor(Color("Green"))
-                        
+                    SecurePasswordField(passwordFieldText: $passwordFieldText) {
+                        showPassword = true
                     }
-                    .background(Color("White"))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
                 } else {
-                    HStack {
-                        TextField("Password", text: $passwordFieldText)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .font(.custom("Montserrat", size: 18))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("Black"))
-                            .onChange(of: passwordFieldText) { comparePasswords(password1: $0, password2: confirmPasswordFieldText) }
-                        
-                        Button {
-                            showPassword = false
-                        } label: {
-                            Image(systemName: "eye.slash.fill")
-                        }
-                        .padding(.horizontal, 20)
-                        .foregroundColor(Color("Green"))
-                        
+                    PasswordField(passwordFieldText: $passwordFieldText) {
+                        showPassword = false
                     }
-                    .background(Color("White"))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
                 }
                 
                 if !showPassword {
-                    SecureField("Confirm password", text: $confirmPasswordFieldText)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .font(.custom("Montserrat", size: 18))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("Black"))
-                        .background(Color("White"))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(confirmPasswordBorderColour, lineWidth: 3)
-                        )
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                        .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText) }
+                    SecureConfirmPasswordField(confirmPasswordFieldText: $confirmPasswordFieldText, borderColour: confirmPasswordBorderColour)
+                        .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText)
+                        }
                 } else {
-                    TextField("Confirm password", text: $confirmPasswordFieldText)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .font(.custom("Montserrat", size: 18))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("Black"))
-                        .background(Color("White"))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(confirmPasswordBorderColour, lineWidth: 3)
-                        )
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+                    ConfirmPasswordField(confirmPasswordFieldText: $confirmPasswordFieldText, borderColour: confirmPasswordBorderColour)
                         .onChange(of: confirmPasswordFieldText) { comparePasswords(password1: $0, password2: passwordFieldText) }
                 }
                 

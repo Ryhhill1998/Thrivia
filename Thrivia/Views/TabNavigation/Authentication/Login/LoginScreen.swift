@@ -29,11 +29,11 @@ struct LoginScreen: View {
                 FormField(fieldName: "Email", fieldText: $emailFieldText)
                 
                 if !showPassword {
-                    SecurePasswordField(fieldName: "Password", passwordFieldText: $passwordFieldText) {
+                    SecurePasswordField(passwordFieldText: $passwordFieldText) {
                         showPassword = true
                     }
                 } else {
-                    PasswordField(fieldName: "Password", passwordFieldText: $passwordFieldText) {
+                    PasswordField(passwordFieldText: $passwordFieldText) {
                         showPassword = false
                     }
                 }

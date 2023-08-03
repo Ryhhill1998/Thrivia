@@ -9,13 +9,12 @@ import SwiftUI
 
 struct SecurePasswordField: View {
     
-    let fieldName: String
     @Binding var passwordFieldText: String
     let action: () -> Void
     
     var body: some View {
         HStack {
-            SecureField(fieldName, text: $passwordFieldText)
+            SecureField("Password", text: $passwordFieldText)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .font(.custom("Montserrat", size: 18))
@@ -29,7 +28,6 @@ struct SecurePasswordField: View {
             }
             .padding(.horizontal, 20)
             .foregroundColor(Color("Green"))
-            
         }
         .background(Color("White"))
         .cornerRadius(10)

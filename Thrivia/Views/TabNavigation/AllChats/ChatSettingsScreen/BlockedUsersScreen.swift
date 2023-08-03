@@ -36,9 +36,9 @@ struct BlockedUsersScreen: View {
                     } label: {
                         HStack(alignment: .center) {
                             HStack(spacing: 15) {
-                                UserIcon(size: "small", borderColour: user.iconColour, backgroundColour: user.iconColour, name: user.username)
+                                UserIcon(size: "small", borderColour: user.getIconColour(), backgroundColour: user.getIconColour(), name: user.getUsername())
                                 
-                                Text(user.username)
+                                Text(user.getUsername())
                                     .font(.custom("Montserrat", size: 17))
                                     .fontWeight(.medium)
                                     .frame(maxWidth: .infinity, alignment: .leading)
