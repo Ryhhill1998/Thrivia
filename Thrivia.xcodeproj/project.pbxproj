@@ -58,6 +58,8 @@
 		5BA35DF02A7305240010AA7F /* ChatSettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA35DEF2A7305240010AA7F /* ChatSettingsScreen.swift */; };
 		5BC0D72C2A7BFF4B00CC3658 /* DescriptionText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D72B2A7BFF4A00CC3658 /* DescriptionText.swift */; };
 		5BC0D72E2A7C208900CC3658 /* DateTimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D72D2A7C208900CC3658 /* DateTimeSelector.swift */; };
+		5BC0D7302A7D3F6600CC3658 /* ConfirmationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D72F2A7D3F6600CC3658 /* ConfirmationAlert.swift */; };
+		5BC0D7322A7D410500CC3658 /* InfoAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D7312A7D410500CC3658 /* InfoAlert.swift */; };
 		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 		5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */; };
 		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
@@ -143,6 +145,8 @@
 		5BA35DEF2A7305240010AA7F /* ChatSettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsScreen.swift; sourceTree = "<group>"; };
 		5BC0D72B2A7BFF4A00CC3658 /* DescriptionText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionText.swift; sourceTree = "<group>"; };
 		5BC0D72D2A7C208900CC3658 /* DateTimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeSelector.swift; sourceTree = "<group>"; };
+		5BC0D72F2A7D3F6600CC3658 /* ConfirmationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationAlert.swift; sourceTree = "<group>"; };
+		5BC0D7312A7D410500CC3658 /* InfoAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoAlert.swift; sourceTree = "<group>"; };
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 		5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
@@ -426,6 +430,8 @@
 				5B5411C82A61708600A024E8 /* AppIcon.swift */,
 				5B5411D22A61BBAB00A024E8 /* LineSeparator.swift */,
 				5B8F03A82A6BD57B00B5192D /* ProgressButton.swift */,
+				5BC0D72F2A7D3F6600CC3658 /* ConfirmationAlert.swift */,
+				5BC0D7312A7D410500CC3658 /* InfoAlert.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -579,6 +585,7 @@
 				5BC0D72E2A7C208900CC3658 /* DateTimeSelector.swift in Sources */,
 				5B5411C12A61389F00A024E8 /* ChatScreen.swift in Sources */,
 				5B1941422A7BA319002B3907 /* SecurePasswordField.swift in Sources */,
+				5BC0D7322A7D410500CC3658 /* InfoAlert.swift in Sources */,
 				5BFBC0792A691CE4005E89FC /* StoredKey.swift in Sources */,
 				5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */,
 				5B5411DF2A62E2D700A024E8 /* ProfileViewModel.swift in Sources */,
@@ -609,6 +616,7 @@
 				5B1941402A7BA1E1002B3907 /* FormField.swift in Sources */,
 				5B5411C52A6159EC00A024E8 /* MessageBubble.swift in Sources */,
 				5BFBC07B2A691D4E005E89FC /* Conversation.swift in Sources */,
+				5BC0D7302A7D3F6600CC3658 /* ConfirmationAlert.swift in Sources */,
 				5B7A93612A6E75F20038A4C1 /* SelectModeToolbar.swift in Sources */,
 				5B19413E2A7B9DCB002B3907 /* PasswordField.swift in Sources */,
 				5B5411F32A63207800A024E8 /* AllChatsModel.swift in Sources */,

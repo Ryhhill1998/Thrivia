@@ -36,47 +36,20 @@ struct ProfileScreen: View {
                 VStack(spacing: 25.0) {
                     ZStack {
                         UserIcon(size: "xLarge", borderColour: .white, backgroundColour: profileViewModel.iconColour, name: profileViewModel.username)
-                        
-                        NavigationLink {
-                            EditIconColour(selectedColour: profileViewModel.iconColourString)
-                                .environmentObject(profileViewModel)
-                        } label: {
-                            Image(systemName: "square.and.pencil")
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(.white)
-                                .background(Color("LightGreen"))
-                                .cornerRadius(15)
-                                .overlay {
-                                    Circle()
-                                        .stroke(.white, lineWidth: 4)
-                                }
-                        }
-                        .offset(x: 35.35, y: 35.35)
+                        EditIconColourLink(currentColour: profileViewModel.iconColourString)
                     }
                     
                     VStack(spacing: 15.0) {
-                        NavigationLink {
-                            EditField(fieldType: "username", currentFieldValue: profileViewModel.username)
-                                .environmentObject(profileViewModel)
-                        } label: {
-                            AccountDetailField(fieldName: "Username", fieldValue: profileViewModel.username)
-                        }
-
+                        EditFieldLink(fieldType: "username", currentValue: profileViewModel.username)
                         
                         LineSeparator()
                         
-                        NavigationLink {
-                            EditField(fieldType: "email", currentFieldValue: profileViewModel.email)
-                                .environmentObject(profileViewModel)
-                        } label: {
-                            AccountDetailField(fieldName: "Email", fieldValue: profileViewModel.email)
-                        }
+                        EditFieldLink(fieldType: "email", currentValue: profileViewModel.email)
                         
                         LineSeparator()
                         
                         NavigationLink {
                             EditPassword()
-                                .environmentObject(profileViewModel)
                         } label: {
                             AccountDetailField(fieldName: "Password", fieldValue: profileViewModel.password)
                         }
@@ -94,20 +67,10 @@ struct ProfileScreen: View {
                         ActionButton(text: "Delete account", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) {
                             showDeleteAccountAlert = true
                         }
-                        .alert("Delete Account", isPresented: $showDeleteAccountAlert, actions: {
-                            Button("Delete", role: .destructive) {
-                                deleteUserAccount()
-                            }
-                            
-                            Button("Cancel", role: .cancel) {}
-                        }, message: {
-                            Text("Are you sure you want to delete your account")
-                        })
-                        .alert("Delete failure", isPresented: $authenticationViewModel.errorExists, actions: {
-                            Button("OK", role: .cancel) {}
-                        }, message: {
-                            Text(authenticationViewModel.error)
-                        })
+                        
+                        InfoAlert(title: "Delete failure", message: authenticationViewModel.error, presentationBind: $authenticationViewModel.errorExists)
+                        
+                        ConfirmationAlert(title: "Delete account", message: "Are you sure you want to delete your account", confirmButtonText: "Delete", presentationBind: $showDeleteAccountAlert, action: deleteUserAccount)
                     }
                     
                     Spacer()
@@ -117,10 +80,47 @@ struct ProfileScreen: View {
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .environmentObject(profileViewModel)
         .accentColor(Color("Black"))
         .onAppear() {
             profileViewModel.setUserId(userId: userId)
             profileViewModel.getProfileData()
         }
+    }
+}
+
+struct EditFieldLink: View {
+    
+    let fieldType: String
+    let currentValue: String
+    
+    var body: some View {
+        NavigationLink {
+            EditField(fieldType: fieldType, currentFieldValue: currentValue)
+        } label: {
+            AccountDetailField(fieldName: fieldType.capitalized, fieldValue: currentValue)
+        }
+    }
+}
+
+struct EditIconColourLink: View {
+    
+    let currentColour: String
+    
+    var body: some View {
+        NavigationLink {
+            EditIconColour(selectedColour: currentColour)
+        } label: {
+            Image(systemName: "square.and.pencil")
+                .frame(width: 30, height: 30)
+                .foregroundColor(.white)
+                .background(Color("LightGreen"))
+                .cornerRadius(15)
+                .overlay {
+                    Circle()
+                        .stroke(.white, lineWidth: 4)
+                }
+        }
+        .offset(x: 35.35, y: 35.35)
     }
 }

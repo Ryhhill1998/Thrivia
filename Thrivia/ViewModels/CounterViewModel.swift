@@ -140,16 +140,10 @@ class CounterViewModel: ObservableObject {
         return range.count
     }
     
-    private func updateTimeDisplay() {
-        let yearsPassed = getYearsPassed()
-        let monthsPassed = getMonthsPassed()
-        var weeksPassed = getWeeksPassed()
-        var daysPassed = getDaysPassed()
-        let hoursPassed = getHoursPassed()
-        let minutesPassed = getMinutesPassed()
-        let secondsPassed = getSecondsPassed()
+    private func getUpdatedWeeksAndDaysPassed(daysPassed: Int, weeksPassed: Int) -> [Int] {
+        var updatedDaysPassed = daysPassed
+        var updatedWeeksPassed = weeksPassed
         
-        // check for errors in built-in calculations
         // get date of current month
         let dateNow = Calendar.current.dateComponents([.day], from: Date.now).day!
         // get date of start date month
@@ -168,16 +162,32 @@ class CounterViewModel: ObservableObject {
                 
                 // adjust weeks passed and days passed accordingly
                 if difference > 0 && daysPassed + difference >= 7 {
-                    daysPassed = (daysPassed + difference) % 7
-                    weeksPassed += 1
+                    updatedDaysPassed = (daysPassed + difference) % 7
+                    updatedWeeksPassed += 1
                 } else if daysPassed + difference < 0 {
-                    daysPassed += (7 + difference)
-                    weeksPassed -= 1
+                    updatedDaysPassed += (7 + difference)
+                    updatedWeeksPassed -= 1
                 } else {
-                    daysPassed += difference
+                    updatedDaysPassed += difference
                 }
             }
         }
+        
+        return [updatedDaysPassed, updatedWeeksPassed]
+    }
+    
+    private func updateTimeDisplay() {
+        let yearsPassed = getYearsPassed()
+        let monthsPassed = getMonthsPassed()
+        var weeksPassed = getWeeksPassed()
+        var daysPassed = getDaysPassed()
+        let hoursPassed = getHoursPassed()
+        let minutesPassed = getMinutesPassed()
+        let secondsPassed = getSecondsPassed()
+        
+        let updatedTimes = getUpdatedWeeksAndDaysPassed(daysPassed: daysPassed, weeksPassed: weeksPassed)
+        daysPassed = updatedTimes[0]
+        weeksPassed = updatedTimes[1]
         
         if yearsPassed > 0 {
             timeUnits1 = getPlural(time: "Year", quantity: yearsPassed)
