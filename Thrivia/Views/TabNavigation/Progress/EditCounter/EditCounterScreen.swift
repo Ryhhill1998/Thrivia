@@ -63,31 +63,16 @@ struct EditCounterScreen: View {
                         .font(.custom("Montserrat", size: 18))
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
-                        .alert(counterViewModel.errorTitle, isPresented: $counterViewModel.errorExists, actions: {
-                            Button("OK", role: .cancel) {}
-                        }, message: {
-                            Text(counterViewModel.errorMessage)
-                        })
+                    
+                    InfoAlert(title: counterViewModel.errorTitle, message: counterViewModel.errorMessage, presentationBind: $counterViewModel.errorExists)
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedDate, in: minDate...Date.now, displayedComponents: .date) {
-                        Text("Start date")
-                            .font(.custom("Montserrat", size: 18))
-                            .foregroundColor(Color("Black"))
-                            .fontWeight(.semibold)
-                    }
-                    .padding(.vertical, 15)
+                    DateTimeSelector(selectedDate: $selectedDate, type: "date")
                     
                     LineSeparator()
                     
-                    DatePicker(selection: $selectedDate, in: minDate...Date.now, displayedComponents: .hourAndMinute) {
-                        Text("Start time")
-                            .font(.custom("Montserrat", size: 18))
-                            .foregroundColor(Color("Black"))
-                            .fontWeight(.semibold)
-                    }
-                    .padding(.vertical, 15)
+                    DateTimeSelector(selectedDate: $selectedDate, type: "time")
                 }
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -108,11 +93,5 @@ struct EditCounterScreen: View {
         }
         .navigationTitle("Edit Counter")
         .toolbar(.hidden, for: .tabBar)
-    }
-}
-
-struct EditCounter_Previews: PreviewProvider {
-    static var previews: some View {
-        EditCounterScreen(counterName: "Counter Name", startDate: Date.now)
     }
 }
