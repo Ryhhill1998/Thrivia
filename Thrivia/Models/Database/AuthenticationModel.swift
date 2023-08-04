@@ -203,10 +203,10 @@ class AuthenticationModel {
                     
                     // delete the chat doc with this chat ID
                     self.deleteChatDoc(chatId: chatId)
-                    
-                    // delete user doc
-                    self.deleteUserDoc(userId: userId)
                 }
+                
+                // delete user doc
+                self.deleteUserDoc(userId: userId)
             }
         }
     }

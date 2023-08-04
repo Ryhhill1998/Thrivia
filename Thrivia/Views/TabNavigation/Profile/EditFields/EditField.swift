@@ -43,17 +43,7 @@ struct EditField: View {
             
             VStack(spacing: 15.0) {
                 VStack(spacing: 15.0) {
-                    HStack {
-                        Text("Current \(fieldType)")
-                            .foregroundColor(Color("Black"))
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.semibold)
-                        
-                        Text(currentFieldValue)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .foregroundColor(Color("Black"))
-                            .font(.custom("Montserrat", size: 15))
-                    }
+                    ExtractedView()
                     
                     LineSeparator()
                     
@@ -99,6 +89,8 @@ struct EditField: View {
                 Spacer()
             }
             .padding(.top, 20.0)
+            
+            InfoAlert(title: profileViewModel.errorTitle, message: profileViewModel.errorMessage, presentationBind: $profileViewModel.errorExists)
         }
         .onDisappear() {
             profileViewModel.resetFetchStatus()
@@ -113,11 +105,6 @@ struct EditField: View {
             if newValue == "success" {
                 newFieldValue = ""
             }
-        })
-        .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
-            Button("OK", role: .cancel) {}
-        }, message: {
-            Text(profileViewModel.errorMessage)
         })
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
@@ -144,5 +131,53 @@ struct EditEmail_Previews: PreviewProvider {
     static var previews: some View {
         EditField(fieldType: "email", currentFieldValue: "ZigzagZebra24@mail.com")
             .environmentObject(ProfileViewModel())
+    }
+}
+
+struct FieldDisplay: View {
+    
+    let fieldType: String
+    let currentValue: String
+    
+    var body: some View {
+        HStack {
+            FieldLabel(label: "Current \(fieldType)")
+            
+            Text(currentValue)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundColor(Color("Black"))
+                .font(.custom("Montserrat", size: 15))
+        }
+    }
+}
+
+struct FieldInput: View {
+    
+    let fieldType: String
+    let placeholder: String
+    @Binding var fieldValue: String
+    
+    var body: some View {
+        HStack {
+            FieldLabel(label: "Current \(fieldType)")
+            
+            TextField(placeholder, text: $fieldValue)
+                .multilineTextAlignment(.trailing)
+                .font(.custom("Montserrat", size: 15))
+                .fontWeight(.medium)
+                .foregroundColor(Color("Black"))
+        }
+    }
+}
+
+struct FieldLabel: View {
+    
+    let label: String
+    
+    var body: some View {
+        Text(label)
+            .foregroundColor(Color("Black"))
+            .font(.custom("Montserrat", size: 15))
+            .fontWeight(.semibold)
     }
 }
