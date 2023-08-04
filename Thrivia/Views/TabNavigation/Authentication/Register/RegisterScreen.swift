@@ -63,12 +63,9 @@ struct RegisterScreen: View {
                     }
                 }
             }
+            
+            InfoAlert(title: "Register failure", message: authenticationViewModel.error, presentationBind: $authenticationViewModel.errorExists)
         }
-        .alert("Register failure", isPresented: $authenticationViewModel.errorExists, actions: {
-            Button("Okay", role: .cancel) {}
-        }, message: {
-            Text(authenticationViewModel.error)
-        })
         .onDisappear() {
             emailFieldText = ""
             usernameFieldField = ""

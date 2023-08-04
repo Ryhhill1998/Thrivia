@@ -55,13 +55,9 @@ struct LoginScreen: View {
                     }
                 }
                 
+                InfoAlert(title: "Login failure", message: authenticationViewModel.error, presentationBind: $authenticationViewModel.errorExists)
             }
         }
-        .alert("Login failure", isPresented: $authenticationViewModel.errorExists, actions: {
-            Button("Okay", role: .cancel) {}
-        }, message: {
-            Text(authenticationViewModel.error)
-        })
         .onDisappear() {
             emailFieldText = ""
             passwordFieldText = ""
