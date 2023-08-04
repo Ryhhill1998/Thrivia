@@ -51,15 +51,8 @@ struct ProgressScreen: View {
                         ActionButton(text: "Edit counter", fontColour: .white, backgroundColour: Color("Green")) { inEditMode = true }
                         
                         ActionButton(text: "Reset counter", fontColour: Color("DarkGreen"), backgroundColour: Color("LightGreen")) { showResetAlert = true }
-                        .alert("Reset Counter", isPresented: $showResetAlert, actions: {
-                            Button("Reset", role: .destructive) {
-                                counterViewModel.resetCounter()
-                            }
-                            
-                            Button("Cancel", role: .cancel) {}
-                        }, message: {
-                            Text("Are you sure you want to reset your counter")
-                        })
+                        
+                        ConfirmationAlert(title: "Reset Counter", message: "Are you sure you want to reset your counter", confirmButtonText: "Reset", presentationBind: $showResetAlert, action: counterViewModel.resetCounter)
                     }
                 }
             }

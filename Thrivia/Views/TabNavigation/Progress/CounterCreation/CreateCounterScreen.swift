@@ -56,11 +56,8 @@ struct CreateCounterScreen: View {
                         .font(.custom("Montserrat", size: 18))
                         .fontWeight(.medium)
                         .foregroundColor(Color("Black"))
-                        .alert(counterViewModel.errorTitle, isPresented: $counterViewModel.errorExists, actions: {
-                            Button("OK", role: .cancel) {}
-                        }, message: {
-                            Text(counterViewModel.errorMessage)
-                        })
+                    
+                    InfoAlert(title: counterViewModel.errorTitle, message: counterViewModel.errorMessage, presentationBind: $counterViewModel.errorExists)
                     
                     LineSeparator()
                     
