@@ -94,17 +94,10 @@ struct AllChatsScreen: View {
                                             }
                                     }
                                 }
+                                
+                                ConfirmationAlert(title: "Delete Chats", message: "Are you sure you want to delete the selected chats?", confirmButtonText: "Delete", presentationBind: $showConfirmDeleteAlert, action: deleteSelectedChats)
                             }
                             .padding(.top, authenticationViewModel.activityStatus == true ? 0 : 20)
-                            .alert("Delete", isPresented: $showConfirmDeleteAlert, actions: {
-                                Button("Delete", role: .destructive) {
-                                    deleteSelectedChats()
-                                }
-                                
-                                Button("Cancel", role: .cancel) {}
-                            }, message: {
-                                Text("Are you sure you want to delete the selected chats?")
-                            })
                         }
                     }
                     
@@ -147,7 +140,7 @@ struct AllChatsScreen: View {
 
 struct ChatsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        AllChatsScreen(userId: "fL9uh1E9wrZGTgRt0twwmkxOzHg2")
+        AllChatsScreen(userId: "7d4xVXaCcdTh1SMw4lNTy8fjmct1")
             .environmentObject(AuthenticationViewModel())
     }
 }

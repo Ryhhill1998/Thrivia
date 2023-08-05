@@ -20,8 +20,6 @@ struct EditPassword: View {
     
     func savePassword() {
         profileViewModel.updateUserPassword(newPassword: newPassword, confirmPassword: confirmPassword)
-        newPassword = ""
-        confirmPassword = ""
     }
     
     func backPressed() {
@@ -35,10 +33,7 @@ struct EditPassword: View {
             VStack(spacing: 15.0) {
                 VStack(spacing: 15.0) {
                     HStack {
-                        Text("New password")
-                            .foregroundColor(Color("Black"))
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.semibold)
+                        FieldLabel(label: "New password")
                         
                         if !showPassword {
                             SecureField("Password", text: $newPassword)
@@ -72,10 +67,7 @@ struct EditPassword: View {
                     LineSeparator()
                     
                     HStack {
-                        Text("Confirm password")
-                            .foregroundColor(Color("Black"))
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.semibold)
+                        FieldLabel(label: "Confirm password")
                         
                         if !showPassword {
                             SecureField("Confirm password", text: $confirmPassword)
@@ -97,42 +89,33 @@ struct EditPassword: View {
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                if profileViewModel.fetchStatus == "pending" {
-                    ProgressButton(text: "Saving", foregroundColour: Color("White"), backgroundColour: Color("Green"))
-                } else if profileViewModel.fetchStatus == "idle" || profileViewModel.fetchStatus == "failure" {
-                    ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: savePassword)
-                } else {
-                    HStack(spacing: 5.0) {
-                        Text("Saved")
-                            .font(.custom("Montserrat", size: 20))
-                            .foregroundColor(Color("White"))
-                            .bold()
-                        
-                        Image(systemName: "checkmark.circle")
-                            .foregroundColor(Color("White"))
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("Green"))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-                }
+                SaveButton(fetchStatus: profileViewModel.fetchStatus, action: savePassword)
                 
                 Spacer()
             }
             .padding(.top, 20.0)
+            
+            InfoAlert(title: profileViewModel.errorTitle, message: profileViewModel.errorMessage, presentationBind: $profileViewModel.errorExists)
         }
         .onDisappear() {
             profileViewModel.resetFetchStatus()
             profileViewModel.resetError()
         }
         .onChange(of: newPassword, perform: { newValue in
-            profileViewModel.resetFetchStatus()
+            if !newValue.isEmpty {
+                profileViewModel.resetFetchStatus()
+            }
         })
-        .alert(profileViewModel.errorTitle, isPresented: $profileViewModel.errorExists, actions: {
-            Button("Okay", role: .cancel) {}
-        }, message: {
-            Text(profileViewModel.errorMessage)
+        .onChange(of: confirmPassword, perform: { newValue in
+            if !newValue.isEmpty {
+                profileViewModel.resetFetchStatus()
+            }
+        })
+        .onChange(of: profileViewModel.fetchStatus, perform: { newValue in
+            if newValue == "success" {
+                newPassword = ""
+                confirmPassword = ""
+            }
         })
         .toolbar(.hidden, for: .tabBar)
         .navigationBarBackButtonHidden(true)
