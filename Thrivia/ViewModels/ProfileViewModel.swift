@@ -103,7 +103,6 @@ class ProfileViewModel: ObservableObject {
             setFetchStatus(fetchStatus: "pending")
             profileModel.updateUserUsername(userId: userId, newUsername: newUsername, errorSetter: setUsernameChangeError(message:), usernameSetter: setUsername(username:))
         }
-        
     }
 
     func updateUserEmail(newEmail: String) {
@@ -126,10 +125,10 @@ class ProfileViewModel: ObservableObject {
     func updateUserPassword(newPassword: String, confirmPassword: String) {
         guard let userId = userId else { return }
         
-        if newPassword != confirmPassword {
+        if newPassword.isEmpty || confirmPassword.isEmpty {
+            setPasswordChangeError(message: "Fields cannot be empty.")
+        } else if newPassword != confirmPassword {
             setPasswordChangeError(message: "Passwords must match.")
-        } else if newPassword.isEmpty {
-            setPasswordChangeError(message: "Password cannot be empty.")
         } else if newPassword.count < 6 {
             setPasswordChangeError(message: "Password must be 6 or more characters.")
         } else {

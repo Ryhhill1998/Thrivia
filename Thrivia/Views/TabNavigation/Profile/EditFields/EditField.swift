@@ -43,48 +43,18 @@ struct EditField: View {
             
             VStack(spacing: 15.0) {
                 VStack(spacing: 15.0) {
-                    ExtractedView()
+                    FieldDisplay(fieldType: fieldType, currentValue: currentFieldValue)
                     
                     LineSeparator()
                     
-                    HStack {
-                        Text("New \(fieldType)")
-                            .foregroundColor(Color("Black"))
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.semibold)
-                        
-                        TextField(placeholder, text: $newFieldValue)
-                            .multilineTextAlignment(.trailing)
-                            .font(.custom("Montserrat", size: 15))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("Black"))
-                    }
+                    FieldInput(fieldType: fieldType, placeholder: placeholder, fieldValue: $newFieldValue)
                 }
                 .padding()
                 .background(Color("White"))
                 .cornerRadius(10)
                 .padding(.horizontal)
                 
-                if profileViewModel.fetchStatus == "pending" {
-                    ProgressButton(text: "Saving", foregroundColour: Color("White"), backgroundColour: Color("Green"))
-                } else if profileViewModel.fetchStatus == "idle" || profileViewModel.fetchStatus == "failure" {
-                    ActionButton(text: "Save", fontColour: Color("White"), backgroundColour: Color("Green"), action: saveField)
-                } else {
-                    HStack(spacing: 5.0) {
-                        Text("Saved")
-                            .font(.custom("Montserrat", size: 20))
-                            .foregroundColor(Color("White"))
-                            .bold()
-                        
-                        Image(systemName: "checkmark.circle")
-                            .foregroundColor(Color("White"))
-                    }
-                    .padding(12)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("Green"))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-                }
+                SaveButton(fetchStatus: profileViewModel.fetchStatus, action: saveField)
                 
                 Spacer()
             }
@@ -148,36 +118,5 @@ struct FieldDisplay: View {
                 .foregroundColor(Color("Black"))
                 .font(.custom("Montserrat", size: 15))
         }
-    }
-}
-
-struct FieldInput: View {
-    
-    let fieldType: String
-    let placeholder: String
-    @Binding var fieldValue: String
-    
-    var body: some View {
-        HStack {
-            FieldLabel(label: "Current \(fieldType)")
-            
-            TextField(placeholder, text: $fieldValue)
-                .multilineTextAlignment(.trailing)
-                .font(.custom("Montserrat", size: 15))
-                .fontWeight(.medium)
-                .foregroundColor(Color("Black"))
-        }
-    }
-}
-
-struct FieldLabel: View {
-    
-    let label: String
-    
-    var body: some View {
-        Text(label)
-            .foregroundColor(Color("Black"))
-            .font(.custom("Montserrat", size: 15))
-            .fontWeight(.semibold)
     }
 }

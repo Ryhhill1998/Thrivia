@@ -60,6 +60,9 @@
 		5BC0D72E2A7C208900CC3658 /* DateTimeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D72D2A7C208900CC3658 /* DateTimeSelector.swift */; };
 		5BC0D7302A7D3F6600CC3658 /* ConfirmationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D72F2A7D3F6600CC3658 /* ConfirmationAlert.swift */; };
 		5BC0D7322A7D410500CC3658 /* InfoAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D7312A7D410500CC3658 /* InfoAlert.swift */; };
+		5BC0D7342A7D702E00CC3658 /* FieldInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D7332A7D702E00CC3658 /* FieldInput.swift */; };
+		5BC0D7362A7D705800CC3658 /* FieldLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D7352A7D705800CC3658 /* FieldLabel.swift */; };
+		5BC0D7382A7D709300CC3658 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC0D7372A7D709300CC3658 /* SaveButton.swift */; };
 		5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */; };
 		5BC6FDE32A5E9CEE006459F8 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */; };
 		5BC6FDEE2A5EA34A006459F8 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6FDED2A5EA34A006459F8 /* LoginScreen.swift */; };
@@ -147,6 +150,9 @@
 		5BC0D72D2A7C208900CC3658 /* DateTimeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeSelector.swift; sourceTree = "<group>"; };
 		5BC0D72F2A7D3F6600CC3658 /* ConfirmationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationAlert.swift; sourceTree = "<group>"; };
 		5BC0D7312A7D410500CC3658 /* InfoAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoAlert.swift; sourceTree = "<group>"; };
+		5BC0D7332A7D702E00CC3658 /* FieldInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldInput.swift; sourceTree = "<group>"; };
+		5BC0D7352A7D705800CC3658 /* FieldLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldLabel.swift; sourceTree = "<group>"; };
+		5BC0D7372A7D709300CC3658 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
 		5BC6FDDC2A5DCAE0006459F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5BC6FDE02A5DD7E1006459F8 /* AuthenticationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationScreen.swift; sourceTree = "<group>"; };
 		5BC6FDE22A5E9CEE006459F8 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
@@ -239,6 +245,9 @@
 				5B8F03AA2A6BDFBC00B5192D /* EditField.swift */,
 				5B8F03AD2A6BF1F600B5192D /* EditPassword.swift */,
 				5B8F03AF2A6C155100B5192D /* EditIconColour.swift */,
+				5BC0D7332A7D702E00CC3658 /* FieldInput.swift */,
+				5BC0D7352A7D705800CC3658 /* FieldLabel.swift */,
+				5BC0D7372A7D709300CC3658 /* SaveButton.swift */,
 			);
 			path = EditFields;
 			sourceTree = "<group>";
@@ -590,6 +599,7 @@
 				5B8186CB2A60994F0093853D /* ActiveUserIcon.swift in Sources */,
 				5B5411DF2A62E2D700A024E8 /* ProfileViewModel.swift in Sources */,
 				5BC0D72C2A7BFF4B00CC3658 /* DescriptionText.swift in Sources */,
+				5BC0D7382A7D709300CC3658 /* SaveButton.swift in Sources */,
 				5B8F03B02A6C155100B5192D /* EditIconColour.swift in Sources */,
 				5B8F03AB2A6BDFBC00B5192D /* EditField.swift in Sources */,
 				5BA35DF02A7305240010AA7F /* ChatSettingsScreen.swift in Sources */,
@@ -597,6 +607,7 @@
 				5B5411E22A62EBC400A024E8 /* AccountDetailField.swift in Sources */,
 				5B1941442A7BA51F002B3907 /* LinkText.swift in Sources */,
 				5B8F31DF2A5027FC001F92B8 /* ContentView.swift in Sources */,
+				5BC0D7342A7D702E00CC3658 /* FieldInput.swift in Sources */,
 				5B5411D32A61BBAB00A024E8 /* LineSeparator.swift in Sources */,
 				5BC6FDE12A5DD7E1006459F8 /* AuthenticationScreen.swift in Sources */,
 				5BFBC0852A692CC6005E89FC /* CodableCryptoUser.swift in Sources */,
@@ -608,6 +619,7 @@
 				5BC6FE072A60508C006459F8 /* TimeDisplay.swift in Sources */,
 				5B8F31DD2A5027FC001F92B8 /* ThriviaApp.swift in Sources */,
 				5B5411C32A61566C00A024E8 /* MessageField.swift in Sources */,
+				5BC0D7362A7D705800CC3658 /* FieldLabel.swift in Sources */,
 				5B5411F52A63220000A024E8 /* AuthenticationViewModel.swift in Sources */,
 				5B5411C92A61708600A024E8 /* AppIcon.swift in Sources */,
 				5BC6FDF62A5EACB2006459F8 /* RegisterScreen.swift in Sources */,
