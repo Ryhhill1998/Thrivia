@@ -14,15 +14,16 @@ struct BlockedUsersScreen: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State var showConfirmUnblockAlert = false
+    @State var selectedUser: OtherUser?
     
-    var userId: String
+    let userId: String
     
     func backPressed() {
         presentationMode.wrappedValue.dismiss()
     }
     
-    func unblockUser(userId: String) {
-        blockedUsersViewModel.unblockUser(userIdToUnblock: userId)
+    func unblockUser() {
+        blockedUsersViewModel.unblockUser(userIdToUnblock: selectedUser!.id)
     }
     
     var body: some View {
@@ -33,6 +34,7 @@ struct BlockedUsersScreen: View {
                 ForEach(blockedUsersViewModel.blockedUsers) { user in
                     Button {
                         showConfirmUnblockAlert = true
+                        selectedUser = user
                     } label: {
                         HStack(alignment: .center) {
                             HStack(spacing: 15) {
@@ -51,16 +53,9 @@ struct BlockedUsersScreen: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                     }
-                    .alert("Unblock", isPresented: $showConfirmUnblockAlert, actions: {
-                        Button("Unblock", role: .destructive) {
-                            unblockUser(userId: user.id)
-                        }
-                        
-                        Button("Cancel", role: .cancel) {}
-                    }, message: {
-                        Text("Are you sure you want to unblock this user?")
-                    })
                 }
+                
+                ConfirmationAlert(title: "Unblock \(selectedUser?.getUsername() ?? "none")", message: "Are you sure you want to unblock this user?", confirmButtonText: "Unblock", presentationBind: $showConfirmUnblockAlert, action: unblockUser)
             }
             .padding(.top, 20)
         }
@@ -86,11 +81,5 @@ struct BlockedUsersScreen: View {
             }
         }
         .toolbar(.visible, for: .navigationBar)
-    }
-}
-
-struct BlockedUsers_Previews: PreviewProvider {
-    static var previews: some View {
-        BlockedUsersScreen(userId: "VxxliXRk4of9K0XqHtgQExc1l9L2")
     }
 }

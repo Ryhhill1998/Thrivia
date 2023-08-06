@@ -187,7 +187,7 @@ class AllChatsModel {
     func retrieveChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
         let otherUserId = otherUser.id
         
-        let chatId = generateChatId(userId: userId, otherUserId: otherUserId)
+        let chatId = AllChatsModel.generateChatId(userId: userId, otherUserId: otherUserId)
         
         let chatDocRef = db.collection("chats").document(chatId)
         
@@ -206,7 +206,7 @@ class AllChatsModel {
         }
     }
     
-    private func generateChatId(userId: String, otherUserId: String) -> String {
+    private static func generateChatId(userId: String, otherUserId: String) -> String {
         let id1Numbers = userId.asciiValues
         let id2Numbers = otherUserId.asciiValues
         
@@ -225,7 +225,7 @@ class AllChatsModel {
     private func createNewChat(userId: String, otherUser: OtherUser, chatSetter: @escaping (Chat, Bool) -> Void) {
         let otherUserId = otherUser.id
         
-        let chatId = generateChatId(userId: userId, otherUserId: otherUserId)
+        let chatId = AllChatsModel.generateChatId(userId: userId, otherUserId: otherUserId)
         
         // create new chat doc
         self.db.collection("chats").document(chatId).setData([
