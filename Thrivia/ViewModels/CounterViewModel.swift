@@ -15,6 +15,8 @@ class CounterViewModel: ObservableObject {
     
     @Published var counterNotCreated = true
     
+    @Published var counterName = ""
+    
     @Published var timeUnits1 = "Days"
     @Published var timeUnits2 = "Hours"
     @Published var timeUnits3 = "Minutes"
@@ -50,6 +52,7 @@ class CounterViewModel: ObservableObject {
     
     private func updateCounterCreationStatus() {
         if counter != nil {
+            counterName = counter!.getName()
             counterNotCreated = false
             createTimerDisplay()
             resetError()
@@ -85,10 +88,6 @@ class CounterViewModel: ObservableObject {
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             self.updateTimeDisplay()
         }
-    }
-    
-    func getCounterName() -> String {
-        return counter?.getName() ?? ""
     }
     
     func editCounter(newName: String, newStart: Date) -> Bool {
