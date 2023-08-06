@@ -20,6 +20,7 @@ class ChatViewModel: ObservableObject {
     @Published var sendError = ""
     @Published var errorExists = false
     @Published var messageSent = false
+    @Published var otherUserIsActive = false
     
     func setUserId(userId: String) {
         self.userId = userId
@@ -28,6 +29,16 @@ class ChatViewModel: ObservableObject {
     func setMessages(messages: [Message]) {
         self.messages = messages
         lastMessageIndex = self.messages.count - 1
+    }
+    
+    func setOtherUserActivityStatus(activityStatus: Bool) {
+        otherUserIsActive = activityStatus
+    }
+    
+    func getOtherUserActivityStatus() {
+        if let otherUserId = loadedChat?.getOtherUser().id {
+            chatModel.getOtherUserActivityStatus(userId: otherUserId, activityStatusSetter: setOtherUserActivityStatus(activityStatus:))
+        }
     }
     
     func listenToChat() {

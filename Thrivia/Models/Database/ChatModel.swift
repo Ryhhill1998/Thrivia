@@ -369,4 +369,22 @@ class ChatModel {
         
         return prekeyBundle.isEmpty ? nil : prekeyBundle
     }
+    
+    func getOtherUserActivityStatus(userId: String, activityStatusSetter: @escaping (Bool) -> Void) {
+        let userDocRef = db.collection("users").document(userId)
+        
+        userDocRef.getDocument { document, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let data = document?.data() {
+                if let activityStatus = data["isActive"] as? Bool {
+                    print("user is active")
+                    activityStatusSetter(activityStatus)
+                }
+            }
+        }
+    }
 }

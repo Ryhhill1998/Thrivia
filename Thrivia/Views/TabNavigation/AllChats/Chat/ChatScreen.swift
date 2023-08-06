@@ -143,9 +143,12 @@ struct ChatScreen: View {
                             .font(.custom("Montserrat", size: 13))
                             .foregroundColor(Color("Black"))
                             .fontWeight(.medium)
-                        Text("online")
-                            .font(.custom("Montserrat", size: 11))
-                            .foregroundColor(Color("Black"))
+                        
+                        if chatViewModel.otherUserIsActive {
+                            Text("online")
+                                .font(.custom("Montserrat", size: 11))
+                                .foregroundColor(Color("Black"))
+                        }
                     }
                 }
             }
@@ -167,6 +170,7 @@ struct ChatScreen: View {
             chatViewModel.setUserId(userId: userId)
             chatViewModel.loadedChat = loadedChat
             
+            chatViewModel.getOtherUserActivityStatus()
             chatViewModel.listenToChat()
         }
         .navigationDestination(isPresented: $navigateToOptions) {
