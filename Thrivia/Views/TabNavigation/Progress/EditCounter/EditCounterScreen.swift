@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EditCounterScreen: View {
     
-    @StateObject var counterViewModelPreview = CounterViewModel(preview: true)
+    @StateObject var counterViewModelPreview = CounterViewModel()
     
     @EnvironmentObject var counterViewModel: CounterViewModel
     

@@ -31,11 +31,9 @@ class CounterViewModel: ObservableObject {
     @Published var errorMessage = ""
     @Published var errorExists = false
     
-    init(preview: Bool) {
-        if !preview {
-            counter = counterModel.getStoredCounter()
-            updateCounterCreationStatus()
-        }
+    func loadCounter() {
+        counter = counterModel.getStoredCounter()
+        updateCounterCreationStatus()
     }
     
     private func resetError() {

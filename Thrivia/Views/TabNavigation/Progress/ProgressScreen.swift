@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProgressScreen: View {
     
-    @StateObject var counterViewModel = CounterViewModel(preview: false)
+    @StateObject var counterViewModel = CounterViewModel()
     
     @State var inEditMode: Bool = false
     @State var showResetAlert = false
@@ -67,6 +67,9 @@ struct ProgressScreen: View {
                 EditCounterScreen(counterName: counterViewModel.counterName, startDate: counterViewModel.getCounterStart())
                     .environmentObject(counterViewModel)
             }
+        }
+        .onAppear() {
+            counterViewModel.loadCounter()
         }
         .accentColor(Color("Black"))
     }
