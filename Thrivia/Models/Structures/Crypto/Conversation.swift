@@ -8,7 +8,7 @@
 import Foundation
 import CryptoKit
 
-class Conversation {
+struct Conversation {
     // static constants
     private static let rootDerivationInfo = "root key derivation info".data(using: .utf8)!
     private static let singleByte1 = Int8(bitPattern: 0x01).description.data(using: .utf8)!
@@ -176,11 +176,11 @@ class Conversation {
         return storedMessageKeys
     }
     
-    func resetMessages() {
+    mutating func resetMessages() {
         messages = []
     }
     
-    func removeMessages(messageIds: Set<String>) {
+    mutating func removeMessages(messageIds: Set<String>) {
         var editedMessages: [Message] = []
         
         for message in messages {
@@ -280,7 +280,7 @@ class Conversation {
         return SymmetricKey(data: messageKey)
     }
     
-    private func generateDhRatchetPair() {
+    mutating private func generateDhRatchetPair() {
         dhRatchetPrivateKey = Curve25519.KeyAgreement.PrivateKey()
         dhRatchetPublicKey = dhRatchetPrivateKey.publicKey
     }
@@ -325,7 +325,7 @@ class Conversation {
         }
     }
     
-    func sendMessage(messageContent: String) -> EncryptedMessage? {
+    mutating func sendMessage(messageContent: String) -> EncryptedMessage? {
         // RESET ROOT CHAIN IF LAST MESSAGE RECEIVED
         if lastMessageReceived == nil || lastMessageReceived! {
             // if enters block, DH ratchet step is triggered
@@ -419,7 +419,7 @@ class Conversation {
         }
     }
     
-    private func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
+    mutating private func findStoredKey(ephemeralKeyRaw: Data, messageNumber: Int) -> StoredKey? {
         var foundKeyIndex: Int?
         
         for i in 0..<storedMessageKeys.count {
@@ -436,7 +436,7 @@ class Conversation {
         return storedMessageKeys.remove(at: index)
     }
     
-    private func storeSkippedMessageKeys(skippedMessages: Int, messageNumber: Int, ephemeralKeyRaw: Data) {
+    mutating private func storeSkippedMessageKeys(skippedMessages: Int, messageNumber: Int, ephemeralKeyRaw: Data) {
         var count = skippedMessages
         var N = messageNumber
         
@@ -452,7 +452,7 @@ class Conversation {
         }
     }
     
-    func receiveMessage(message: EncryptedMessage) {
+    mutating func receiveMessage(message: EncryptedMessage) {
         var senderIdentityKey: Curve25519.KeyAgreement.PublicKey
         var ephemeralKey: Curve25519.KeyAgreement.PublicKey
         

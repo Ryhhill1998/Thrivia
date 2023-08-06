@@ -87,7 +87,7 @@ class ChatModel {
             }
             
             // decrypt messages
-            if let conversation = conversation {
+            if var conversation = conversation {
                 for message in encryptedMessages {
                     
                     // remove message doc from db
@@ -331,7 +331,7 @@ class ChatModel {
     }
     
     func deleteMessages(chatId: String, messageIds: Set<String>, messagesSetter: ([Message]) -> Void) {
-        if let conversation = Utilities.retrieveConversationFromUserDefaults(chatId: chatId) {
+        if var conversation = Utilities.retrieveConversationFromUserDefaults(chatId: chatId) {
             conversation.removeMessages(messageIds: messageIds)
             
             if Utilities.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {

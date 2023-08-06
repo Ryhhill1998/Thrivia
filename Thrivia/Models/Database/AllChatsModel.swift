@@ -265,7 +265,7 @@ class AllChatsModel {
     }
     
     func deleteChat(chatId: String) {
-        if let conversation = Utilities.retrieveConversationFromUserDefaults(chatId: chatId) {
+        if var conversation = Utilities.retrieveConversationFromUserDefaults(chatId: chatId) {
             conversation.resetMessages()
             
             if Utilities.saveConversationToUserDefaults(conversation: conversation, chatId: chatId) {
