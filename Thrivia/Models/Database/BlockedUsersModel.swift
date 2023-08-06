@@ -23,7 +23,7 @@ class BlockedUsersModel {
                 let userIsBlocked = setOfBlockedUserIds.contains(userIdToBlock)
                 
                 if userIsBlocked {
-                    errorSetter("You have already blocked this user.")
+                    errorSetter("You have already blocked this user. Go to your blocked users list to unblock.")
                     print("already blocked")
                 } else {
                     docRef.updateData([

@@ -52,25 +52,12 @@ struct ChatOptions: View {
                         .cornerRadius(10)
                         .padding(.horizontal)
                     }
-                    .alert("Block", isPresented: $showConfirmBlockAlert, actions: {
-                        Button("Block", role: .destructive) {
-                            blockUser()
-                        }
-                        
-                        Button("Cancel", role: .cancel) {}
-                    }, message: {
-                        Text("Are you sure you want to block this user?")
-                    })
-                    .alert("Block success", isPresented: $blockedUsersViewModel.blockedSuccessfully, actions: {
-                        Button("OK", role: .cancel) {}
-                    }, message: {
-                        Text("User was blocked.")
-                    })
-                    .alert("Block failed", isPresented: $blockedUsersViewModel.errorExists, actions: {
-                        Button("OK", role: .cancel) {}
-                    }, message: {
-                        Text(blockedUsersViewModel.error)
-                    })
+                    
+                    ConfirmationAlert(title: "Block user", message: "Are you sure you want to block this user?", confirmButtonText: "Block", presentationBind: $showConfirmBlockAlert, action: blockUser)
+                    
+                    InfoAlert(title: "Block success", message: "User was blocked.", presentationBind: $blockedUsersViewModel.blockedSuccessfully)
+                    
+                    InfoAlert(title: "Block failed", message: blockedUsersViewModel.error, presentationBind: $blockedUsersViewModel.errorExists)
                 }
                 
                 Spacer()
