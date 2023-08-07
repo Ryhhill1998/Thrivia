@@ -409,14 +409,16 @@ struct Conversation {
         }
     }
     
-    private func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey, associatedData: Data) -> Data? {
+    private func decryptMessage(message: EncryptedMessage, messageKey: SymmetricKey) -> Data? {
+        // generate associated data
+        let associatedData = generateAssociatedData(senderId: otherUser.getId(), senderIdentityKey: otherUser.getIdentityKey().rawRepresentation, recipientId: user.getId(), recipientIdentityKey: user.getIdentityKeyPublic().rawRepresentation)
+        
         do {
             let cipherText = Data(base64Encoded: message.getContent())!
             let sealedBox = try ChaChaPoly.SealedBox(combined: cipherText)
             let decryptedData = try ChaChaPoly.open(sealedBox, using: messageKey, authenticating: associatedData)
             return decryptedData
         } catch {
-            print("failed to decrypt")
             return nil
         }
     }
@@ -540,11 +542,8 @@ struct Conversation {
             messageKey = SymmetricKey(data: storedMessageKey!.getKey())
         }
         
-        // generate associated data
-        let associatedData = generateAssociatedData(senderId: otherUser.getId(), senderIdentityKey: otherUser.getIdentityKey().rawRepresentation, recipientId: user.getId(), recipientIdentityKey: user.getIdentityKeyPublic().rawRepresentation)
-        
         // decrypt message
-        if let decryptedData = decryptMessage(message: message, messageKey: messageKey, associatedData: associatedData) {
+        if let decryptedData = decryptMessage(message: message, messageKey: messageKey) {
             // add new message object to messages array
             let messageContent = String(data: decryptedData, encoding: .utf8)!
             let newMessage = Message(id: message.id, content: messageContent, sent: false, read: true, timestamp: message.getTimestamp())
