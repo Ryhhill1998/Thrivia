@@ -89,7 +89,7 @@ class AuthenticationModel {
         // 10 x one-time prekeys
         let privateOneTimePrekeys = cryptoUser.getOneTimePrekeysPrivate()
         let publicOneTimePrekeys = privateOneTimePrekeys.map { $0.publicKey }
-        let publicOneTimePrekeyStrings = publicOneTimePrekeys.map { $0.rawRepresentation.base64EncodedString() } // to be stored on server
+        let publicOneTimePrekeyStrings = publicOneTimePrekeys.map { $0.rawRepresentation.base64EncodedString() }
         
         db.collection("users").document(userId).setData([
             "email": email,

@@ -221,14 +221,16 @@ struct Conversation {
         return masterKey
     }
     
-    private func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey? {
-        // verify prekey signature
+    private func validatePrekeySignature() -> Bool {
         let signedPrekey = otherUser.getSignedPrekeySigning()
         let prekeySignature = otherUser.getPrekeySignature()
         let identityKey = otherUser.getIdentityKey()
-        let isValidSignature = signedPrekey.isValidSignature(prekeySignature, for: identityKey.rawRepresentation)
-        
-        if !isValidSignature {
+        return signedPrekey.isValidSignature(prekeySignature, for: identityKey.rawRepresentation)
+    }
+    
+    private func generateSenderMasterKey(ephemeralKeyPrivate: Curve25519.KeyAgreement.PrivateKey) -> SymmetricKey? {
+        // verify prekey signature
+        if !validatePrekeySignature() {
             return nil
         }
         
@@ -315,7 +317,10 @@ struct Conversation {
         return [chainKey, messageKey]
     }
     
-    private func encryptMessage(messageData: Data, messageKey: SymmetricKey, associatedData: Data) -> Data? {
+    private func encryptMessage(messageData: Data, messageKey: SymmetricKey) -> Data? {
+        // generate associated data
+        let associatedData = generateAssociatedData(senderId: user.getId(), senderIdentityKey: user.getIdentityKeyPublic().rawRepresentation, recipientId: otherUser.getId(), recipientIdentityKey: otherUser.getIdentityKey().rawRepresentation)
+        
         do {
             let encryptedMessage = try ChaChaPoly.seal(messageData, using: messageKey, authenticating: associatedData).combined
             
@@ -364,14 +369,11 @@ struct Conversation {
         
         let messageKey = kdfMessageOutput[1]
         
-        // generate associated data
-        let associatedData = generateAssociatedData(senderId: user.getId(), senderIdentityKey: user.getIdentityKeyPublic().rawRepresentation, recipientId: otherUser.getId(), recipientIdentityKey: otherUser.getIdentityKey().rawRepresentation)
-        
         // convert message content to data
         let messageData = messageContent.data(using: .utf8)!
         
         // encrypt message content
-        if let encryptedMessage = encryptMessage(messageData: messageData, messageKey: messageKey, associatedData: associatedData) {
+        if let encryptedMessage = encryptMessage(messageData: messageData, messageKey: messageKey) {
             // create new message
             let messageId = UUID().uuidString
             
